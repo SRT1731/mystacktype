@@ -22,6 +22,7 @@ import { SITE_CONFIG } from './config/content';
 
 export default function App() {
   const [entranceComplete, setEntranceComplete] = useState(false);
+  const [quizOpen, setQuizOpen] = useState(false);
   const { user } = useAuth();
 
   /* ── PayPal 결제 완료 → Firestore 저장 ── */
@@ -111,6 +112,7 @@ export default function App() {
   const { hero, cinematic, metrics, technology, architecture, footer } = SITE_CONFIG;
   const metricColors = ['#3166ff', '#57c84d', '#c98a16'];
   const featureColors = ['#3166ff', '#57c84d', '#c98a16', '#2f8f83'];
+  const openQuiz = useCallback(() => setQuizOpen(true), []);
 
   return (
     <div style={{ fontFamily: '"Space Mono", monospace' }}>
@@ -234,6 +236,16 @@ export default function App() {
               >
                 Result example: The Bottle Collector / Messiness 82
               </motion.p>
+              <motion.button
+                type="button"
+                onClick={openQuiz}
+                className="mt-1 h-[52px] w-full max-w-[300px] bg-white px-6 text-[14px] font-bold uppercase text-[#111614] transition hover:bg-[#90ffbe]"
+                initial={{ opacity: 0, y: 18 }}
+                animate={entranceComplete ? { opacity: 1, y: 0 } : {}}
+                transition={{ duration: 0.8, delay: 0.45 }}
+              >
+                Start Free Quiz
+              </motion.button>
             </div>
 
             {/* Right heading */}
@@ -249,7 +261,7 @@ export default function App() {
         </motion.div>
       </section>
 
-      <QuizExperience />
+      {quizOpen ? <QuizExperience onClose={() => setQuizOpen(false)} /> : null}
 
       {/* ════════════════ SECTION 2: CINEMATIC TEXT ════════════════ */}
       <section
@@ -546,12 +558,13 @@ export default function App() {
                 </li>
               </ul>
               <div className="flex flex-col gap-3">
-                <a
-                  href="#quiz"
+                <button
+                  type="button"
+                  onClick={openQuiz}
                   className="w-full max-w-md mx-auto h-[50px] rounded-lg font-bold text-[15px] flex items-center justify-center bg-[#3166ff] text-white hover:bg-[#2455dc] transition-colors"
                 >
                   Reveal My Stack Type
-                </a>
+                </button>
               </div>
             </motion.div>
 

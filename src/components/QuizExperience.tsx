@@ -12,7 +12,11 @@ const resultToneLabels = {
   roast: 'Roast',
 } as const;
 
-export function QuizExperience() {
+interface QuizExperienceProps {
+  onClose: () => void;
+}
+
+export function QuizExperience({ onClose }: QuizExperienceProps) {
   const [answers, setAnswers] = useState<AnswerMap>({});
   const [showResult, setShowResult] = useState(false);
   const questions = QUIZ_CONFIG.questions;
@@ -84,11 +88,33 @@ export function QuizExperience() {
 
   return (
     <section
-      id="quiz"
-      className="relative bg-[#f8faf6] px-4 py-24 text-[#111614] sm:px-6 md:px-8"
+      className="fixed inset-0 z-[100] bg-[#030503]/78 p-3 text-[#111614] backdrop-blur-xl sm:p-5"
+      role="dialog"
+      aria-modal="true"
+      aria-label="MyStackType quiz"
     >
-      <div className="mx-auto grid max-w-6xl gap-10 lg:grid-cols-[0.85fr_1.15fr]">
-        <div className="lg:sticky lg:top-24 lg:self-start">
+      <div className="mx-auto flex h-full max-w-6xl flex-col overflow-hidden border border-white/15 bg-[#f8faf6] shadow-2xl">
+        <div className="flex items-center justify-between border-b border-[#dbe4dc] bg-white px-4 py-3 sm:px-6">
+          <div>
+            <p className="text-[11px] font-bold uppercase text-[#3166ff]">
+              Free stack type quiz
+            </p>
+            <p className="mt-1 text-[12px] text-[#66706a]">
+              {answeredCount}/{questions.length} answered
+            </p>
+          </div>
+          <button
+            type="button"
+            onClick={onClose}
+            className="flex h-10 w-10 items-center justify-center border border-[#dbe4dc] bg-[#f8faf6] text-[22px] leading-none text-[#111614] transition hover:bg-white"
+            aria-label="Close quiz"
+          >
+            ×
+          </button>
+        </div>
+
+        <div className="grid flex-1 gap-8 overflow-y-auto p-4 sm:p-6 lg:grid-cols-[0.78fr_1.22fr] lg:p-8">
+        <div className="lg:sticky lg:top-0 lg:self-start">
           <p className="mb-5 text-[12px] font-bold uppercase text-[#3166ff]">
             Free stack type quiz
           </p>
@@ -252,6 +278,7 @@ export function QuizExperience() {
               </p>
             </div>
           ) : null}
+        </div>
         </div>
       </div>
     </section>
