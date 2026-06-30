@@ -11,6 +11,7 @@ import { ScrambleIn } from './components/ScrambleText';
 import { ConnectAILabLogo } from './components/ConnectAILabLogo';
 import PayPalCheckoutButton from './components/payment/PayPalCheckoutButton';
 import TossCheckoutButton from './components/payment/TossCheckoutButton';
+import { QuizExperience } from './components/QuizExperience';
 import { useAuth } from './contexts/AuthContext';
 import { createOrder } from './lib/firestore';
 import { PRODUCTS } from './lib/paypal';
@@ -247,6 +248,8 @@ export default function App() {
           </div>
         </motion.div>
       </section>
+
+      <QuizExperience />
 
       {/* ════════════════ SECTION 2: CINEMATIC TEXT ════════════════ */}
       <section
@@ -487,7 +490,7 @@ export default function App() {
       </section>
 
       {/* ════════════════ SECTION 6: PRICING ════════════════ */}
-      <section className="min-h-screen bg-white py-32 px-6">
+      <section id="pricing" className="min-h-screen bg-white py-32 px-6">
         <div className="max-w-6xl mx-auto">
           <motion.div
             className="text-center mb-20"
@@ -543,12 +546,12 @@ export default function App() {
                 </li>
               </ul>
               <div className="flex flex-col gap-3">
-                <button
-                  type="button"
+                <a
+                  href="#quiz"
                   className="w-full max-w-md mx-auto h-[50px] rounded-lg font-bold text-[15px] flex items-center justify-center bg-[#3166ff] text-white hover:bg-[#2455dc] transition-colors"
                 >
                   Reveal My Stack Type
-                </button>
+                </a>
               </div>
             </motion.div>
 

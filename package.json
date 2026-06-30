@@ -6,12 +6,15 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "lint:copy": "tsx scripts/lint-copy.ts",
+    "test:scoring": "tsx scripts/test-scoring.ts"
   },
   "dependencies": {
     "@paypal/react-paypal-js": "^10.0.0",
     "firebase": "^12.15.0",
     "framer-motion": "^12.41.0",
+    "html-to-image": "^1.11.13",
     "lucide-react": "^0.456.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1"
@@ -23,6 +26,7 @@
     "autoprefixer": "^10.4.20",
     "postcss": "^8.4.49",
     "tailwindcss": "^3.4.15",
+    "tsx": "^4.22.4",
     "typescript": "^5.6.3",
     "vite": "^5.4.11"
   }
