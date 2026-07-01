@@ -73,7 +73,7 @@ export function ShareCard({ outcome, format = 'feed' }: ShareCardProps) {
               <div className="mt-10 flex gap-4 text-[32px] text-white/64">
                 <span>위험 점수 {stackScore}</span>
                 <span>·</span>
-                <span>{result.rarity}% rarity</span>
+                <span>희귀도 {result.rarity}%</span>
               </div>
             </div>
             <RadarChart dimensions={dimensions} size={360} />

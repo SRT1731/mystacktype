@@ -5,6 +5,6 @@
 // ============================================================
 
 export const IMAGE_URLS = {
-  hero: '/assets/stack-clarity-hero.png',
-  report: '/assets/stack-clarity-report.png',
+  hero: '/assets/glp1-hero-v2.jpg',
+  report: '/assets/glp1-report-v2.jpg',
 };

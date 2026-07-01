@@ -1,11 +1,5 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
-import {
-  motion,
-  useScroll,
-  useTransform,
-  useSpring,
-  useMotionTemplate,
-} from 'framer-motion';
+import { motion } from 'framer-motion';
 import { Navbar } from './components/Navbar';
 import { ScrambleIn } from './components/ScrambleText';
 import { ConnectAILabLogo } from './components/ConnectAILabLogo';
@@ -93,21 +87,6 @@ export default function App() {
     return () => clearTimeout(timer);
   }, []);
 
-  /* ── Section 2 scroll-driven 3D text ── */
-  const section2Ref = useRef<HTMLDivElement>(null);
-  const { scrollYProgress } = useScroll({
-    target: section2Ref,
-    offset: ['start end', 'end start'],
-  });
-  const smoothProgress = useSpring(scrollYProgress, {
-    stiffness: 15,
-    damping: 32,
-    mass: 1.8,
-  });
-  const yScaleValue = useTransform(smoothProgress, [0, 1], [60, -120]);
-  const textOpacity = useTransform(smoothProgress, [0.3, 0.5], [0, 1]);
-  const transform3D = useMotionTemplate`rotateX(24deg) translateY(${yScaleValue}px) translateZ(15px)`;
-
   /* ── Destructure config for readability ── */
   const { hero, cinematic, metrics, technology, architecture, footer } = SITE_CONFIG;
   const metricColors = ['#3166ff', '#57c84d', '#c98a16'];
@@ -115,7 +94,7 @@ export default function App() {
   const openQuiz = useCallback(() => setQuizOpen(true), []);
 
   return (
-    <div style={{ fontFamily: '"Space Mono", monospace' }}>
+    <div style={{ fontFamily: '"Pretendard", "Apple SD Gothic Neo", "Noto Sans KR", system-ui, sans-serif' }}>
       <Navbar entranceComplete={entranceComplete} onQuizOpen={openQuiz} />
 
       {/* ════════════════ SECTION 1: HERO ════════════════ */}
@@ -194,7 +173,7 @@ export default function App() {
         >
           <div className="flex-1" />
 
-          <div className="flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
+          <div className="flex flex-col gap-6 md:flex-row md:items-end md:justify-start">
             {/* Left column */}
             <div className="flex flex-col gap-4 sm:gap-5">
               <motion.p
@@ -207,8 +186,8 @@ export default function App() {
                 60초 무료 진단
               </motion.p>
               <h1
-                className="text-white uppercase leading-[0.9] text-[58px] sm:text-[82px] md:text-[112px] lg:text-[128px]"
-                style={{ fontFamily: '"Anton SC", sans-serif', letterSpacing: 0 }}
+                className="max-w-2xl text-white leading-[0.98] text-[44px] font-black sm:text-[64px] md:text-[82px] lg:text-[96px]"
+                style={{ letterSpacing: 0 }}
               >
                 <ScrambleIn text={hero.titleLeft[0]} delay={200} triggered={entranceComplete} />
                 <br />
@@ -216,7 +195,7 @@ export default function App() {
               </h1>
 
               <motion.p
-                className="max-w-md text-[15px] sm:text-[17px] text-white/75 leading-[1.6]"
+                className="max-w-lg text-[15px] sm:text-[18px] text-white/78 leading-[1.65]"
                 initial={{ opacity: 0, y: 25 }}
                 animate={entranceComplete ? { opacity: 1, y: 0 } : {}}
                 transition={{
@@ -228,35 +207,25 @@ export default function App() {
                 {hero.description}
               </motion.p>
               <motion.p
-                className="text-white/45 text-[12px] sm:text-[13px] uppercase"
+                className="text-white/52 text-[12px] sm:text-[13px]"
                 style={{ letterSpacing: 0 }}
                 initial={{ opacity: 0, y: 18 }}
                 animate={entranceComplete ? { opacity: 1, y: 0 } : {}}
                 transition={{ duration: 0.8, delay: 0.35 }}
               >
-                결과 예시: 리바운드 경계형 / 위험 점수 76
+                무료 결과: 위험 타입 · 6축 레이더 · 상담 질문
               </motion.p>
               <motion.button
                 type="button"
                 onClick={openQuiz}
-                className="mt-1 h-[52px] w-full max-w-[300px] bg-white px-6 text-[14px] font-bold uppercase text-[#111614] transition hover:bg-[#90ffbe]"
+                className="mt-1 h-[52px] w-full max-w-[300px] rounded-full bg-white px-6 text-[15px] font-extrabold text-[#111614] transition hover:bg-[#90ffbe]"
                 initial={{ opacity: 0, y: 18 }}
                 animate={entranceComplete ? { opacity: 1, y: 0 } : {}}
                 transition={{ duration: 0.8, delay: 0.45 }}
               >
-                무료 진단 시작
+                무료 진단 시작하기
               </motion.button>
             </div>
-
-            {/* Right heading */}
-            <h1
-              className="text-white uppercase leading-[0.9] text-[58px] sm:text-[82px] md:text-[112px] lg:text-[128px] text-left md:text-right"
-              style={{ fontFamily: '"Anton SC", sans-serif', letterSpacing: 0 }}
-            >
-              <ScrambleIn text={hero.titleRight[0]} delay={700} triggered={entranceComplete} />
-              <br />
-              <ScrambleIn text={hero.titleRight[1]} delay={1000} triggered={entranceComplete} />
-            </h1>
           </div>
         </motion.div>
       </section>
@@ -264,62 +233,68 @@ export default function App() {
       {quizOpen ? <QuizExperience onClose={() => setQuizOpen(false)} /> : null}
 
       {/* ════════════════ SECTION 2: CINEMATIC TEXT ════════════════ */}
-      <section
-        ref={section2Ref}
-        className="relative h-screen h-[100dvh] flex items-center justify-center overflow-hidden bg-[#f4f7f2]"
-      >
-        {/* Video background */}
-        {VIDEO_URLS.section2 && (
+      <section className="relative min-h-screen overflow-hidden bg-[#101412] text-white">
+        {VIDEO_URLS.section2 ? (
           <video
             src={VIDEO_URLS.section2}
-            className="absolute inset-0 w-full h-full object-cover"
+            className="absolute inset-0 h-full w-full object-cover"
             autoPlay
             muted
             loop
             playsInline
           />
+        ) : (
+          <img
+            src={IMAGE_URLS.report}
+            alt=""
+            className="absolute inset-0 h-full w-full object-cover opacity-35"
+          />
         )}
 
-        {/* Top gradient overlay */}
         <div
-          className="absolute top-0 left-0 right-0 z-10"
+          className="absolute inset-0"
           style={{
-            height: 180,
-            background: 'linear-gradient(to bottom, rgba(1,1,3,0.16), transparent)',
+            background:
+              'linear-gradient(90deg, rgba(8,12,10,0.94) 0%, rgba(8,12,10,0.68) 46%, rgba(8,12,10,0.36) 100%)',
           }}
         />
 
-        <div
-          className="absolute inset-x-0 bottom-0 h-48 pointer-events-none"
-          style={{
-            background: 'linear-gradient(to top, #ffffff, transparent)',
-          }}
-        />
+        <div className="relative z-10 mx-auto grid min-h-screen max-w-6xl items-center gap-12 px-6 py-28 md:grid-cols-[0.9fr_1.1fr]">
+          <motion.div>
+            <p className="mb-5 text-[12px] font-extrabold text-[#90ffbe]">
+              놓치기 쉬운 신호
+            </p>
+            <h2 className="text-[38px] font-black leading-[1.05] sm:text-[54px] md:text-[64px]">
+              {cinematic.text}
+            </h2>
+          </motion.div>
 
-        {/* 3D text content */}
-        <div className="relative z-20 max-w-5xl mx-auto" style={{ perspective: 400 }}>
-          <div className="mx-auto mb-8 h-2 w-28 rounded-full bg-[#57c84d]" />
-          <motion.p
-            className="text-[38px] sm:text-[54px] md:text-[76px] lg:text-[88px] text-[#141815] leading-[0.95] uppercase select-none px-6 sm:px-12 text-center"
-            style={{
-              fontFamily: '"Anton SC", sans-serif',
-              letterSpacing: 0,
-              transform: transform3D,
-              opacity: textOpacity,
-            }}
-          >
-            {cinematic.text}
-          </motion.p>
+          <motion.div className="grid gap-3 sm:grid-cols-3 md:grid-cols-1">
+            {[
+              ['1', '잘 빠지는데 힘이 빠진다'],
+              ['2', '한 끼가 반도 안 들어간다'],
+              ['3', '끊은 뒤가 더 걱정된다'],
+            ].map(([num, label]) => (
+              <div
+                key={num}
+                className="flex min-h-[82px] items-center gap-5 border border-white/14 bg-white/8 px-5 backdrop-blur-md"
+              >
+                <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[#90ffbe] text-[15px] font-black text-[#101412]">
+                  {num}
+                </span>
+                <span className="text-[18px] font-bold text-white/88">{label}</span>
+              </div>
+            ))}
+          </motion.div>
         </div>
       </section>
 
       {/* ════════════════ SECTION 3: METRICS ════════════════ */}
-      <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-white">
-        {/* Video background */}
+      <section className="relative min-h-screen overflow-hidden bg-[#f7faf6]">
         {VIDEO_URLS.metrics && (
           <video
             src={VIDEO_URLS.metrics}
-            className="absolute inset-0 w-full h-full object-cover"
+            className="absolute inset-0 h-full w-full object-cover"
             autoPlay
             muted
             loop
@@ -327,47 +302,54 @@ export default function App() {
           />
         )}
 
-        <div className="relative z-20 pt-32 pb-32 px-6 max-w-6xl mx-auto w-full">
-          <motion.p
-            className="text-[#66706a] text-[13px] sm:text-[14px] tracking-[0.2em] uppercase mb-20 text-center"
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            transition={{ duration: 1.2 }}
-            viewport={{ once: true, amount: 0.3 }}
-          >
-            {metrics.subtitle}
-          </motion.p>
+        <div className="relative z-20 mx-auto grid min-h-screen max-w-6xl items-center gap-12 px-6 py-28 md:grid-cols-[0.95fr_1.05fr]">
+          <motion.div>
+            <p className="mb-5 text-[12px] font-extrabold text-[#3166ff]">
+              {metrics.subtitle}
+            </p>
+            <h2 className="max-w-xl text-[42px] font-black leading-[1.02] text-[#111614] sm:text-[58px]">
+              돈 내기 전에, 먼저 내 상태부터 보세요.
+            </h2>
+            <p className="mt-6 max-w-md text-[16px] leading-relaxed text-[#4d5852]">
+              무료 진단은 연락처를 얻기 위한 빈 미끼가 아니라, 바로 써먹을 수 있는 결과를 줍니다.
+            </p>
+            <button
+              type="button"
+              onClick={openQuiz}
+              className="mt-8 h-[52px] rounded-full bg-[#111614] px-7 text-[15px] font-extrabold text-white transition hover:bg-[#3166ff]"
+            >
+              내 위험 타입 보기
+            </button>
+          </motion.div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-16 md:gap-8 text-center">
-            {metrics.items.map((m, i) => (
-              <motion.div
-                key={m.label}
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.8, delay: i * 0.15 }}
-                viewport={{ once: true, amount: 0.3 }}
-              >
-                <div
-                  className="leading-none text-[56px] sm:text-[72px] md:text-[88px] lg:text-[96px]"
-                  style={{
-                    color: metricColors[i % metricColors.length],
-                    fontFamily: '"Anton SC", sans-serif',
-                    letterSpacing: 0,
-                  }}
-                >
-                  {m.value}
+          <motion.div className="relative min-h-[520px] overflow-hidden border border-[#dbe4dc] bg-white shadow-[0_24px_80px_rgba(17,22,20,0.08)]">
+            <img
+              src={IMAGE_URLS.report}
+              alt=""
+              className="absolute inset-0 h-full w-full object-cover"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-white via-white/72 to-white/16" />
+            <div className="absolute inset-x-0 bottom-0 grid gap-3 p-5 sm:grid-cols-3">
+              {metrics.items.map((m, i) => (
+                <div key={m.label} className="bg-white/88 p-4 backdrop-blur-md">
+                  <div
+                    className="text-[34px] font-black leading-none"
+                    style={{ color: metricColors[i % metricColors.length] }}
+                  >
+                    {m.value}
+                  </div>
+                  <p className="mt-3 text-[13px] font-bold leading-snug text-[#3f4742]">
+                    {m.label}
+                  </p>
                 </div>
-                <div className="text-[#3f4742] text-[13px] sm:text-[15px] mt-4 tracking-wide">
-                  {m.label}
-                </div>
-              </motion.div>
-            ))}
-          </div>
+              ))}
+            </div>
+          </motion.div>
         </div>
       </section>
 
       {/* ════════════════ SECTION 4: TECHNOLOGY ════════════════ */}
-      <section className="relative min-h-screen flex flex-col overflow-hidden bg-[#eef4f0]">
+      <section className="relative min-h-screen overflow-hidden bg-[#eef4f0]">
         {/* Video background */}
         {VIDEO_URLS.technology && (
           <video
@@ -380,15 +362,11 @@ export default function App() {
           />
         )}
 
-        <div className="relative z-20 flex flex-col flex-1 px-8 sm:px-12 md:px-16 py-20 sm:py-24">
-          <div className="flex flex-col md:flex-row md:justify-between md:items-start gap-6">
+        <div className="relative z-20 mx-auto flex min-h-screen max-w-6xl flex-col justify-center px-6 py-28">
+          <div className="flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
             <motion.h2
-              className="text-[#111614] uppercase leading-[0.9] text-[48px] sm:text-[64px] md:text-[82px]"
-              style={{ fontFamily: '"Anton SC", sans-serif', letterSpacing: 0 }}
-              initial={{ opacity: 0, y: 40 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 1.0 }}
-              viewport={{ once: true, amount: 0.3 }}
+              className="text-[42px] font-black leading-[1.03] text-[#111614] sm:text-[58px] md:text-[72px]"
+              style={{ letterSpacing: 0 }}
             >
               {technology.title[0]}
               <br />
@@ -396,38 +374,25 @@ export default function App() {
             </motion.h2>
 
             <motion.p
-              className="text-[#4d5852] text-[13px] sm:text-[15px] leading-relaxed max-w-xs md:text-right md:pt-2"
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 1.0, delay: 0.2 }}
-              viewport={{ once: true, amount: 0.3 }}
+              className="max-w-sm text-[15px] leading-relaxed text-[#4d5852] md:text-right"
             >
               {technology.description}
             </motion.p>
           </div>
 
-          <div className="flex-1 min-h-[160px]" />
-
           <motion.div
-            className="grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-6"
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            transition={{ duration: 1.0, delay: 0.3 }}
-            viewport={{ once: true, amount: 0.3 }}
+            className="mt-16 grid gap-4 sm:grid-cols-2 lg:grid-cols-4"
           >
             {technology.features.map((f, i) => (
               <motion.div
                 key={f.title}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.7, delay: i * 0.1 }}
-                viewport={{ once: true, amount: 0.3 }}
+                className="min-h-[220px] border border-[#d6e1d8] bg-white/78 p-5 shadow-sm backdrop-blur-sm"
               >
-                <div className="mb-4 h-1.5 w-10 rounded-full" style={{ backgroundColor: featureColors[i % featureColors.length] }} />
-                <h3 className="text-[#111614] text-[14px] sm:text-[16px] font-bold mb-2">
+                <div className="mb-8 h-1.5 w-12 rounded-full" style={{ backgroundColor: featureColors[i % featureColors.length] }} />
+                <h3 className="mb-4 text-[22px] font-black text-[#111614]">
                   {f.title}
                 </h3>
-                <p className="text-[#59645e] text-[12px] sm:text-[14px] leading-relaxed">
+                <p className="text-[14px] leading-relaxed text-[#59645e]">
                   {f.desc}
                 </p>
               </motion.div>
@@ -457,32 +422,23 @@ export default function App() {
         )}
 
         <div className="relative z-20 max-w-3xl mx-auto px-6 py-32 text-center">
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 1.0 }}
-            viewport={{ once: true, amount: 0.4 }}
-          >
+          <motion.div>
             <p className="text-[#66706a] text-[13px] sm:text-[14px] tracking-[0.2em] uppercase mb-8">
               {architecture.subtitle}
             </p>
             <h2
-              className="text-[#111614] uppercase leading-[0.95] mb-10 text-[42px] sm:text-[58px] md:text-[72px]"
-              style={{ fontFamily: '"Anton SC", sans-serif', letterSpacing: 0 }}
+              className="mb-8 text-[42px] font-black leading-[1.03] text-[#111614] sm:text-[58px] md:text-[70px]"
+              style={{ letterSpacing: 0 }}
             >
               {architecture.heading}
             </h2>
-            <p className="text-[#4d5852] text-[15px] sm:text-[17px] leading-relaxed max-w-xl mx-auto">
+            <p className="mx-auto max-w-xl text-[16px] leading-relaxed text-[#4d5852] sm:text-[18px]">
               {architecture.description}
             </p>
           </motion.div>
 
           <motion.div
             className="mt-20 flex flex-col items-center gap-4"
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            transition={{ duration: 1.2, delay: 0.4 }}
-            viewport={{ once: true, amount: 0.4 }}
           >
             {architecture.layers.map((l) => (
               <div
@@ -490,13 +446,19 @@ export default function App() {
                 className="w-full max-w-md h-[72px] border border-[#dbe4dc] bg-white/80 backdrop-blur-md rounded-lg flex items-center justify-between px-6 shadow-sm"
               >
                 <span className="text-[#77827b] text-[12px] tracking-[0.15em] uppercase">
-                  Layer {l.num}
+                  Step {l.num}
                 </span>
                 <span className="text-[#111614] text-[16px] sm:text-[18px] font-bold">
                   {l.name}
                 </span>
               </div>
             ))}
+            <a
+              href="#pricing"
+              className="mt-4 flex h-[52px] w-full max-w-md items-center justify-center rounded-full bg-[#111614] px-6 text-[15px] font-extrabold text-white transition hover:bg-[#3166ff]"
+            >
+              사전예약 옵션 보기
+            </a>
           </motion.div>
         </div>
       </section>
@@ -506,22 +468,18 @@ export default function App() {
         <div className="max-w-6xl mx-auto">
           <motion.div
             className="text-center mb-20"
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 1.0 }}
-            viewport={{ once: true, amount: 0.3 }}
           >
             <p className="text-[#66706a] text-[13px] sm:text-[14px] tracking-[0.2em] uppercase mb-8">
-              Start Here
+              사전예약
             </p>
             <h2
-              className="text-[#111614] uppercase leading-[0.95] mb-6 text-[42px] sm:text-[58px] md:text-[72px]"
-              style={{ fontFamily: '"Anton SC", sans-serif', letterSpacing: 0 }}
+              className="mb-6 text-[42px] font-black leading-[1.03] text-[#111614] sm:text-[58px] md:text-[70px]"
+              style={{ letterSpacing: 0 }}
             >
-              무료 진단 후, 유지 코치 사전예약.
+              출시 전, 가장 낮은 가격으로.
             </h2>
             <p className="text-[#4d5852] text-[15px] sm:text-[17px] leading-relaxed max-w-xl mx-auto">
-              아직 만들고 있는 상품의 예약입니다. 출시 안 되면 전액 환불됩니다.
+              무료 진단 결과가 쓸모 있었다면, 유지 코치를 먼저 예약하세요. 출시되지 않으면 전액 환불됩니다.
             </p>
           </motion.div>
 
@@ -529,10 +487,6 @@ export default function App() {
             {/* ── Basic ── */}
             <motion.div
               className="border border-[#dbe4dc] bg-[#f6f8f4] rounded-2xl p-8 flex flex-col shadow-sm"
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0 }}
-              viewport={{ once: true, amount: 0.3 }}
             >
               <p className="text-[#66706a] text-[12px] tracking-[0.15em] uppercase mb-3">무료 진단</p>
               <div className="flex items-baseline gap-1 mb-2">
@@ -544,7 +498,7 @@ export default function App() {
                 </span>
               </div>
               <p className="text-[#4d5852] text-[13px] leading-relaxed mb-8">
-                위험 타입·점수·레이더·물어볼 질문을 무료로 확인하세요.
+                먼저 내 상태를 확인하세요. 결제는 그다음입니다.
               </p>
               <ul className="flex flex-col gap-3 mb-10 flex-1">
                 <li className="flex items-center gap-3 text-[#3f4742] text-[13px]">
@@ -563,7 +517,7 @@ export default function App() {
                   onClick={openQuiz}
                   className="w-full max-w-md mx-auto h-[50px] rounded-lg font-bold text-[15px] flex items-center justify-center bg-[#3166ff] text-white hover:bg-[#2455dc] transition-colors"
                 >
-                  무료 진단 시작
+                  무료로 먼저 보기
                 </button>
               </div>
             </motion.div>
@@ -571,17 +525,13 @@ export default function App() {
             {/* ── Pro (Featured) ── */}
             <motion.div
               className="border border-[#3166ff]/35 rounded-2xl p-8 flex flex-col relative bg-white shadow-[0_18px_60px_rgba(49,102,255,0.14)]"
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.1 }}
-              viewport={{ once: true, amount: 0.3 }}
             >
               <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2">
                 <span className="bg-[#57c84d] text-[#111614] text-[11px] font-bold tracking-[0.1em] uppercase px-4 py-1.5 rounded-full">
-                  Early Bird
+                  초기 멤버
                 </span>
               </div>
-              <p className="text-[#66706a] text-[12px] tracking-[0.15em] uppercase mb-3">유지 코치 얼리버드 사전예약</p>
+              <p className="text-[#66706a] text-[12px] tracking-[0.15em] uppercase mb-3">창립 멤버 사전예약</p>
               <div className="flex items-baseline gap-1 mb-2">
                 <span
                   className="text-[52px] leading-none"
@@ -589,10 +539,10 @@ export default function App() {
                 >
                   $7
                 </span>
-                <span className="text-[#66706a] text-[14px]">/사전예약</span>
+                <span className="text-[#66706a] text-[14px]">먼저 예약</span>
               </div>
               <p className="text-[#4d5852] text-[13px] leading-relaxed mb-8">
-                출시 시 창립 멤버가로 우선 오픈. 미출시 시 전액 환불.
+                첫 오픈 때 가장 낮은 가격으로 초대합니다.
               </p>
               <ul className="flex flex-col gap-3 mb-10 flex-1">
                 <li className="flex items-center gap-3 text-[#3f4742] text-[13px]">
@@ -602,7 +552,7 @@ export default function App() {
                   <span className="text-[#57c84d]">✓</span> 유지 체크포인트
                 </li>
                 <li className="flex items-center gap-3 text-[#3f4742] text-[13px]">
-                  <span className="text-[#57c84d]">✓</span> 상담 질문 정리
+                  <span className="text-[#57c84d]">✓</span> 진료 전 질문 정리
                 </li>
                 <li className="flex items-center gap-3 text-[#3f4742] text-[13px]">
                   <span className="text-[#57c84d]">✓</span> 미출시 시 전액 환불
@@ -624,10 +574,6 @@ export default function App() {
             {/* ── Enterprise ── */}
             <motion.div
               className="border border-[#dbe4dc] bg-[#f6f8f4] rounded-2xl p-8 flex flex-col shadow-sm"
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.2 }}
-              viewport={{ once: true, amount: 0.3 }}
             >
               <p className="text-[#66706a] text-[12px] tracking-[0.15em] uppercase mb-3">파운더 사전예약</p>
               <div className="flex items-baseline gap-1 mb-2">
@@ -637,10 +583,10 @@ export default function App() {
                 >
                   $19
                 </span>
-                <span className="text-[#66706a] text-[14px]">/사전예약</span>
+                <span className="text-[#66706a] text-[14px]">피드백 참여</span>
               </div>
               <p className="text-[#4d5852] text-[13px] leading-relaxed mb-8">
-                얼리버드 + 초기 1:1 피드백 반영 + 근육 사수 스타터 가이드 우선.
+                초기 피드백을 반영하고, 우선 자료를 먼저 받는 옵션입니다.
               </p>
               <ul className="flex flex-col gap-3 mb-10 flex-1">
                 <li className="flex items-center gap-3 text-[#3f4742] text-[13px]">
@@ -670,7 +616,7 @@ export default function App() {
                   href="mailto:contact@connectailab.com"
                   className="w-full max-w-md mx-auto h-[50px] rounded-lg font-medium text-[15px] flex items-center justify-center gap-2 border border-[#cbd7cf] text-[#3f4742] hover:bg-white transition-colors"
                 >
-                  Contact Sales
+                  문의하기
                 </a>
               </div>
             </motion.div>

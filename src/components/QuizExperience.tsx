@@ -7,9 +7,9 @@ import { RadarChart } from './RadarChart';
 type AnswerMap = Record<string, string>;
 
 const resultToneLabels = {
-  normal: 'Normal',
-  strong: 'Strong',
-  roast: 'Roast',
+  normal: '기본 결과',
+  strong: '핵심 결과',
+  roast: '공유용 결과',
 } as const;
 
 interface QuizExperienceProps {
@@ -18,10 +18,13 @@ interface QuizExperienceProps {
 
 export function QuizExperience({ onClose }: QuizExperienceProps) {
   const [answers, setAnswers] = useState<AnswerMap>({});
+  const [currentIndex, setCurrentIndex] = useState(0);
   const [showResult, setShowResult] = useState(false);
   const questions = QUIZ_CONFIG.questions;
+  const currentQuestion = questions[currentIndex];
   const answeredCount = Object.keys(answers).length;
   const isComplete = answeredCount === questions.length;
+  const currentAnswer = answers[currentQuestion.id];
 
   const selectedOptionIds = useMemo(() => Object.values(answers), [answers]);
   const outcome = useMemo(
@@ -88,7 +91,18 @@ export function QuizExperience({ onClose }: QuizExperienceProps) {
 
   function handleReset() {
     setAnswers({});
+    setCurrentIndex(0);
     setShowResult(false);
+  }
+
+  function goToPreviousQuestion() {
+    setCurrentIndex((index) => Math.max(index - 1, 0));
+    setShowResult(false);
+  }
+
+  function goToNextQuestion() {
+    if (!currentAnswer) return;
+    setCurrentIndex((index) => Math.min(index + 1, questions.length - 1));
   }
 
   return (
@@ -124,10 +138,12 @@ export function QuizExperience({ onClose }: QuizExperienceProps) {
             60초 GLP-1 근손실 위험 진단
           </p>
           <h2
-            className="max-w-xl text-[46px] uppercase leading-[0.92] sm:text-[64px]"
-            style={{ fontFamily: '"Anton SC", sans-serif', letterSpacing: 0 }}
+            className="max-w-xl text-[40px] font-black leading-[1.05] sm:text-[56px]"
+            style={{ letterSpacing: 0 }}
           >
-            당신의 근손실 위험은 몇 점일까?
+            내 근손실 위험,
+            <br />
+            몇 점일까?
           </h2>
           <p className="mt-6 max-w-md text-[15px] leading-relaxed text-[#4d5852]">
             10문항으로 위험 타입, 점수, 6축 레이더, 담당 의사에게 물어볼 질문을 정리합니다.
@@ -138,37 +154,37 @@ export function QuizExperience({ onClose }: QuizExperienceProps) {
               style={{ width: `${(answeredCount / questions.length) * 100}%` }}
             />
           </div>
-          <p className="mt-3 text-[13px] text-[#66706a]">
-            {answeredCount}/{questions.length} answered
-          </p>
+            <p className="mt-3 text-[13px] text-[#66706a]">
+              {currentIndex + 1}번째 질문 · {answeredCount}/{questions.length} 완료
+            </p>
         </div>
 
         <div className="space-y-5">
-          {questions.map((question) => (
+          {!showResult ? (
             <div
-              key={question.id}
+              key={currentQuestion.id}
               className="border border-[#dbe4dc] bg-white p-5 shadow-sm sm:p-6"
             >
               <p className="mb-3 text-[11px] font-bold uppercase text-[#66706a]">
-                {question.eyebrow}
+                {currentQuestion.eyebrow}
               </p>
               <h3 className="text-[20px] font-bold leading-snug text-[#111614]">
-                {question.title}
+                {currentQuestion.title}
               </h3>
-              {question.helper ? (
+              {currentQuestion.helper ? (
                 <p className="mt-2 text-[13px] leading-relaxed text-[#66706a]">
-                  {question.helper}
+                  {currentQuestion.helper}
                 </p>
               ) : null}
 
               <div className="mt-5 grid gap-3">
-                {question.options.map((option) => {
-                  const isSelected = answers[question.id] === option.id;
+                {currentQuestion.options.map((option) => {
+                  const isSelected = answers[currentQuestion.id] === option.id;
                   return (
                     <button
                       key={option.id}
                       type="button"
-                      onClick={() => handleAnswer(question.id, option.id)}
+                      onClick={() => handleAnswer(currentQuestion.id, option.id)}
                       className={`min-h-[58px] border px-4 py-3 text-left text-[14px] transition ${
                         isSelected
                           ? 'border-[#3166ff] bg-[#edf3ff] text-[#111614]'
@@ -186,39 +202,60 @@ export function QuizExperience({ onClose }: QuizExperienceProps) {
                 })}
               </div>
             </div>
-          ))}
+          ) : null}
 
-          <div className="flex flex-col gap-3 sm:flex-row">
-            <button
-              type="button"
-              onClick={handleReveal}
-              disabled={!isComplete}
-              className="h-[54px] flex-1 bg-[#3166ff] px-6 text-[15px] font-bold text-white transition hover:bg-[#2455dc] disabled:cursor-not-allowed disabled:bg-[#b9c2bb]"
-            >
-              결과 보기
-            </button>
-            <button
-              type="button"
-              onClick={handleReset}
-              className="h-[54px] border border-[#dbe4dc] px-6 text-[15px] font-bold text-[#3f4742] transition hover:bg-white"
-            >
-              Reset
-            </button>
-          </div>
+          {!showResult ? (
+            <div className="flex flex-col gap-3 sm:flex-row">
+              <button
+                type="button"
+                onClick={goToPreviousQuestion}
+                disabled={currentIndex === 0}
+                className="h-[54px] border border-[#dbe4dc] px-6 text-[15px] font-bold text-[#3f4742] transition hover:bg-white disabled:cursor-not-allowed disabled:opacity-40"
+              >
+                이전
+              </button>
+              {currentIndex === questions.length - 1 ? (
+                <button
+                  type="button"
+                  onClick={handleReveal}
+                  disabled={!isComplete}
+                  className="h-[54px] flex-1 bg-[#3166ff] px-6 text-[15px] font-bold text-white transition hover:bg-[#2455dc] disabled:cursor-not-allowed disabled:bg-[#b9c2bb]"
+                >
+                  결과 보기
+                </button>
+              ) : (
+                <button
+                  type="button"
+                  onClick={goToNextQuestion}
+                  disabled={!currentAnswer}
+                  className="h-[54px] flex-1 bg-[#111614] px-6 text-[15px] font-bold text-white transition hover:bg-[#3166ff] disabled:cursor-not-allowed disabled:bg-[#b9c2bb]"
+                >
+                  다음
+                </button>
+              )}
+              <button
+                type="button"
+                onClick={handleReset}
+                className="h-[54px] border border-[#dbe4dc] px-6 text-[15px] font-bold text-[#3f4742] transition hover:bg-white"
+              >
+                다시 시작
+              </button>
+            </div>
+          ) : null}
 
           {showResult ? (
             <div className="border border-[#111614] bg-[#111614] p-6 text-white sm:p-8">
               <div className="grid gap-8 md:grid-cols-[1fr_260px] md:items-center">
                 <div>
                   <p className="text-[13px] uppercase text-white/50">
-                    {resultToneLabels[outcome.tone]} result
+                    {resultToneLabels[outcome.tone]}
                   </p>
                   <div className="mt-5 text-[52px] leading-none">
                     {outcome.result.emoji}
                   </div>
                   <h3
-                    className="mt-5 text-[48px] uppercase leading-[0.92] sm:text-[64px]"
-                    style={{ fontFamily: '"Anton SC", sans-serif', letterSpacing: 0 }}
+                    className="mt-5 text-[42px] font-black leading-[1.02] sm:text-[58px]"
+                    style={{ letterSpacing: 0 }}
                   >
                     {outcome.result.name}
                   </h3>
