@@ -1,30 +1,23 @@
 export type ResultTypeId =
-  | 'minimalist'
-  | 'precision_tracker'
-  | 'optimizer'
-  | 'trend_chaser'
-  | 'collector'
-  | 'reset_seeker';
+  | 'runaway'
+  | 'undereater'
+  | 'plateau'
+  | 'rebound'
+  | 'defender'
+  | 'balanced';
 
 export type StackTypeId = ResultTypeId;
 export type ResultTone = 'normal' | 'strong' | 'roast';
 
 export type QuizDimension =
-  | 'volume'
-  | 'consistency'
-  | 'tracking'
-  | 'trendPull'
-  | 'overload'
-  | 'safetyAwareness';
+  | 'lossSpeed'
+  | 'protein'
+  | 'strengthTraining'
+  | 'intakeCapacity'
+  | 'recovery'
+  | 'maintenanceReadiness';
 
-export type RadarAxis =
-  | 'volume'
-  | 'consistency'
-  | 'tracking'
-  | 'trendPull'
-  | 'overload'
-  | 'safetyAwareness';
-
+export type RadarAxis = QuizDimension;
 export type DimensionVector = Record<RadarAxis, number>;
 export type RawDimensionVector = Record<QuizDimension, number>;
 
@@ -69,548 +62,297 @@ export interface QuizOutcome {
   dimensions: DimensionVector;
   rawDimensions: RawDimensionVector;
   selectedOptionIds: string[];
+  insights: string[];
+  doctorQuestions: string[];
 }
 
 export const RESULT_SCREEN_FOOTER =
-  'For fun and reflection only — not medical advice. Ask a qualified professional for health questions.';
+  '본 진단은 교육용 정보이며 의학적 진단·조언·처방을 대신하지 않습니다. GLP-1은 전문의약품이며 복용·용량·중단은 반드시 담당 의사와 상의하세요.';
 
-export const STACK_SCORE_WEIGHTS = {
-  consistency: 0.28,
-  tracking: 0.26,
-  safetyAwareness: 0.24,
-  overload: 0.22,
-} as const;
+export const RESERVATION_HEADLINE =
+  "약 끊었을 때 요요를 막는 '유지 코치'를 만들고 있어요.";
 
-// When scores tie, choose the result with the highest potential urgency first.
-// This nudges unclear, noisy stacks toward a reset path instead of a flattering label.
-export const RESULT_TIE_BREAK_ORDER: ResultTypeId[] = [
-  'reset_seeker',
-  'collector',
-  'trend_chaser',
-  'optimizer',
-  'precision_tracker',
-  'minimalist',
-];
+export const RESERVATION_SUBHEAD =
+  '창립 멤버로 먼저 여는 사전예약. 출시 안 되면 전액 환불.';
+
+export const DIMENSION_LABELS: Record<QuizDimension, string> = {
+  lossSpeed: '감량 속도',
+  protein: '단백질',
+  strengthTraining: '근력운동',
+  intakeCapacity: '섭취 여력',
+  recovery: '회복·컨디션',
+  maintenanceReadiness: '유지 준비도',
+};
 
 export const DIMENSION_LIMITS: Record<QuizDimension, { min: number; max: number }> = {
-  volume: { min: 0, max: 22 },
-  consistency: { min: -13, max: 18 },
-  tracking: { min: -5, max: 24 },
-  trendPull: { min: 0, max: 21 },
-  overload: { min: 0, max: 29 },
-  safetyAwareness: { min: -7, max: 14 },
+  lossSpeed: { min: 0, max: 9 },
+  protein: { min: 0, max: 9 },
+  strengthTraining: { min: 0, max: 9 },
+  intakeCapacity: { min: 0, max: 9 },
+  recovery: { min: 0, max: 9 },
+  maintenanceReadiness: { min: 0, max: 9 },
 };
+
+export const RESULT_TIE_BREAK_ORDER: ResultTypeId[] = [
+  'rebound',
+  'undereater',
+  'plateau',
+  'runaway',
+  'defender',
+  'balanced',
+];
 
 export const QUIZ_RESULTS: StackTypeResult[] = [
   {
-    id: 'minimalist',
-    emoji: '□',
-    name: 'The Minimalist',
-    shortName: 'Minimalist',
-    tagline: 'Few bottles. Fewer mysteries.',
-    rarity: 14,
-    description:
-      'Your stack is small, repeatable, and mostly under control. You are not trying to win the supplement internet. You want a routine that makes sense and stays boring in a good way.',
-    signals: [
-      'Low supplement count',
-      'Stable daily routine',
-      'Less influenced by trends',
-      'Clear reason for most items',
-    ],
-    resetHint:
-      'Keep the routine simple, but write down the reason for each item so it does not become autopilot.',
-    paidReportAngle:
-      'A one-page reset can help you protect the simplicity and spot any item that no longer earns its place.',
-    paywallHeadline: 'Keep it this clean as life adds bottles.',
-    shareCopy: {
-      normal: 'I got The Minimalist. My supplement stack is quiet, clean, and surprisingly adult.',
-      strong: 'I got The Minimalist. Apparently my stack is the least dramatic part of my life.',
-      roast: 'I got The Minimalist. My bottles are organized because my personality needed one easy win.',
-    },
-  },
-  {
-    id: 'precision_tracker',
-    emoji: '◎',
-    name: 'The Precision Tracker',
-    shortName: 'Tracker',
-    tagline: 'If it is not logged, did it even happen?',
-    rarity: 11,
-    description:
-      'You like structure. You notice timing, effects, and patterns. Your strength is discipline. Your risk is turning a simple routine into a spreadsheet with feelings.',
-    signals: [
-      'Tracks effects or timing',
-      'Likes repeatable routines',
-      'Checks labels and details',
-      'Makes changes deliberately',
-    ],
-    resetHint:
-      'Choose one tracking metric for the next 7 days. More data is not always more clarity.',
-    paidReportAngle:
-      'The reset report can turn your tracking habit into a cleaner Keep / Check / Track framework.',
-    paywallHeadline: 'Turn your tracking into one clear picture.',
-    shareCopy: {
-      normal: 'I got The Precision Tracker. My stack has notes, timing, and probably a tiny operations team.',
-      strong: 'I got The Precision Tracker. I do not supplement, I run a dashboard.',
-      roast: 'I got The Precision Tracker. My pill box has more process discipline than most startups.',
-    },
-  },
-  {
-    id: 'optimizer',
-    emoji: '◇',
-    name: 'The Optimizer',
-    shortName: 'Optimizer',
-    tagline: 'You do not buy supplements. You workshop them.',
-    rarity: 8,
-    description:
-      'You like testing ideas before committing. You compare options, ask AI, read threads, and try to build a stack that matches how you feel today. Your edge is curiosity. Your risk is endless optimization.',
-    signals: [
-      'Uses AI or deep research',
-      'Adapts based on daily condition',
-      'Enjoys experimenting',
-      'Wants a personal stack, not a popular one',
-    ],
-    resetHint:
-      'Before adding anything new, define the question you are trying to answer. No question, no experiment.',
-    paidReportAngle:
-      'The reset report can turn scattered experiments into a clean 7-day decision path.',
-    paywallHeadline: 'Give the endless optimizing a finish line.',
-    shareCopy: {
-      normal: 'I got The Optimizer. My routine is basically a conversation with my future self.',
-      strong: 'I got The Optimizer. I asked one question and somehow designed a supplement roadmap.',
-      roast: 'I got The Optimizer. My stack has more prompts than my workday.',
-    },
-  },
-  {
-    id: 'trend_chaser',
-    emoji: '↗',
-    name: 'The Trend Chaser',
-    shortName: 'Trend Chaser',
-    tagline: 'Your shelf has seen every new era.',
+    id: 'runaway',
+    emoji: '↘',
+    name: '폭주 감량형',
+    shortName: '폭주형',
+    tagline: '숫자는 잘 빠지는데, 안쪽도 같이 흔들리는 구간.',
     rarity: 22,
     description:
-      'You are curious and fast-moving. If a supplement keeps appearing in videos, newsletters, or group chats, it gets your attention. Your strength is discovery. Your risk is letting the internet write your routine.',
-    signals: [
-      'Influenced by social proof',
-      'Tries new products quickly',
-      'Has several half-used bottles',
-      'Routine changes often',
-    ],
+      '숫자는 잘 빠지는데 그 안에서 근육이 같이 빠지는 중. 지금 안 잡으면 끊었을 때 도로 찌는 뿌리가 여기예요.',
+    signals: ['최근 한 달 감량 속도가 빠름', '섭취량이 줄어듦', '회복감이 떨어짐', '유지 준비가 부족함'],
     resetHint:
-      'Pause new purchases for 7 days and list what each current item is supposed to do.',
+      '속도보다 구성이 먼저예요. 담당 의사에게 현재 속도와 근력 변화에 대해 확인할 질문을 정리하세요.',
     paidReportAngle:
-      'The reset report can separate useful discoveries from trend leftovers.',
-    paywallHeadline: 'Keep the hits, retire the rest.',
+      '유지 코치는 감량 속도, 단백질, 근력운동, 회복 신호를 한 화면에서 점검하는 방향으로 설계 중입니다.',
+    paywallHeadline: RESERVATION_HEADLINE,
     shareCopy: {
-      normal: 'I got The Trend Chaser. My stack is curious, social, and maybe a little too online.',
-      strong: 'I got The Trend Chaser. If the internet whispers, my cart listens.',
-      roast: 'I got The Trend Chaser. My supplement shelf has a faster content cycle than TikTok.',
+      normal: '내 근손실 위험은 {score}점, 폭주 감량형이래.',
+      strong: '{score}점 폭주 감량형. 잘 빠지는 게 다가 아니었네.',
+      roast: '근손실 위험 {score}점 폭주 감량형 인정… 오늘부터 단백질 좀 먹자.',
     },
   },
   {
-    id: 'collector',
-    emoji: '▦',
-    name: 'The Collector',
-    shortName: 'Collector',
-    tagline: 'A promising routine became a tiny archive.',
-    rarity: 28,
+    id: 'undereater',
+    emoji: '▽',
+    name: '저섭취 취약형',
+    shortName: '저섭취형',
+    tagline: '거의 못 먹는 구간. 근육이 먼저 흔들릴 수 있어요.',
+    rarity: 18,
     description:
-      'You have accumulated a lot. Some items are useful, some are forgotten, and some are there because past-you was extremely convincing. Your strength is willingness to try. Your risk is clutter without clarity.',
-    signals: [
-      'High supplement count',
-      'Some forgotten reasons',
-      'Overlapping goals',
-      'Routine feels hard to explain',
-    ],
+      '거의 못 먹는 구간. 단백질·영양이 바닥이라 근육이 제일 먼저 깎여요.',
+    signals: ['한 끼 양이 크게 줄어듦', '단백질 관리가 약함', '컨디션 저하가 있음', '물·전해질 관리가 부족함'],
     resetHint:
-      'Sort every bottle into three piles: Keep, Check, and Mystery. The Mystery pile is the real story.',
+      '무리해서 줄이는 문제가 아니라, 충분히 버틸 기반이 약한 상태일 수 있어요. 담당 의사에게 섭취 여력과 회복 신호를 같이 물어보세요.',
     paidReportAngle:
-      'The reset report is built for turning a crowded shelf into a practical 7-day cleanup plan.',
-    paywallHeadline: 'Sort the archive into Keep / Check / Mystery.',
+      '유지 코치는 부족한 축을 먼저 보여주고, 다음 상담 때 물어볼 질문을 정리하는 방향으로 준비 중입니다.',
+    paywallHeadline: RESERVATION_HEADLINE,
     shareCopy: {
-      normal: 'I got The Collector. My shelf has history, ambition, and a few open questions.',
-      strong: 'I got The Collector. My stack is less routine, more archaeological site.',
-      roast: 'I got The Collector. My cabinet looked at the quiz and asked for a lawyer.',
+      normal: '내 근손실 위험은 {score}점, 저섭취 취약형이래.',
+      strong: '{score}점 저섭취 취약형. 잘 빠지는 게 다가 아니었네.',
+      roast: '근손실 위험 {score}점 저섭취 취약형 인정… 오늘부터 단백질 좀 먹자.',
     },
   },
   {
-    id: 'reset_seeker',
+    id: 'plateau',
+    emoji: '＝',
+    name: '정체 고민형',
+    shortName: '정체형',
+    tagline: '효과가 둔해진 구간. 다음 선택이 중요해요.',
+    rarity: 16,
+    description:
+      '효과가 둔해진 구간. 여기서 뭘 조정하느냐가 근육과 다음 국면을 가릅니다.',
+    signals: ['효과 둔화 체감', '감량 속도 변화', '운동·단백질 루틴 점검 필요', '다음 상담 질문 필요'],
+    resetHint:
+      '정체기는 더 세게 밀기보다 현재 루틴을 점검할 타이밍이에요. 담당 의사와 몸 상태·유지 전략을 같이 확인하세요.',
+    paidReportAngle:
+      '유지 코치는 정체 구간에서 놓치기 쉬운 단백질, 근력운동, 회복 신호를 정리하는 방향입니다.',
+    paywallHeadline: RESERVATION_HEADLINE,
+    shareCopy: {
+      normal: '내 근손실 위험은 {score}점, 정체 고민형이래.',
+      strong: '{score}점 정체 고민형. 잘 빠지는 게 다가 아니었네.',
+      roast: '근손실 위험 {score}점 정체 고민형 인정… 오늘부터 단백질 좀 먹자.',
+    },
+  },
+  {
+    id: 'rebound',
     emoji: '↺',
-    name: 'The Reset Seeker',
-    shortName: 'Reset Seeker',
-    tagline: 'You do not need more. You need a clean start.',
-    rarity: 17,
+    name: '리바운드 경계형',
+    shortName: '리바운드형',
+    tagline: '유지 구간의 창이 열렸어요. 여기서 흐름이 갈립니다.',
+    rarity: 14,
     description:
-      'Your routine may not be huge, but it feels noisy. You want a calmer way to decide what stays, what needs checking, and what can wait. Your strength is self-awareness. Your risk is staying stuck because everything feels equally urgent.',
-    signals: [
-      'Feels unsure about the routine',
-      'Wants simplification',
-      'May skip or restart often',
-      'Needs a clear next step',
-    ],
+      '끊는(끊을) 구간 — 요요 위험이 가장 큰 창. 이 며칠을 어떻게 넘기냐가 다 결정해요.',
+    signals: ['유지 또는 종료 구간', '유지 계획 부족', '감량 이후 루틴 전환 필요', '회복·운동 점검 필요'],
     resetHint:
-      'Pick one week where the goal is not improvement. The goal is observation.',
+      '지금은 숫자보다 유지 루틴이 중요한 구간이에요. 담당 의사에게 종료 전후 관리와 근력 변화에 대해 질문하세요.',
     paidReportAngle:
-      'The reset report gives you a simple Keep / Check / Track / Ask map so the routine feels less foggy.',
-    paywallHeadline: 'One calm starting point instead of ten urgent ones.',
+      '유지 코치는 종료 전후의 루틴 공백을 줄이고, 상담 질문을 놓치지 않게 돕는 방향으로 만들고 있습니다.',
+    paywallHeadline: RESERVATION_HEADLINE,
     shareCopy: {
-      normal: 'I got The Reset Seeker. My stack does not need drama, it needs a calmer plan.',
-      strong: 'I got The Reset Seeker. The quiz said I need clarity before another checkout page.',
-      roast: 'I got The Reset Seeker. My stack is not broken, it is just emotionally buffering.',
+      normal: '내 근손실 위험은 {score}점, 리바운드 경계형이래.',
+      strong: '{score}점 리바운드 경계형. 잘 빠지는 게 다가 아니었네.',
+      roast: '근손실 위험 {score}점 리바운드 경계형 인정… 오늘부터 단백질 좀 먹자.',
+    },
+  },
+  {
+    id: 'defender',
+    emoji: '◆',
+    name: '근육 사수형',
+    shortName: '사수형',
+    tagline: '방향은 맞아요. 이제 유지력이 승부예요.',
+    rarity: 12,
+    description:
+      '방향은 맞아요. 근육 지키는 쪽으로 잘 가고 있고, 유지가 관건.',
+    signals: ['단백질 관리 양호', '근력운동 루틴 있음', '컨디션 비교적 안정', '유지 계획 점검 가능'],
+    resetHint:
+      '이미 좋은 축이 있어요. 이 루틴을 유지 구간에서도 이어갈 수 있는지 담당 의사와 점검하세요.',
+    paidReportAngle:
+      '유지 코치는 좋은 루틴이 끊기지 않도록 체크포인트와 질문을 정리하는 방향입니다.',
+    paywallHeadline: RESERVATION_HEADLINE,
+    shareCopy: {
+      normal: '내 근손실 위험은 {score}점, 근육 사수형이래.',
+      strong: '{score}점 근육 사수형. 잘 빠지는 게 다가 아니었네.',
+      roast: '근손실 위험 {score}점 근육 사수형 인정… 오늘부터 단백질 좀 먹자.',
+    },
+  },
+  {
+    id: 'balanced',
+    emoji: '◌',
+    name: '균형 관리형',
+    shortName: '균형형',
+    tagline: '큰 위험 신호는 낮지만, 방심하면 틈이 생겨요.',
+    rarity: 18,
+    description:
+      '큰 위험 신호는 없지만 방심 구간. 한두 개만 챙기면 근육을 더 지킵니다.',
+    signals: ['전반적 위험 낮음', '일부 축 보완 가능', '공유 가능한 기준점 확보', '상담 질문 정리 필요'],
+    resetHint:
+      '지금은 위험을 키우지 않는 관리가 중요해요. 약한 축 한두 개를 먼저 확인하세요.',
+    paidReportAngle:
+      '유지 코치는 현재 균형을 유지하고 약한 축만 빠르게 확인하는 방향으로 준비 중입니다.',
+    paywallHeadline: RESERVATION_HEADLINE,
+    shareCopy: {
+      normal: '내 근손실 위험은 {score}점, 균형 관리형이래.',
+      strong: '{score}점 균형 관리형. 잘 빠지는 게 다가 아니었네.',
+      roast: '근손실 위험 {score}점 균형 관리형 인정… 오늘부터 단백질 좀 먹자.',
     },
   },
 ];
 
 export const QUIZ_QUESTIONS: QuizQuestion[] = [
   {
-    id: 'daily_count',
-    eyebrow: 'Question 1',
-    title: 'How many supplements do you use on a normal day?',
-    helper: 'Count capsules, powders, gummies, drinks, and oils.',
+    id: 'journey_stage',
+    eyebrow: 'Q1',
+    title: '지금 GLP-1 여정 어디쯤이에요?',
     options: [
-      {
-        id: 'count_0_2',
-        label: '0 to 2',
-        weights: { minimalist: 4, reset_seeker: 1 },
-        dimensions: { volume: 0, consistency: 2 },
-      },
-      {
-        id: 'count_3_5',
-        label: '3 to 5',
-        weights: { precision_tracker: 2, optimizer: 1 },
-        dimensions: { volume: 2, consistency: 1 },
-      },
-      {
-        id: 'count_6_9',
-        label: '6 to 9',
-        weights: { optimizer: 2, collector: 3 },
-        dimensions: { volume: 5, overload: 2 },
-      },
-      {
-        id: 'count_10_plus',
-        label: '10 or more',
-        weights: { collector: 5, reset_seeker: 2 },
-        dimensions: { volume: 8, overload: 4 },
-      },
+      { id: 'stage_start', label: '막 시작 (1개월 미만)', dimensions: { maintenanceReadiness: 2 }, weights: { balanced: 1 } },
+      { id: 'stage_early_loss', label: '감량 초반', dimensions: { lossSpeed: 1, maintenanceReadiness: 2 }, weights: { balanced: 1 } },
+      { id: 'stage_mid_loss', label: '감량 중반', dimensions: { lossSpeed: 2, maintenanceReadiness: 2 }, weights: { runaway: 1 } },
+      { id: 'stage_plateau', label: '정체기(효과 둔화)', dimensions: { maintenanceReadiness: 4, recovery: 1 }, weights: { plateau: 8 } },
+      { id: 'stage_near_goal', label: '목표 근접', dimensions: { maintenanceReadiness: 4 }, weights: { rebound: 2 } },
+      { id: 'stage_maintenance', label: '유지 중', dimensions: { maintenanceReadiness: 5 }, weights: { rebound: 5 } },
+      { id: 'stage_stopped', label: '이미 끊음', dimensions: { maintenanceReadiness: 6 }, weights: { rebound: 7 } },
     ],
   },
   {
-    id: 'decision_style',
-    eyebrow: 'Question 2',
-    title: 'How do you decide what goes into today?',
+    id: 'duration',
+    eyebrow: 'Q2',
+    title: '사용한 지 얼마나 됐어요?',
     options: [
-      {
-        id: 'decision_fixed',
-        label: 'I follow the same routine most days',
-        weights: { minimalist: 3, precision_tracker: 3 },
-        dimensions: { consistency: 4, tracking: 1 },
-      },
-      {
-        id: 'decision_body',
-        label: 'I adjust based on how I feel',
-        weights: { optimizer: 3, reset_seeker: 1 },
-        dimensions: { consistency: -1, tracking: 1 },
-      },
-      {
-        id: 'decision_ai',
-        label: 'I discuss it with AI or research first',
-        weights: { optimizer: 5, precision_tracker: 1 },
-        dimensions: { tracking: 3, trendPull: 1 },
-      },
-      {
-        id: 'decision_social',
-        label: 'If everyone is talking about it, I check it out',
-        weights: { trend_chaser: 5, collector: 1 },
-        dimensions: { trendPull: 5, overload: 1 },
-      },
-      {
-        id: 'decision_random',
-        label: 'Honestly, whatever I remember',
-        weights: { collector: 3, reset_seeker: 4 },
-        dimensions: { consistency: -4, overload: 3 },
-      },
+      { id: 'duration_under_1m', label: '1개월 미만', dimensions: { maintenanceReadiness: 2 }, weights: { balanced: 1 } },
+      { id: 'duration_1_3m', label: '1~3개월', dimensions: { maintenanceReadiness: 2 }, weights: { balanced: 1 } },
+      { id: 'duration_3_6m', label: '3~6개월', dimensions: { maintenanceReadiness: 3 }, weights: { runaway: 1 } },
+      { id: 'duration_6m_plus', label: '6개월 이상', dimensions: { maintenanceReadiness: 4 }, weights: { rebound: 1, plateau: 1 } },
     ],
   },
   {
-    id: 'routine_memory',
-    eyebrow: 'Question 3',
-    title: 'How clearly do you remember why each item is in your stack?',
+    id: 'monthly_loss_speed',
+    eyebrow: 'Q3',
+    title: '최근 한 달, 체중이 빠지는 속도는?',
     options: [
-      {
-        id: 'memory_clear',
-        label: 'Very clearly',
-        weights: { minimalist: 2, precision_tracker: 3 },
-        dimensions: { tracking: 3, safetyAwareness: 2 },
-      },
-      {
-        id: 'memory_mostly',
-        label: 'Mostly, but a few are fuzzy',
-        weights: { optimizer: 1, reset_seeker: 2 },
-        dimensions: { overload: 1 },
-      },
-      {
-        id: 'memory_some',
-        label: 'Some bottles are basically mysteries',
-        weights: { collector: 4, reset_seeker: 3 },
-        dimensions: { overload: 4, consistency: -2 },
-      },
-      {
-        id: 'memory_none',
-        label: 'I remember the purchase, not the reason',
-        weights: { collector: 5, trend_chaser: 2 },
-        dimensions: { overload: 5, trendPull: 2 },
-      },
+      { id: 'loss_none', label: '거의 없음', dimensions: { lossSpeed: 0 }, weights: { plateau: 2, balanced: 1 } },
+      { id: 'loss_slow', label: '완만', dimensions: { lossSpeed: 2 }, weights: { balanced: 2, defender: 1 } },
+      { id: 'loss_fast', label: '빠름', dimensions: { lossSpeed: 6 }, weights: { runaway: 3 } },
+      { id: 'loss_very_fast', label: '매우 빠름', dimensions: { lossSpeed: 9 }, weights: { runaway: 5, undereater: 1 } },
     ],
   },
   {
-    id: 'shelf_state',
-    eyebrow: 'Question 4',
-    title: 'What does your supplement shelf look like?',
+    id: 'protein',
+    eyebrow: 'Q4',
+    title: '하루 단백질, 얼마나 챙겨요?',
     options: [
-      {
-        id: 'shelf_clean',
-        label: 'Small and easy to explain',
-        weights: { minimalist: 5 },
-        dimensions: { volume: 0, consistency: 3 },
-      },
-      {
-        id: 'shelf_labeled',
-        label: 'Organized, labeled, or tracked',
-        weights: { precision_tracker: 5 },
-        dimensions: { tracking: 4, consistency: 2 },
-      },
-      {
-        id: 'shelf_active',
-        label: 'A few active bottles, a few experiments',
-        weights: { optimizer: 3, trend_chaser: 2 },
-        dimensions: { trendPull: 2, overload: 1 },
-      },
-      {
-        id: 'shelf_crowded',
-        label: 'Crowded, but I swear it makes sense',
-        weights: { collector: 5, optimizer: 1 },
-        dimensions: { volume: 5, overload: 3 },
-      },
-      {
-        id: 'shelf_chaos',
-        label: 'A drawer, a bag, a backup drawer, and vibes',
-        weights: { collector: 5, reset_seeker: 3 },
-        dimensions: { volume: 6, overload: 5, consistency: -3 },
-      },
+      { id: 'protein_none', label: '거의 신경 안 씀', dimensions: { protein: 9 }, weights: { undereater: 4, runaway: 2 } },
+      { id: 'protein_sometimes', label: '가끔', dimensions: { protein: 6 }, weights: { balanced: 1, undereater: 2 } },
+      { id: 'protein_meals', label: '매끼 의식함', dimensions: { protein: 2 }, weights: { defender: 2, balanced: 1 } },
+      { id: 'protein_target', label: '목표량을 계산해서 챙김', dimensions: { protein: 0 }, weights: { defender: 5 } },
     ],
   },
   {
-    id: 'before_buying',
-    eyebrow: 'Question 5',
-    title: 'Before buying something new, what do you usually check?',
+    id: 'strength_training',
+    eyebrow: 'Q5',
+    title: '근력운동(웨이트·맨몸)은 주 몇 회?',
     options: [
-      {
-        id: 'buy_clinical',
-        label: 'Interactions, label warnings, or a clinician question',
-        weights: { precision_tracker: 3, minimalist: 1 },
-        dimensions: { safetyAwareness: 5, tracking: 2 },
-      },
-      {
-        id: 'buy_studies',
-        label: 'Studies, reviews, and whether it fits my goal',
-        weights: { optimizer: 3, precision_tracker: 2 },
-        dimensions: { tracking: 3, safetyAwareness: 2 },
-      },
-      {
-        id: 'buy_people',
-        label: 'What people online are saying',
-        weights: { trend_chaser: 5 },
-        dimensions: { trendPull: 5 },
-      },
-      {
-        id: 'buy_discount',
-        label: 'The sale, bundle, or limited-time offer',
-        weights: { trend_chaser: 3, collector: 3 },
-        dimensions: { trendPull: 3, overload: 2 },
-      },
-      {
-        id: 'buy_later',
-        label: 'I usually buy first and organize later',
-        weights: { collector: 5, reset_seeker: 2 },
-        dimensions: { overload: 4, safetyAwareness: -2 },
-      },
+      { id: 'training_none', label: '안 함', dimensions: { strengthTraining: 9 }, weights: { runaway: 2, undereater: 2 } },
+      { id: 'training_1_2', label: '주 1~2회', dimensions: { strengthTraining: 5 }, weights: { balanced: 1 } },
+      { id: 'training_3_4', label: '주 3~4회', dimensions: { strengthTraining: 1 }, weights: { defender: 4 } },
+      { id: 'training_5_plus', label: '주 5회 이상', dimensions: { strengthTraining: 0 }, weights: { defender: 5 } },
     ],
   },
   {
-    id: 'tracking_style',
-    eyebrow: 'Question 6',
-    title: 'How do you track whether your stack is helping?',
+    id: 'meal_amount',
+    eyebrow: 'Q6',
+    title: '요즘 한 끼 먹는 양은?',
     options: [
-      {
-        id: 'track_data',
-        label: 'Notes, metrics, sleep data, mood, or symptoms',
-        weights: { precision_tracker: 5, optimizer: 2 },
-        dimensions: { tracking: 5, consistency: 1 },
-      },
-      {
-        id: 'track_ai',
-        label: 'I summarize changes with AI or a checklist',
-        weights: { optimizer: 5, precision_tracker: 1 },
-        dimensions: { tracking: 4 },
-      },
-      {
-        id: 'track_memory',
-        label: 'I keep it in my head',
-        weights: { minimalist: 1, reset_seeker: 2 },
-        dimensions: { tracking: -1 },
-      },
-      {
-        id: 'track_feel',
-        label: 'I go by vibes and general energy',
-        weights: { trend_chaser: 2, reset_seeker: 2 },
-        dimensions: { tracking: -2, trendPull: 1 },
-      },
-      {
-        id: 'track_none',
-        label: 'I do not really track it',
-        weights: { collector: 3, reset_seeker: 4 },
-        dimensions: { tracking: -4, overload: 2 },
-      },
+      { id: 'meal_barely', label: '거의 못 먹음', dimensions: { intakeCapacity: 9, recovery: 3 }, weights: { undereater: 8 } },
+      { id: 'meal_half', label: '평소의 반 이하', dimensions: { intakeCapacity: 7, recovery: 2 }, weights: { undereater: 6, runaway: 1 } },
+      { id: 'meal_less', label: '조금 줄었다', dimensions: { intakeCapacity: 3 }, weights: { balanced: 1 } },
+      { id: 'meal_similar', label: '평소와 비슷', dimensions: { intakeCapacity: 0 }, weights: { defender: 1, balanced: 1 } },
     ],
   },
   {
-    id: 'skip_pattern',
-    eyebrow: 'Question 7',
-    title: 'What happens when your routine gets busy?',
+    id: 'support_intake',
+    eyebrow: 'Q7',
+    title: '단백질 말고 따로 챙기는 게 있어요?',
+    helper: '가장 가까운 항목 하나만 골라주세요.',
     options: [
-      {
-        id: 'skip_rare',
-        label: 'I rarely miss it',
-        weights: { precision_tracker: 3, minimalist: 2 },
-        dimensions: { consistency: 4 },
-      },
-      {
-        id: 'skip_flexible',
-        label: 'I skip without stress and restart tomorrow',
-        weights: { minimalist: 2, reset_seeker: 1 },
-        dimensions: { consistency: 1 },
-      },
-      {
-        id: 'skip_stack',
-        label: 'I accidentally combine random items later',
-        weights: { collector: 3, reset_seeker: 3 },
-        dimensions: { consistency: -3, overload: 3 },
-      },
-      {
-        id: 'skip_research',
-        label: 'I redesign the routine instead of doing it',
-        weights: { optimizer: 4, reset_seeker: 2 },
-        dimensions: { consistency: -2, tracking: 2 },
-      },
-      {
-        id: 'skip_forget',
-        label: 'I forget, then wonder if anything works',
-        weights: { reset_seeker: 5, collector: 2 },
-        dimensions: { consistency: -4, overload: 2 },
-      },
+      { id: 'support_none', label: '딱히 없음', dimensions: { intakeCapacity: 3, recovery: 1 }, weights: { undereater: 1 } },
+      { id: 'support_water', label: '물·전해질', dimensions: { intakeCapacity: 2, recovery: 1 }, weights: { balanced: 1 } },
+      { id: 'support_fiber', label: '식이섬유', dimensions: { intakeCapacity: 1 }, weights: { balanced: 1 } },
+      { id: 'support_full', label: '비타민·미네랄까지 챙김', dimensions: { intakeCapacity: 0, recovery: 0 }, weights: { defender: 1 } },
     ],
   },
   {
-    id: 'too_real',
-    eyebrow: 'Question 8',
-    title: 'Which sentence feels a little too real?',
+    id: 'recovery',
+    eyebrow: 'Q8',
+    title: '요즘 컨디션·회복력은?',
     options: [
-      {
-        id: 'real_simple',
-        label: 'I want fewer choices, not more bottles',
-        weights: { reset_seeker: 5, minimalist: 2 },
-        dimensions: { overload: 2 },
-      },
-      {
-        id: 'real_research',
-        label: 'Researching the stack is half the hobby',
-        weights: { optimizer: 4, precision_tracker: 1 },
-        dimensions: { tracking: 2, trendPull: 1 },
-      },
-      {
-        id: 'real_online',
-        label: 'My cart knows what trend I saw last night',
-        weights: { trend_chaser: 5 },
-        dimensions: { trendPull: 5, overload: 1 },
-      },
-      {
-        id: 'real_shelf',
-        label: 'I found a bottle and said, wait, I own this?',
-        weights: { collector: 5, reset_seeker: 2 },
-        dimensions: { volume: 3, overload: 5 },
-      },
-      {
-        id: 'real_notes',
-        label: 'I have notes on what changed and when',
-        weights: { precision_tracker: 5 },
-        dimensions: { tracking: 5, consistency: 2 },
-      },
+      { id: 'recovery_low', label: '기운 없고 자주 처진다', dimensions: { recovery: 8 }, weights: { runaway: 2, undereater: 2 } },
+      { id: 'recovery_okay', label: '그냥저냥', dimensions: { recovery: 5 }, weights: { balanced: 1 } },
+      { id: 'recovery_fine', label: '괜찮다', dimensions: { recovery: 2 }, weights: { balanced: 1, defender: 1 } },
+      { id: 'recovery_good', label: '좋다', dimensions: { recovery: 0 }, weights: { defender: 2 } },
     ],
   },
   {
-    id: 'safety_check',
-    eyebrow: 'Question 9',
-    title: 'How often do you check labels, timing, or possible conflicts?',
-    helper:
-      'This quiz is educational only. For medication, pregnancy, health conditions, or side effects, ask a qualified professional.',
+    id: 'muscle_change',
+    eyebrow: 'Q9',
+    title: '근육·근력 체감 변화는?',
     options: [
-      {
-        id: 'safety_often',
-        label: 'Often. I check before changing things',
-        weights: { precision_tracker: 4, minimalist: 1 },
-        dimensions: { safetyAwareness: 5, tracking: 2 },
-      },
-      {
-        id: 'safety_sometimes',
-        label: 'Sometimes, especially if something feels strong',
-        weights: { optimizer: 2, reset_seeker: 1 },
-        dimensions: { safetyAwareness: 2 },
-      },
-      {
-        id: 'safety_rarely',
-        label: 'Rarely. I mostly trust the product page',
-        weights: { trend_chaser: 3, collector: 2 },
-        dimensions: { safetyAwareness: -3, trendPull: 2 },
-      },
-      {
-        id: 'safety_unsure',
-        label: 'I am not sure what I should be checking',
-        weights: { reset_seeker: 5, collector: 1 },
-        dimensions: { safetyAwareness: -2, overload: 3 },
-      },
+      { id: 'muscle_down', label: '빠진 것 같다', dimensions: { recovery: 7, strengthTraining: 2 }, weights: { runaway: 3, undereater: 2 } },
+      { id: 'muscle_unsure', label: '잘 모르겠다', dimensions: { recovery: 4, maintenanceReadiness: 1 }, weights: { balanced: 1 } },
+      { id: 'muscle_same', label: '유지되는 듯', dimensions: { recovery: 1 }, weights: { defender: 2, balanced: 1 } },
+      { id: 'muscle_up', label: '오히려 늘었다', dimensions: { recovery: 0, strengthTraining: 0 }, weights: { defender: 4 } },
     ],
   },
   {
-    id: 'result_tone',
-    eyebrow: 'Final choice',
-    title: 'How should your result talk to you?',
-    helper: 'This only changes the share copy tone, not your result.',
+    id: 'stop_plan',
+    eyebrow: 'Q10',
+    title: '끊을 계획이 있어요?',
     options: [
-      {
-        id: 'tone_normal',
-        label: 'Normal',
-        helper: 'Clean, supportive, no punches.',
-        tone: 'normal',
-      },
-      {
-        id: 'tone_strong',
-        label: 'Strong',
-        helper: 'Clear and a little sharper.',
-        tone: 'strong',
-      },
-      {
-        id: 'tone_roast',
-        label: 'Roast me',
-        helper: 'Funny, dramatic, still harmless.',
-        tone: 'roast',
-      },
+      { id: 'stop_now', label: '지금 끊는 중', dimensions: { maintenanceReadiness: 9 }, weights: { rebound: 8 } },
+      { id: 'stop_soon', label: '3개월 내 끊을 것', dimensions: { maintenanceReadiness: 7 }, weights: { rebound: 7 } },
+      { id: 'stop_none', label: '아직 없음', dimensions: { maintenanceReadiness: 2 }, weights: { balanced: 1 } },
+      { id: 'stop_continue', label: '계속 맞을 것', dimensions: { maintenanceReadiness: 3 }, weights: { balanced: 1 } },
+      { id: 'stop_rebound', label: '이미 끊고 요요 겪는 중', dimensions: { maintenanceReadiness: 9, recovery: 2 }, weights: { rebound: 9 } },
     ],
   },
 ];
 
 export const QUIZ_CONFIG = {
-  id: 'stack-type-v2',
-  title: 'What is your supplement stack type?',
-  estimatedTime: '60 seconds',
+  id: 'glp1-muscle-risk-v1',
+  title: '당신의 GLP-1 근손실 위험은 몇 점일까?',
+  estimatedTime: '60초',
   disclaimer: RESULT_SCREEN_FOOTER,
   questions: QUIZ_QUESTIONS,
   results: QUIZ_RESULTS,

@@ -2,49 +2,48 @@ import assert from 'node:assert/strict';
 import { calculateQuizOutcome, chooseResultType } from '../src/lib/scoring.ts';
 import type { ResultTypeId } from '../src/config/quiz.ts';
 
-const minimalistOutcome = calculateQuizOutcome([
-  'count_0_2',
-  'decision_fixed',
-  'memory_clear',
-  'shelf_clean',
-  'buy_clinical',
-  'track_memory',
-  'skip_flexible',
-  'real_simple',
-  'safety_often',
-  'tone_strong',
+const reboundOutcome = calculateQuizOutcome([
+  'stage_maintenance',
+  'duration_6m_plus',
+  'loss_slow',
+  'protein_sometimes',
+  'training_1_2',
+  'meal_less',
+  'support_water',
+  'recovery_okay',
+  'muscle_unsure',
+  'stop_soon',
 ]);
 
-assert.equal(minimalistOutcome.resultType, 'minimalist');
-assert.equal(minimalistOutcome.tone, 'strong');
-assert.equal(minimalistOutcome.stackScore, 74);
+assert.equal(reboundOutcome.resultType, 'rebound');
+assert.equal(reboundOutcome.tone, 'strong');
+assert.equal(reboundOutcome.doctorQuestions.length, 3);
 
-const collectorOutcome = calculateQuizOutcome([
-  'count_10_plus',
-  'decision_random',
-  'memory_none',
-  'shelf_chaos',
-  'buy_later',
-  'track_none',
-  'skip_stack',
-  'real_shelf',
-  'safety_unsure',
-  'tone_roast',
+const defenderOutcome = calculateQuizOutcome([
+  'stage_mid_loss',
+  'duration_3_6m',
+  'loss_slow',
+  'protein_target',
+  'training_3_4',
+  'meal_similar',
+  'support_full',
+  'recovery_good',
+  'muscle_same',
+  'stop_none',
 ]);
 
-assert.equal(collectorOutcome.resultType, 'collector');
-assert.equal(collectorOutcome.tone, 'roast');
-assert.equal(collectorOutcome.stackScore, 7);
+assert.equal(defenderOutcome.resultType, 'defender');
+assert.ok(defenderOutcome.stackScore < 35);
 
 const tiedScores = new Map<ResultTypeId, number>([
-  ['minimalist', 4],
-  ['precision_tracker', 4],
-  ['optimizer', 4],
-  ['trend_chaser', 4],
-  ['collector', 4],
-  ['reset_seeker', 4],
+  ['runaway', 4],
+  ['undereater', 4],
+  ['plateau', 4],
+  ['rebound', 4],
+  ['defender', 4],
+  ['balanced', 4],
 ]);
 
-assert.equal(chooseResultType(tiedScores), 'reset_seeker');
+assert.equal(chooseResultType(tiedScores), 'rebound');
 
 console.log('Scoring tests passed.');

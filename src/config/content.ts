@@ -1,88 +1,78 @@
 // ============================================================
 // Site Content Configuration — 텍스트/데이터 관리
 // ============================================================
-// 사이트에 표시되는 모든 텍스트를 여기서 수정할 수 있습니다.
-// ============================================================
 
 export const SITE_CONFIG = {
-  // 브랜드
   brandName: 'Stack Clarity',
-  copyright: '© 2026 Stack Clarity. All rights reserved.',
+  copyright: '© 2026 Stack Clarity',
 
-  // 히어로 섹션
   hero: {
-    titleLeft: ['What is your', 'supplement'],
-    titleRight: ['stack', 'type?'],
-    watermark: 'STACK?',
+    titleLeft: ['GLP-1', '근손실'],
+    titleRight: ['위험', '몇 점?'],
+    watermark: 'MUSCLE?',
     description:
-      'Take the 60-second quiz, get your Stack Type, and see whether your routine is clean, chaotic, or quietly doing too much.',
+      '마운자로·위고비 맞는 중이라면 60초 진단. 잘 빠지는 게 다가 아닙니다 — 뭐가 같이 빠지는지가 중요해요.',
   },
 
-  // 시네마틱 텍스트 섹션
   cinematic: {
-    text: 'Your supplement stack is not random. It has a type.',
+    text: '끊고 나서야 알게 돼요. 빠진 게 지방만이 아니었다는 걸.',
   },
 
-  // 성능 지표 섹션
   metrics: {
-    subtitle: 'Why people share it',
+    subtitle: '무료 진단이 보여주는 것',
     items: [
-      { value: '60 sec', label: 'Free Stack Type Quiz' },
-      { value: 'Share', label: 'Result worth sending to friends' },
-      { value: '$7', label: 'Optional one-page reset' },
+      { value: '60초', label: '무료 근손실 위험 진단' },
+      { value: '6축', label: '근손실 위험 분석' },
+      { value: '공유', label: '결과 카드' },
     ],
   },
 
-  // 기술 섹션
   technology: {
-    title: ['Your stack', 'has a type'],
+    title: ['진단이', '알려주는 것'],
     description:
-      'No diagnosis. No miracle claims. Just a faster way to understand the routine you already built.',
+      '의학적 판단을 대신하지 않습니다. 내 상태를 정리하고 담당 의사에게 더 나은 질문을 하기 위한 교육용 진단입니다.',
     features: [
       {
-        title: 'Stack Type',
-        desc: 'A personality-style result that feels personal enough to share.',
+        title: '위험 타입',
+        desc: '현재 구간을 폭주 감량형, 저섭취 취약형, 리바운드 경계형 등으로 보여줍니다.',
       },
       {
-        title: 'Messiness Score',
-        desc: 'A quick number that makes your routine feel visible.',
+        title: '위험 점수',
+        desc: '감량 속도, 단백질, 근력운동, 섭취 여력, 회복, 유지 준비도를 0~100으로 정리합니다.',
       },
       {
-        title: 'Gentle or Roast',
-        desc: 'Pick the tone before your result becomes a share card.',
+        title: '6축 레이더',
+        desc: '어느 축이 약한지 한눈에 보고 상담 전 질문을 준비할 수 있습니다.',
       },
       {
-        title: 'Reset Hint',
-        desc: 'One clear next step before buying another bottle.',
+        title: '물어볼 질문',
+        desc: '진료 때 바로 가져갈 수 있는 질문 3개를 무료 결과에 포함합니다.',
       },
     ],
   },
 
-  // 아키텍처 섹션
   architecture: {
-    subtitle: 'Paid Report',
-    heading: 'From "I take a lot" to a clean 7-day reset.',
+    subtitle: 'Early Access',
+    heading: "약 끊었을 때 요요를 막는 '유지 코치'를 만들고 있어요.",
     description:
-      'The report turns your current routine into a practical Keep / Check / Track / Ask framework.',
+      '감량 이후의 공백을 줄이기 위해 위험 축, 상담 질문, 유지 체크포인트를 한곳에 모으는 코치를 준비 중입니다. 미출시 시 전액 환불됩니다.',
     layers: [
-      { num: 1, name: 'Keep / Check' },
-      { num: 2, name: 'Track / Ask' },
-      { num: 3, name: '7-Day Reset' },
+      { num: 1, name: '위험 축 확인' },
+      { num: 2, name: '상담 질문 정리' },
+      { num: 3, name: '유지 체크포인트' },
     ],
   },
 
-  // 푸터
   footer: {
     tagline:
-      'Find your Stack Type, clean up the routine, and ask better questions. Educational only, not medical advice.',
+      '내 근손실 위험을 알고, 근육 지키며 감량하고, 더 나은 질문을 하세요. 본 서비스는 교육용 정보이며 의학적 조언을 대신하지 않습니다.',
   },
 
-  // 네비게이션
   nav: {
     links: [
-      { label: 'How it works', scrollMultiplier: 1 },
-      { label: 'Pricing', scrollMultiplier: 2 },
+      { label: '진단 방식', scrollMultiplier: 1 },
+      { label: '사전예약', scrollMultiplier: 2 },
     ],
-    downloadLabel: 'Take Quiz',
+    downloadLabel: '무료 진단',
   },
 };

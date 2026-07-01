@@ -15,6 +15,7 @@ interface ShareCardProps {
 export function ShareCard({ outcome, format = 'feed' }: ShareCardProps) {
   const cardRef = useRef<HTMLDivElement>(null);
   const { result, tone, dimensions, stackScore } = outcome;
+  const shareCopy = result.shareCopy[tone].replace('{score}', String(stackScore));
   const isStory = format === 'story';
   const width = 1080;
   const height = isStory ? 1920 : 1080;
@@ -32,7 +33,7 @@ export function ShareCard({ outcome, format = 'feed' }: ShareCardProps) {
     });
 
     const link = document.createElement('a');
-    link.download = `mystacktype-${result.id}-${format}.png`;
+    link.download = `stack-clarity-${result.id}-${format}.png`;
     link.href = dataUrl;
     link.click();
     trackQuizEvent({
@@ -53,7 +54,7 @@ export function ShareCard({ outcome, format = 'feed' }: ShareCardProps) {
         <div className="relative flex h-full flex-col justify-between p-20">
           <div>
             <p className="text-4xl uppercase tracking-[0.22em] text-white/58">
-              MyStackType
+              Stack Clarity
             </p>
             <div className="mt-12 text-[112px] leading-none">{result.emoji}</div>
             <h2 className="mt-10 max-w-[840px] text-[86px] font-semibold leading-[0.98]">
@@ -67,10 +68,10 @@ export function ShareCard({ outcome, format = 'feed' }: ShareCardProps) {
           <div className="grid grid-cols-[1fr_360px] items-end gap-12">
             <div>
               <p className="text-[42px] leading-tight text-[#90ffbe]">
-                {result.shareCopy[tone]}
+                {shareCopy}
               </p>
               <div className="mt-10 flex gap-4 text-[32px] text-white/64">
-                <span>Stack Score {stackScore}</span>
+                <span>위험 점수 {stackScore}</span>
                 <span>·</span>
                 <span>{result.rarity}% rarity</span>
               </div>
@@ -79,7 +80,7 @@ export function ShareCard({ outcome, format = 'feed' }: ShareCardProps) {
           </div>
 
           <p className="border-t border-white/14 pt-8 text-[26px] text-white/42">
-            entertainment quiz · not medical advice
+            교육용 진단 · 의학적 조언 아님
           </p>
           <span className="sr-only">{RESULT_SCREEN_FOOTER}</span>
         </div>
@@ -90,7 +91,7 @@ export function ShareCard({ outcome, format = 'feed' }: ShareCardProps) {
         onClick={handleDownload}
         className="rounded border border-white/20 px-4 py-2 text-sm text-white hover:bg-white/10"
       >
-        Download share image
+        공유 이미지 저장
       </button>
     </div>
   );

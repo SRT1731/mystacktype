@@ -58,8 +58,13 @@ export function QuizExperience({ onClose }: QuizExperienceProps) {
     });
   }
 
+  const shareCopy = outcome.result.shareCopy[outcome.tone].replace(
+    '{score}',
+    String(outcome.stackScore)
+  );
+
   async function handleShare() {
-    const shareText = `${outcome.result.shareCopy[outcome.tone]}\n${window.location.href}`;
+    const shareText = `${shareCopy}\n${window.location.href}`;
     const canNativeShare = 'share' in navigator;
 
     trackQuizEvent({
@@ -70,7 +75,7 @@ export function QuizExperience({ onClose }: QuizExperienceProps) {
 
     if (canNativeShare) {
       await navigator.share({
-        title: `MyStackType: ${outcome.result.name}`,
+        title: `Stack Clarity: ${outcome.result.name}`,
         text: shareText,
         url: window.location.href,
       });
@@ -78,7 +83,7 @@ export function QuizExperience({ onClose }: QuizExperienceProps) {
     }
 
     await navigator.clipboard.writeText(shareText);
-    alert('Share text copied.');
+    alert('공유 문구를 복사했어요.');
   }
 
   function handleReset() {
@@ -91,23 +96,23 @@ export function QuizExperience({ onClose }: QuizExperienceProps) {
       className="fixed inset-0 z-[100] bg-[#030503]/78 p-3 text-[#111614] backdrop-blur-xl sm:p-5"
       role="dialog"
       aria-modal="true"
-      aria-label="MyStackType quiz"
+      aria-label="Stack Clarity quiz"
     >
       <div className="mx-auto flex h-full max-w-6xl flex-col overflow-hidden border border-white/15 bg-[#f8faf6] shadow-2xl">
         <div className="flex items-center justify-between border-b border-[#dbe4dc] bg-white px-4 py-3 sm:px-6">
           <div>
             <p className="text-[11px] font-bold uppercase text-[#3166ff]">
-              Free stack type quiz
+              무료 근손실 위험 진단
             </p>
             <p className="mt-1 text-[12px] text-[#66706a]">
-              {answeredCount}/{questions.length} answered
+              {answeredCount}/{questions.length} 완료
             </p>
           </div>
           <button
             type="button"
             onClick={onClose}
             className="flex h-10 w-10 items-center justify-center border border-[#dbe4dc] bg-[#f8faf6] text-[22px] leading-none text-[#111614] transition hover:bg-white"
-            aria-label="Close quiz"
+            aria-label="진단 닫기"
           >
             ×
           </button>
@@ -116,17 +121,16 @@ export function QuizExperience({ onClose }: QuizExperienceProps) {
         <div className="grid flex-1 gap-8 overflow-y-auto p-4 sm:p-6 lg:grid-cols-[0.78fr_1.22fr] lg:p-8">
         <div className="lg:sticky lg:top-0 lg:self-start">
           <p className="mb-5 text-[12px] font-bold uppercase text-[#3166ff]">
-            Free stack type quiz
+            60초 GLP-1 근손실 위험 진단
           </p>
           <h2
             className="max-w-xl text-[46px] uppercase leading-[0.92] sm:text-[64px]"
             style={{ fontFamily: '"Anton SC", sans-serif', letterSpacing: 0 }}
           >
-            Find your supplement stack type
+            당신의 근손실 위험은 몇 점일까?
           </h2>
           <p className="mt-6 max-w-md text-[15px] leading-relaxed text-[#4d5852]">
-            Answer 10 quick questions. You will get a stack type, Stack Score,
-            share line, and a cleaner next-step frame.
+            10문항으로 위험 타입, 점수, 6축 레이더, 담당 의사에게 물어볼 질문을 정리합니다.
           </p>
           <div className="mt-8 h-2 w-full max-w-md overflow-hidden rounded-full bg-[#dfe7df]">
             <div
@@ -191,7 +195,7 @@ export function QuizExperience({ onClose }: QuizExperienceProps) {
               disabled={!isComplete}
               className="h-[54px] flex-1 bg-[#3166ff] px-6 text-[15px] font-bold text-white transition hover:bg-[#2455dc] disabled:cursor-not-allowed disabled:bg-[#b9c2bb]"
             >
-              Reveal My Stack Type
+              결과 보기
             </button>
             <button
               type="button"
@@ -226,10 +230,10 @@ export function QuizExperience({ onClose }: QuizExperienceProps) {
                   </p>
                   <div className="mt-6 flex flex-wrap gap-3 text-[13px]">
                     <span className="border border-white/18 px-3 py-2">
-                      Stack Score {outcome.stackScore}
+                      위험 점수 {outcome.stackScore}
                     </span>
                     <span className="border border-white/18 px-3 py-2">
-                      Rarity {outcome.result.rarity}%
+                      희귀도 {outcome.result.rarity}%
                     </span>
                   </div>
                 </div>
@@ -238,16 +242,37 @@ export function QuizExperience({ onClose }: QuizExperienceProps) {
 
               <div className="mt-8 grid gap-4 md:grid-cols-2">
                 <div className="border border-white/14 p-4">
-                  <p className="text-[12px] uppercase text-white/42">Share line</p>
+                  <p className="text-[12px] uppercase text-white/42">한 줄 결과</p>
                   <p className="mt-3 text-[15px] leading-relaxed text-white/82">
-                    {outcome.result.shareCopy[outcome.tone]}
+                    {outcome.result.description}
                   </p>
                 </div>
                 <div className="border border-white/14 p-4">
-                  <p className="text-[12px] uppercase text-white/42">Reset angle</p>
+                  <p className="text-[12px] uppercase text-white/42">사전예약</p>
                   <p className="mt-3 text-[15px] leading-relaxed text-white/82">
                     {outcome.result.paywallHeadline}
                   </p>
+                </div>
+              </div>
+
+              <div className="mt-4 grid gap-4 md:grid-cols-2">
+                <div className="border border-white/14 p-4">
+                  <p className="text-[12px] uppercase text-white/42">맞춤 인사이트</p>
+                  <ul className="mt-3 space-y-2 text-[14px] leading-relaxed text-white/78">
+                    {outcome.insights.map((insight) => (
+                      <li key={insight}>• {insight}</li>
+                    ))}
+                  </ul>
+                </div>
+                <div className="border border-white/14 p-4">
+                  <p className="text-[12px] uppercase text-white/42">
+                    진료 때 물어볼 질문
+                  </p>
+                  <ul className="mt-3 space-y-2 text-[14px] leading-relaxed text-white/78">
+                    {outcome.doctorQuestions.map((question) => (
+                      <li key={question}>• {question}</li>
+                    ))}
+                  </ul>
                 </div>
               </div>
 
@@ -257,7 +282,7 @@ export function QuizExperience({ onClose }: QuizExperienceProps) {
                   onClick={handleShare}
                   className="h-[50px] bg-[#57c84d] px-5 text-[14px] font-bold text-[#111614] transition hover:bg-[#6ee064]"
                 >
-                  Share Result
+                  결과 공유
                 </button>
                 <a
                   href="#pricing"
@@ -269,7 +294,7 @@ export function QuizExperience({ onClose }: QuizExperienceProps) {
                   }
                   className="flex h-[50px] items-center justify-center border border-white/18 px-5 text-[14px] font-bold text-white transition hover:bg-white/10"
                 >
-                  See Reset Report
+                  사전예약 보기
                 </a>
               </div>
 

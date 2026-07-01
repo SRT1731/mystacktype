@@ -8,9 +8,10 @@ import { useAuth } from '../contexts/AuthContext';
 
 interface NavbarProps {
   entranceComplete: boolean;
+  onQuizOpen: () => void;
 }
 
-export function Navbar({ entranceComplete }: NavbarProps) {
+export function Navbar({ entranceComplete, onQuizOpen }: NavbarProps) {
   const [menuOpen, setMenuOpen] = useState(false);
   const [downloadHovered, setDownloadHovered] = useState(false);
   const [aboutHovered, setAboutHovered] = useState(false);
@@ -86,7 +87,7 @@ export function Navbar({ entranceComplete }: NavbarProps) {
                       onMouseLeave={() => setAboutHovered(false)}
                       onClick={() => scrollTo(window.innerHeight)}
                     >
-                      <ScrambleText text="About" isHovered={aboutHovered} />
+                      <ScrambleText text="진단 방식" isHovered={aboutHovered} />
                     </button>
                     <button
                       className="text-[16px] font-normal text-white/85 hover:text-white transition-colors cursor-pointer bg-transparent border-none"
@@ -94,7 +95,7 @@ export function Navbar({ entranceComplete }: NavbarProps) {
                       onMouseLeave={() => setMetricsHovered(false)}
                       onClick={() => scrollTo(window.innerHeight * 2)}
                     >
-                      <ScrambleText text="Metrics" isHovered={metricsHovered} />
+                      <ScrambleText text="분석" isHovered={metricsHovered} />
                     </button>
                   </motion.div>
                 )}
@@ -147,9 +148,10 @@ export function Navbar({ entranceComplete }: NavbarProps) {
               whileTap={{ scale: 0.97 }}
               onMouseEnter={() => setDownloadHovered(true)}
               onMouseLeave={() => setDownloadHovered(false)}
+              onClick={onQuizOpen}
             >
               <span className="text-black text-[16px] font-medium">
-                <ScrambleText text="Take Quiz" isHovered={downloadHovered} />
+                <ScrambleText text="무료 진단" isHovered={downloadHovered} />
               </span>
             </motion.button>
           </div>
@@ -204,13 +206,13 @@ export function Navbar({ entranceComplete }: NavbarProps) {
                       className="text-[13px] font-normal text-white/85 cursor-pointer bg-transparent border-none"
                       onClick={() => scrollTo(window.innerHeight)}
                     >
-                      About
+                      진단 방식
                     </button>
                     <button
                       className="text-[13px] font-normal text-white/85 cursor-pointer bg-transparent border-none"
                       onClick={() => scrollTo(window.innerHeight * 2)}
                     >
-                      Metrics
+                      분석
                     </button>
                   </motion.div>
                 )}
@@ -249,8 +251,9 @@ export function Navbar({ entranceComplete }: NavbarProps) {
             <motion.button
               className="h-9 px-3.5 bg-white rounded-full flex items-center gap-1.5 cursor-pointer border-none shrink-0"
               whileTap={{ scale: 0.95 }}
+              onClick={onQuizOpen}
             >
-              <span className="text-black text-[13px] font-medium">Take Quiz</span>
+              <span className="text-black text-[13px] font-medium">무료 진단</span>
             </motion.button>
           </div>
         </div>

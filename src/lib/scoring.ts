@@ -1,9 +1,9 @@
 import {
+  DIMENSION_LABELS,
   DIMENSION_LIMITS,
   QUIZ_QUESTIONS,
   QUIZ_RESULTS,
   RESULT_TIE_BREAK_ORDER,
-  STACK_SCORE_WEIGHTS,
   type DimensionVector,
   type QuizDimension,
   type QuizOutcome,
@@ -11,6 +11,33 @@ import {
   type ResultTone,
   type ResultTypeId,
 } from '../config/quiz';
+
+const DIMENSION_KEYS: QuizDimension[] = [
+  'lossSpeed',
+  'protein',
+  'strengthTraining',
+  'intakeCapacity',
+  'recovery',
+  'maintenanceReadiness',
+];
+
+const INSIGHT_COPY: Record<QuizDimension, string> = {
+  lossSpeed: '감량 속도 축이 높아요. 숫자 변화만 보지 말고 근력·컨디션 변화도 같이 확인할 구간이에요.',
+  protein: '단백질 축이 높아요. 근육을 지키는 기반이 약해질 수 있어 담당 의사에게 섭취 여력을 물어보는 게 좋아요.',
+  strengthTraining: '근력운동 축이 높아요. 운동 루틴이 약하면 감량 후 유지력이 흔들릴 수 있어요.',
+  intakeCapacity: '섭취 여력 축이 높아요. 거의 못 먹는 날이 이어지면 회복과 근력 체감이 같이 흔들릴 수 있어요.',
+  recovery: '회복·컨디션 축이 높아요. 기운, 회복감, 근력 체감 변화를 상담 때 구체적으로 말할 준비가 필요해요.',
+  maintenanceReadiness: '유지 준비도 축이 높아요. 종료 전후 루틴 공백이 생기지 않게 미리 질문을 정리하세요.',
+};
+
+const DOCTOR_QUESTION_COPY: Record<QuizDimension, string> = {
+  lossSpeed: '최근 감량 속도와 근력 체감 변화를 같이 보면 어떤 점을 확인해야 하나요?',
+  protein: '현재 식사량에서 단백질과 영양 상태를 어떻게 점검하면 좋을까요?',
+  strengthTraining: '제 상태에서 근력운동 루틴을 어느 정도로 잡는 게 안전할까요?',
+  intakeCapacity: '식사량이 줄어든 기간이 길어질 때 어떤 신호를 봐야 하나요?',
+  recovery: '기운 없음, 회복감 저하, 근력 체감 변화가 있을 때 어떤 검사가 도움이 될까요?',
+  maintenanceReadiness: '유지 구간으로 넘어가기 전 어떤 계획을 세워야 요요 위험을 낮출 수 있을까요?',
+};
 
 export function calculateQuizOutcome(selectedOptionIds: string[]): QuizOutcome {
   const resultScores = initializeResultScores();
@@ -39,45 +66,80 @@ export function calculateQuizOutcome(selectedOptionIds: string[]): QuizOutcome {
     }
   }
 
-  const resultType = chooseResultType(resultScores);
-  const result = QUIZ_RESULTS.find((item) => item.id === resultType) ?? QUIZ_RESULTS[0];
   const dimensions = normalizeDimensions(rawDimensions);
-  const stackScore = calculateStackScore(dimensions);
+  const stackScore = calculateRiskScore(dimensions);
+  const resultType = chooseResultType(resultScores, selectedOptionIds, stackScore);
+  const result = QUIZ_RESULTS.find((item) => item.id === resultType) ?? QUIZ_RESULTS[0];
 
   return {
     resultType,
     result,
     tone,
     stackScore,
-    messinessScore: 100 - stackScore,
+    messinessScore: stackScore,
     dimensions,
     rawDimensions,
     selectedOptionIds,
+    insights: buildInsights(dimensions),
+    doctorQuestions: buildDoctorQuestions(dimensions),
   };
 }
 
-export function calculateStackScore(dimensions: DimensionVector): number {
-  const score =
-    STACK_SCORE_WEIGHTS.consistency * dimensions.consistency +
-    STACK_SCORE_WEIGHTS.tracking * dimensions.tracking +
-    STACK_SCORE_WEIGHTS.safetyAwareness * dimensions.safetyAwareness +
-    STACK_SCORE_WEIGHTS.overload * (1 - dimensions.overload);
+export function calculateRiskScore(dimensions: DimensionVector): number {
+  const average =
+    DIMENSION_KEYS.reduce((sum, dimension) => sum + dimensions[dimension], 0) /
+    DIMENSION_KEYS.length;
 
-  return clamp(Math.round(100 * score), 0, 100);
+  return clamp(Math.round(average * 100), 0, 100);
 }
+
+export const calculateStackScore = calculateRiskScore;
 
 export function normalizeDimensions(rawDimensions: RawDimensionVector): DimensionVector {
   return {
-    volume: normalizeDimension('volume', rawDimensions.volume),
-    consistency: normalizeDimension('consistency', rawDimensions.consistency),
-    tracking: normalizeDimension('tracking', rawDimensions.tracking),
-    trendPull: normalizeDimension('trendPull', rawDimensions.trendPull),
-    overload: normalizeDimension('overload', rawDimensions.overload),
-    safetyAwareness: normalizeDimension('safetyAwareness', rawDimensions.safetyAwareness),
+    lossSpeed: normalizeDimension('lossSpeed', rawDimensions.lossSpeed),
+    protein: normalizeDimension('protein', rawDimensions.protein),
+    strengthTraining: normalizeDimension(
+      'strengthTraining',
+      rawDimensions.strengthTraining
+    ),
+    intakeCapacity: normalizeDimension('intakeCapacity', rawDimensions.intakeCapacity),
+    recovery: normalizeDimension('recovery', rawDimensions.recovery),
+    maintenanceReadiness: normalizeDimension(
+      'maintenanceReadiness',
+      rawDimensions.maintenanceReadiness
+    ),
   };
 }
 
-export function chooseResultType(scores: Map<ResultTypeId, number>): ResultTypeId {
+export function chooseResultType(
+  scores: Map<ResultTypeId, number>,
+  selectedOptionIds: string[] = [],
+  riskScore = 0
+): ResultTypeId {
+  if (selectedOptionIds.includes('stage_plateau')) return 'plateau';
+
+  if (
+    selectedOptionIds.some((id) =>
+      ['stop_now', 'stop_soon', 'stop_rebound', 'stage_maintenance', 'stage_stopped'].includes(id)
+    )
+  ) {
+    return 'rebound';
+  }
+
+  if (selectedOptionIds.some((id) => ['meal_barely', 'meal_half'].includes(id))) {
+    return 'undereater';
+  }
+
+  if (riskScore >= 70) return 'runaway';
+
+  if (
+    selectedOptionIds.includes('protein_target') &&
+    selectedOptionIds.some((id) => ['training_3_4', 'training_5_plus'].includes(id))
+  ) {
+    return 'defender';
+  }
+
   const maxScore = Math.max(...scores.values());
   const tied = [...scores.entries()]
     .filter(([, score]) => score === maxScore)
@@ -86,7 +148,7 @@ export function chooseResultType(scores: Map<ResultTypeId, number>): ResultTypeI
   return (
     RESULT_TIE_BREAK_ORDER.find((id) => tied.includes(id)) ??
     tied[0] ??
-    QUIZ_RESULTS[0].id
+    'balanced'
   );
 }
 
@@ -96,13 +158,33 @@ function initializeResultScores(): Map<ResultTypeId, number> {
 
 function emptyRawDimensions(): RawDimensionVector {
   return {
-    volume: 0,
-    consistency: 0,
-    tracking: 0,
-    trendPull: 0,
-    overload: 0,
-    safetyAwareness: 0,
+    lossSpeed: 0,
+    protein: 0,
+    strengthTraining: 0,
+    intakeCapacity: 0,
+    recovery: 0,
+    maintenanceReadiness: 0,
   };
+}
+
+function buildInsights(dimensions: DimensionVector): string[] {
+  return topRiskDimensions(dimensions)
+    .slice(0, 3)
+    .map((dimension) => INSIGHT_COPY[dimension]);
+}
+
+function buildDoctorQuestions(dimensions: DimensionVector): string[] {
+  return topRiskDimensions(dimensions)
+    .slice(0, 3)
+    .map((dimension) => DOCTOR_QUESTION_COPY[dimension]);
+}
+
+function topRiskDimensions(dimensions: DimensionVector): QuizDimension[] {
+  return [...DIMENSION_KEYS].sort((a, b) => {
+    const valueDiff = dimensions[b] - dimensions[a];
+    if (valueDiff !== 0) return valueDiff;
+    return DIMENSION_LABELS[a].localeCompare(DIMENSION_LABELS[b], 'ko');
+  });
 }
 
 function normalizeDimension(dimension: QuizDimension, value: number): number {

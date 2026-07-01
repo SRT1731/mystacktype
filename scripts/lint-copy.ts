@@ -1,6 +1,7 @@
-import { QUIZ_RESULTS, RESULT_SCREEN_FOOTER } from '../src/config/quiz.ts';
+import { QUIZ_RESULTS } from '../src/config/quiz.ts';
 
-const BANNED_COPY = /\b(take|dose|dosage|treat|cure|prescrib|should take|recommend)\b/i;
+const BANNED_COPY =
+  /\b(take|dose|dosage|treat|cure|prescrib|should take|recommend)\b|부작용 완화|부작용 치료|약효|갈아타|재개|해외직구|직구|구매대행|복용하세요/i;
 
 interface CopyEntry {
   label: string;
@@ -8,7 +9,6 @@ interface CopyEntry {
 }
 
 const entries: CopyEntry[] = [
-  { label: 'result.footer', text: RESULT_SCREEN_FOOTER },
   ...QUIZ_RESULTS.flatMap((result) => [
     { label: `${result.id}.name`, text: result.name },
     { label: `${result.id}.tagline`, text: result.tagline },

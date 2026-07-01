@@ -98,8 +98,8 @@ export function AuthModal({ isOpen, onClose }: AuthModalProps) {
             </h2>
             <p className="text-white/40 text-[14px] mb-8">
               {mode === 'login'
-                ? 'Save your quiz results and reset reports.'
-                : 'Create an account to keep your Stack Type results.'}
+                ? '진단 결과와 사전예약 정보를 저장하세요.'
+                : '계정을 만들고 GLP-1 근손실 위험 진단 결과를 보관하세요.'}
             </p>
 
             {/* Error */}

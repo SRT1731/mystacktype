@@ -42,16 +42,16 @@ export interface PayPalSubscriptionPlan {
 
 export const PRODUCTS: PayPalProduct[] = [
   {
-    id: 'stack-clarity-one-page-reset',
-    name: 'One-Page Stack Reset Report',
-    description: 'A simple AI-assisted reset report for your current supplement routine',
+    id: 'glp1-maintenance-coach-early-bird',
+    name: '유지 코치 얼리버드 사전예약',
+    description: '창립 멤버 우선 오픈. 미출시 시 전액 환불.',
     price: '7.00',
     currency: 'USD',
   },
   {
-    id: 'stack-clarity-full-reset',
-    name: 'Full Stack Reset Report',
-    description: 'A deeper reset report with routine organization and follow-up prompts',
+    id: 'glp1-maintenance-coach-founder',
+    name: '파운더 사전예약',
+    description: '얼리버드와 초기 피드백 반영 혜택. 미출시 시 전액 환불.',
     price: '19.00',
     currency: 'USD',
   },
@@ -61,16 +61,16 @@ export const PRODUCTS: PayPalProduct[] = [
 
 export const SUBSCRIPTION_PLANS: PayPalSubscriptionPlan[] = [
   {
-    id: 'stack-clarity-monthly',
+    id: 'glp1-maintenance-coach-monthly',
     name: 'Stack Clarity Monthly',
-    description: 'Monthly access to Stack Clarity report tools',
+    description: 'Monthly access to Stack Clarity tools',
     planId: 'YOUR_PAYPAL_PLAN_ID', // PayPal에서 생성한 구독 플랜 ID
     price: '19.00',
     currency: 'USD',
     interval: 'MONTH',
   },
   {
-    id: 'stack-clarity-yearly',
+    id: 'glp1-maintenance-coach-yearly',
     name: 'Stack Clarity Yearly',
     description: 'Annual access — save 20%',
     planId: 'YOUR_PAYPAL_YEARLY_PLAN_ID',

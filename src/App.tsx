@@ -42,7 +42,7 @@ export default function App() {
           paypalPayerId: details.payer?.payer_id || '',
         });
         console.log('[Firestore] Order saved:', orderId);
-        alert(`✅ 결제 완료! Order: ${orderId}`);
+        alert(`창립 멤버 확정! 출시되면 가장 먼저 알려드릴게요. Order: ${orderId}`);
       } catch (err) {
         console.error('[Firestore] Failed to save order:', err);
         alert(`결제는 완료되었지만 기록 저장에 실패했습니다. Order: ${orderId}`);
@@ -116,7 +116,7 @@ export default function App() {
 
   return (
     <div style={{ fontFamily: '"Space Mono", monospace' }}>
-      <Navbar entranceComplete={entranceComplete} />
+      <Navbar entranceComplete={entranceComplete} onQuizOpen={openQuiz} />
 
       {/* ════════════════ SECTION 1: HERO ════════════════ */}
       <section className="relative h-screen h-[100dvh] flex flex-col overflow-hidden">
@@ -204,7 +204,7 @@ export default function App() {
                 animate={entranceComplete ? { opacity: 1, y: 0 } : {}}
                 transition={{ duration: 0.7, delay: 0.15 }}
               >
-                Free 60-second quiz
+                60초 무료 진단
               </motion.p>
               <h1
                 className="text-white uppercase leading-[0.9] text-[58px] sm:text-[82px] md:text-[112px] lg:text-[128px]"
@@ -234,7 +234,7 @@ export default function App() {
                 animate={entranceComplete ? { opacity: 1, y: 0 } : {}}
                 transition={{ duration: 0.8, delay: 0.35 }}
               >
-                Result example: The Bottle Collector / Messiness 82
+                결과 예시: 리바운드 경계형 / 위험 점수 76
               </motion.p>
               <motion.button
                 type="button"
@@ -244,7 +244,7 @@ export default function App() {
                 animate={entranceComplete ? { opacity: 1, y: 0 } : {}}
                 transition={{ duration: 0.8, delay: 0.45 }}
               >
-                Start Free Quiz
+                무료 진단 시작
               </motion.button>
             </div>
 
@@ -518,10 +518,10 @@ export default function App() {
               className="text-[#111614] uppercase leading-[0.95] mb-6 text-[42px] sm:text-[58px] md:text-[72px]"
               style={{ fontFamily: '"Anton SC", sans-serif', letterSpacing: 0 }}
             >
-              Take the free quiz. Pay only if you want the reset.
+              무료 진단 후, 유지 코치 사전예약.
             </h2>
             <p className="text-[#4d5852] text-[15px] sm:text-[17px] leading-relaxed max-w-xl mx-auto">
-              The hook is the result. The product is the clarity after the result.
+              아직 만들고 있는 상품의 예약입니다. 출시 안 되면 전액 환불됩니다.
             </p>
           </motion.div>
 
@@ -534,7 +534,7 @@ export default function App() {
               transition={{ duration: 0.8, delay: 0 }}
               viewport={{ once: true, amount: 0.3 }}
             >
-              <p className="text-[#66706a] text-[12px] tracking-[0.15em] uppercase mb-3">Free Stack Type Quiz</p>
+              <p className="text-[#66706a] text-[12px] tracking-[0.15em] uppercase mb-3">무료 진단</p>
               <div className="flex items-baseline gap-1 mb-2">
                 <span
                   className="text-[52px] leading-none uppercase"
@@ -544,17 +544,17 @@ export default function App() {
                 </span>
               </div>
               <p className="text-[#4d5852] text-[13px] leading-relaxed mb-8">
-                Get a result that feels personal enough to send to a friend.
+                위험 타입·점수·레이더·물어볼 질문을 무료로 확인하세요.
               </p>
               <ul className="flex flex-col gap-3 mb-10 flex-1">
                 <li className="flex items-center gap-3 text-[#3f4742] text-[13px]">
-                  <span className="text-[#3166ff]">✓</span> Stack Type result
+                  <span className="text-[#3166ff]">✓</span> 위험 타입
                 </li>
                 <li className="flex items-center gap-3 text-[#3f4742] text-[13px]">
-                  <span className="text-[#3166ff]">✓</span> Messiness Score
+                  <span className="text-[#3166ff]">✓</span> 위험 점수
                 </li>
                 <li className="flex items-center gap-3 text-[#3f4742] text-[13px]">
-                  <span className="text-[#3166ff]">✓</span> Shareable result idea
+                  <span className="text-[#3166ff]">✓</span> 6축 레이더와 상담 질문
                 </li>
               </ul>
               <div className="flex flex-col gap-3">
@@ -563,7 +563,7 @@ export default function App() {
                   onClick={openQuiz}
                   className="w-full max-w-md mx-auto h-[50px] rounded-lg font-bold text-[15px] flex items-center justify-center bg-[#3166ff] text-white hover:bg-[#2455dc] transition-colors"
                 >
-                  Reveal My Stack Type
+                  무료 진단 시작
                 </button>
               </div>
             </motion.div>
@@ -578,10 +578,10 @@ export default function App() {
             >
               <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2">
                 <span className="bg-[#57c84d] text-[#111614] text-[11px] font-bold tracking-[0.1em] uppercase px-4 py-1.5 rounded-full">
-                  Best First Buy
+                  Early Bird
                 </span>
               </div>
-              <p className="text-[#66706a] text-[12px] tracking-[0.15em] uppercase mb-3">One-Page Stack Reset Report</p>
+              <p className="text-[#66706a] text-[12px] tracking-[0.15em] uppercase mb-3">유지 코치 얼리버드 사전예약</p>
               <div className="flex items-baseline gap-1 mb-2">
                 <span
                   className="text-[52px] leading-none"
@@ -589,23 +589,23 @@ export default function App() {
                 >
                   $7
                 </span>
-                <span className="text-[#66706a] text-[14px]">/one-time</span>
+                <span className="text-[#66706a] text-[14px]">/사전예약</span>
               </div>
               <p className="text-[#4d5852] text-[13px] leading-relaxed mb-8">
-                For people who want the quick cleanup after seeing their type.
+                출시 시 창립 멤버가로 우선 오픈. 미출시 시 전액 환불.
               </p>
               <ul className="flex flex-col gap-3 mb-10 flex-1">
                 <li className="flex items-center gap-3 text-[#3f4742] text-[13px]">
-                  <span className="text-[#57c84d]">✓</span> One-page stack summary
+                  <span className="text-[#57c84d]">✓</span> 창립 멤버 우선 오픈
                 </li>
                 <li className="flex items-center gap-3 text-[#3f4742] text-[13px]">
-                  <span className="text-[#57c84d]">✓</span> Keep / Check / Track / Ask plan
+                  <span className="text-[#57c84d]">✓</span> 유지 체크포인트
                 </li>
                 <li className="flex items-center gap-3 text-[#3f4742] text-[13px]">
-                  <span className="text-[#57c84d]">✓</span> 7-day tracker
+                  <span className="text-[#57c84d]">✓</span> 상담 질문 정리
                 </li>
                 <li className="flex items-center gap-3 text-[#3f4742] text-[13px]">
-                  <span className="text-[#57c84d]">✓</span> Questions for a qualified professional
+                  <span className="text-[#57c84d]">✓</span> 미출시 시 전액 환불
                 </li>
               </ul>
               <div className="flex flex-col gap-3">
@@ -629,7 +629,7 @@ export default function App() {
               transition={{ duration: 0.8, delay: 0.2 }}
               viewport={{ once: true, amount: 0.3 }}
             >
-              <p className="text-[#66706a] text-[12px] tracking-[0.15em] uppercase mb-3">Full Stack Reset Report</p>
+              <p className="text-[#66706a] text-[12px] tracking-[0.15em] uppercase mb-3">파운더 사전예약</p>
               <div className="flex items-baseline gap-1 mb-2">
                 <span
                   className="text-[52px] leading-none"
@@ -637,23 +637,23 @@ export default function App() {
                 >
                   $19
                 </span>
-                <span className="text-[#66706a] text-[14px]">/one-time</span>
+                <span className="text-[#66706a] text-[14px]">/사전예약</span>
               </div>
               <p className="text-[#4d5852] text-[13px] leading-relaxed mb-8">
-                For messy stacks with too many bottles and too many maybes.
+                얼리버드 + 초기 1:1 피드백 반영 + 근육 사수 스타터 가이드 우선.
               </p>
               <ul className="flex flex-col gap-3 mb-10 flex-1">
                 <li className="flex items-center gap-3 text-[#3f4742] text-[13px]">
-                  <span className="text-[#c98a16]">✓</span> Detailed routine map
+                  <span className="text-[#c98a16]">✓</span> 얼리버드 혜택 포함
                 </li>
                 <li className="flex items-center gap-3 text-[#3f4742] text-[13px]">
-                  <span className="text-[#c98a16]">✓</span> Morning/evening organization
+                  <span className="text-[#c98a16]">✓</span> 초기 1:1 피드백 반영
                 </li>
                 <li className="flex items-center gap-3 text-[#3f4742] text-[13px]">
-                  <span className="text-[#c98a16]">✓</span> Potential overlap checkpoints
+                  <span className="text-[#c98a16]">✓</span> 근육 사수 스타터 가이드 우선
                 </li>
                 <li className="flex items-center gap-3 text-[#3f4742] text-[13px]">
-                  <span className="text-[#c98a16]">✓</span> Professional questions
+                  <span className="text-[#c98a16]">✓</span> 미출시 시 전액 환불
                 </li>
               </ul>
               <div className="flex flex-col gap-3">

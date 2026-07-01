@@ -33,14 +33,14 @@ export interface TossProduct {
 
 export const TOSS_PRODUCTS: TossProduct[] = [
   {
-    id: 'stack-clarity-one-page-reset-kr',
-    name: 'One-Page Stack Reset Report',
+    id: 'glp1-maintenance-coach-early-bird-kr',
+    name: '유지 코치 얼리버드 사전예약',
     price: 7000,
     currency: 'KRW',
   },
   {
-    id: 'stack-clarity-full-reset-kr',
-    name: 'Full Stack Reset Report',
+    id: 'glp1-maintenance-coach-founder-kr',
+    name: '파운더 사전예약',
     price: 19000,
     currency: 'KRW',
   },

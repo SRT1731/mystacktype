@@ -1,4 +1,4 @@
-import type { DimensionVector } from '../config/quiz';
+import { DIMENSION_LABELS, type DimensionVector } from '../config/quiz';
 
 interface RadarChartProps {
   dimensions: DimensionVector;
@@ -8,12 +8,12 @@ interface RadarChartProps {
 }
 
 const AXES: Array<{ key: keyof DimensionVector; label: string }> = [
-  { key: 'volume', label: 'Volume' },
-  { key: 'consistency', label: 'Consistency' },
-  { key: 'tracking', label: 'Tracking' },
-  { key: 'trendPull', label: 'Trend Pull' },
-  { key: 'overload', label: 'Overload' },
-  { key: 'safetyAwareness', label: 'Safety' },
+  { key: 'lossSpeed', label: DIMENSION_LABELS.lossSpeed },
+  { key: 'protein', label: DIMENSION_LABELS.protein },
+  { key: 'strengthTraining', label: DIMENSION_LABELS.strengthTraining },
+  { key: 'intakeCapacity', label: DIMENSION_LABELS.intakeCapacity },
+  { key: 'recovery', label: DIMENSION_LABELS.recovery },
+  { key: 'maintenanceReadiness', label: DIMENSION_LABELS.maintenanceReadiness },
 ];
 
 export function RadarChart({
@@ -37,7 +37,7 @@ export function RadarChart({
       viewBox={`0 0 ${size} ${size}`}
       className={className}
       role="img"
-      aria-label="Supplement stack profile radar chart"
+      aria-label="GLP-1 muscle loss risk radar chart"
     >
       {rings.map((ring) => (
         <polygon
@@ -71,7 +71,7 @@ export function RadarChart({
                 textAnchor="middle"
                 dominantBaseline="middle"
                 fill="rgba(255,255,255,0.72)"
-                fontSize={size * 0.035}
+                fontSize={size * 0.04}
                 fontFamily="Inter, ui-sans-serif, system-ui"
               >
                 {axis.label}
