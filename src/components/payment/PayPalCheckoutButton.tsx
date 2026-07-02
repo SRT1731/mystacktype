@@ -71,7 +71,7 @@ const PayPalCheckoutButton: React.FC<PayPalCheckoutButtonProps> = ({
               },
             ],
             application_context: {
-              brand_name: 'Stack Clarity',
+              brand_name: '근지킴',
               shipping_preference: 'NO_SHIPPING' as const,
               user_action: 'PAY_NOW' as const,
             },

@@ -36,7 +36,7 @@ const statusItems = [
 const careItems = [
   {
     title: '건강한 체형 변화',
-    text: '근육은 지키고 체지방은 줄이는 방향을 먼저 확인해요.',
+    text: '체중만 보지 않고 근육과 컨디션을 함께 확인합니다.',
   },
   {
     title: '지속 가능한 식습관',
@@ -53,17 +53,17 @@ const careItems = [
 ];
 
 const processSteps = [
-  ['001', '정확한 진단 & 목표 설정', '60초 질문으로 지금 상태를 먼저 확인해요.'],
+  ['001', '현재 상태 확인 & 목표 설정', '10개 문항으로 지금 상태를 먼저 확인합니다.'],
   ['002', '맞춤 플랜 & 실행', '식단, 운동, 생활 루틴의 빈틈을 정리해요.'],
   ['003', '성과 분석 & 유지 관리', '감량 이후에도 흔들리지 않도록 체크합니다.'],
 ];
 
 const plans = [
   {
-    label: '무료 진단',
+    label: '무료 자가 점검',
     price: '무료',
     note: '먼저 내 상태 확인',
-    benefits: ['60초 상태 진단', '위험 점수', '약점 그래프', '상담 질문'],
+    benefits: ['60초 상태 점검', '위험 점수', '약점 그래프', '진료 질문'],
     action: '무료로 시작하기',
     free: true,
   },
@@ -131,10 +131,10 @@ export default function App() {
               className="block text-[22px] font-semibold uppercase text-[#a46c55]"
               style={{ fontFamily: 'Georgia, "Times New Roman", serif', letterSpacing: '0.06em' }}
             >
-              LUMIERE
+              근지킴
             </span>
             <span className="mt-1 block text-[10px] font-semibold text-[#a46c55]/75">
-              루미에르 밸런스
+              KEEP MUSCLE
             </span>
           </a>
           <nav className="hidden items-center gap-10 text-[14px] font-semibold text-[#5a4a42] md:flex">
@@ -148,7 +148,7 @@ export default function App() {
             onClick={openQuiz}
             className="rounded-full bg-[#bd766e] px-5 py-3 text-[13px] font-bold text-white shadow-[0_14px_28px_rgba(189,118,110,0.22)] transition hover:bg-[#a9625d]"
           >
-            무료 진단받기
+            무료 자가 점검
           </button>
         </div>
       </header>
@@ -168,24 +168,24 @@ export default function App() {
                 className="text-[48px] font-medium leading-[1.18] text-[#3a2b27] sm:text-[64px] lg:text-[76px]"
                 style={{ fontFamily: 'Georgia, "Times New Roman", "Noto Serif KR", serif' }}
               >
-                삶은 빠졌는데,
+                힘은 빠졌는데,
                 <br />
-                컨디션도 함께
+                근육도 함께
                 <br />
                 무너졌나요?
               </h1>
               <p className="mt-8 max-w-md text-[16px] leading-[1.9] text-[#6f5c52]">
-                루미에르는 체중 감량이 아닌, 내 몸의 균형과 컨디션 회복을 목표로 합니다.
+                근지킴은 GLP-1 사용 중 놓치기 쉬운 근손실 위험과 진료 때 물어볼 질문을 60초 안에 정리해 드립니다.
               </p>
               <button
                 type="button"
                 onClick={openQuiz}
                 className="mt-9 rounded-full bg-[#bd766e] px-8 py-4 text-[15px] font-bold text-white shadow-[0_18px_36px_rgba(189,118,110,0.25)] transition hover:bg-[#a9625d]"
               >
-                무료 진단받기
+                무료 자가 점검
               </button>
               <p className="mt-6 text-[13px] font-medium text-[#90796f]">
-                10초면 내 상태를 확인할 수 있어요
+                10개 문항이면 충분합니다
               </p>
             </motion.div>
 
@@ -245,17 +245,17 @@ export default function App() {
               >
                 먼저 내 상태를
                 <br />
-                정확히 알아야 해요.
+                정확히 확인해야 합니다.
               </h2>
               <p className="mt-6 max-w-sm text-[15px] leading-[1.9] text-[#6f5c52]">
-                식단보다 중요한 것은 지금 내 몸 상태를 아는 것부터 시작됩니다.
+                체중계 숫자보다 중요한 것은 지금 내 몸이 버틸 준비가 되어 있는지 확인하는 일입니다.
               </p>
               <button
                 type="button"
                 onClick={openQuiz}
                 className="mt-8 rounded-full bg-[#bd766e] px-7 py-4 text-[14px] font-bold text-white shadow-[0_16px_32px_rgba(189,118,110,0.22)]"
               >
-                무료 진단 시작하기
+                자가 점검 시작하기
               </button>
             </div>
             <div className="relative rounded-[22px] bg-white/86 p-7 shadow-[0_28px_80px_rgba(112,76,62,0.14)]">
@@ -275,7 +275,7 @@ export default function App() {
                 ))}
               </div>
               <p className="mt-6 text-[12px] text-[#90796f]">
-                결과는 교육용 참고 정보이며 의학적 진단을 대신하지 않습니다.
+                결과는 교육용 참고 정보이며 의학적 진단·처방을 대신하지 않습니다.
               </p>
             </div>
           </div>
@@ -284,7 +284,7 @@ export default function App() {
         <section id="outcome" className="bg-[#fffaf5] px-5 py-24">
           <div className="mx-auto max-w-6xl">
             <div className="mb-12 text-center">
-              <p className="mb-3 text-[13px] font-bold text-[#b06d5e]">진단 후 달라지는 것</p>
+              <p className="mb-3 text-[13px] font-bold text-[#b06d5e]">자가 점검 후 달라지는 것</p>
               <h2
                 className="text-[34px] font-medium leading-tight text-[#3a2b27] sm:text-[46px]"
                 style={{ fontFamily: 'Georgia, "Times New Roman", "Noto Serif KR", serif' }}
@@ -316,7 +316,7 @@ export default function App() {
         <section id="process" className="bg-[#fbf1eb] px-5 py-24">
           <div className="mx-auto max-w-6xl">
             <div className="mb-12 text-center">
-              <p className="mb-3 text-[13px] font-bold text-[#b06d5e]">루미에르 코칭 과정</p>
+              <p className="mb-3 text-[13px] font-bold text-[#b06d5e]">근지킴 유지 과정</p>
               <h2
                 className="text-[34px] font-medium leading-tight text-[#3a2b27] sm:text-[46px]"
                 style={{ fontFamily: 'Georgia, "Times New Roman", "Noto Serif KR", serif' }}
@@ -429,17 +429,17 @@ export default function App() {
           <div className="mx-auto grid max-w-6xl overflow-hidden rounded-[34px] bg-white/55 shadow-[0_24px_90px_rgba(97,61,45,0.12)] md:grid-cols-[0.95fr_1.05fr]">
             <img src={lifestyleVisual} alt="" className="h-full min-h-[360px] w-full object-cover" />
             <div className="flex flex-col justify-center p-8 sm:p-12">
-              <p className="mb-4 text-[13px] font-bold text-[#b06d5e]">루미에르가 약속합니다</p>
+              <p className="mb-4 text-[13px] font-bold text-[#b06d5e]">근지킴이 약속합니다</p>
               <h2
                 className="text-[34px] font-medium leading-tight text-[#3a2b27] sm:text-[46px]"
                 style={{ fontFamily: 'Georgia, "Times New Roman", "Noto Serif KR", serif' }}
               >
                 지금의 변화를 넘어,
                 <br />
-                더 빛나는 나를 만나세요.
+                근육을 지키는 감량을 준비하세요.
               </h2>
               <p className="mt-6 max-w-md text-[15px] leading-[1.9] text-[#6f5c52]">
-                루미에르는 단순한 체중 감량이 아닌 당신의 건강한 습관과 자신감을 되찾아 드립니다.
+                근지킴은 단순한 체중 감량이 아니라, 감량 이후에도 버틸 수 있는 습관과 질문을 함께 정리합니다.
               </p>
               <div className="mt-9 grid gap-4 text-center sm:grid-cols-3">
                 {['여성 전문 코칭', '프라이빗 관리', '신뢰할 수 있는 데이터'].map((item) => (
@@ -455,7 +455,7 @@ export default function App() {
 
       <footer className="border-t border-[#eadbd2] bg-[#fffaf5] px-5 py-8">
         <div className="mx-auto flex max-w-6xl flex-col gap-3 text-[12px] text-[#8a756b] sm:flex-row sm:items-center sm:justify-between">
-          <p className="font-bold text-[#4b3c35]">LUMIERE · © 2026</p>
+          <p className="font-bold text-[#4b3c35]">근지킴 · © 2026</p>
           <p className="max-w-2xl leading-relaxed sm:text-right">
             교육용 정보이며 의학적 진단·처방을 대신하지 않습니다. 복용·중단은 담당 의사와 상의하세요.
           </p>

@@ -45,7 +45,7 @@ export function Navbar({ entranceComplete, onQuizOpen }: NavbarProps) {
             >
               <ConnectAILabLogo size={18} className="text-white" />
               <span className="text-[16px] font-medium tracking-tight text-white">
-                Stack Clarity
+                근지킴
               </span>
             </motion.div>
 
@@ -87,7 +87,7 @@ export function Navbar({ entranceComplete, onQuizOpen }: NavbarProps) {
                       onMouseLeave={() => setAboutHovered(false)}
                       onClick={() => scrollTo(window.innerHeight)}
                     >
-                      <ScrambleText text="진단 방식" isHovered={aboutHovered} />
+                      <ScrambleText text="자가 점검 방식" isHovered={aboutHovered} />
                     </button>
                     <button
                       className="text-[16px] font-normal text-white/85 hover:text-white transition-colors cursor-pointer bg-transparent border-none"
@@ -151,7 +151,7 @@ export function Navbar({ entranceComplete, onQuizOpen }: NavbarProps) {
               onClick={onQuizOpen}
             >
               <span className="text-black text-[16px] font-medium">
-                <ScrambleText text="무료 진단" isHovered={downloadHovered} />
+                <ScrambleText text="무료 자가 점검" isHovered={downloadHovered} />
               </span>
             </motion.button>
           </div>
@@ -169,7 +169,7 @@ export function Navbar({ entranceComplete, onQuizOpen }: NavbarProps) {
             >
               <ConnectAILabLogo size={14} className="text-white shrink-0" />
               <span className="text-[13px] font-medium tracking-tight text-white whitespace-nowrap">
-                Stack Clarity
+                근지킴
               </span>
             </motion.div>
 
@@ -206,7 +206,7 @@ export function Navbar({ entranceComplete, onQuizOpen }: NavbarProps) {
                       className="text-[13px] font-normal text-white/85 cursor-pointer bg-transparent border-none"
                       onClick={() => scrollTo(window.innerHeight)}
                     >
-                      진단 방식
+                      자가 점검 방식
                     </button>
                     <button
                       className="text-[13px] font-normal text-white/85 cursor-pointer bg-transparent border-none"
@@ -253,7 +253,7 @@ export function Navbar({ entranceComplete, onQuizOpen }: NavbarProps) {
               whileTap={{ scale: 0.95 }}
               onClick={onQuizOpen}
             >
-              <span className="text-black text-[13px] font-medium">무료 진단</span>
+              <span className="text-black text-[13px] font-medium">무료 자가 점검</span>
             </motion.button>
           </div>
         </div>

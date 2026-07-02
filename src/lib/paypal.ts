@@ -62,8 +62,8 @@ export const PRODUCTS: PayPalProduct[] = [
 export const SUBSCRIPTION_PLANS: PayPalSubscriptionPlan[] = [
   {
     id: 'glp1-maintenance-coach-monthly',
-    name: 'Stack Clarity Monthly',
-    description: 'Monthly access to Stack Clarity tools',
+    name: '근지킴 월간 플랜',
+    description: '근지킴 유지 관리 도구 월간 이용권',
     planId: 'YOUR_PAYPAL_PLAN_ID', // PayPal에서 생성한 구독 플랜 ID
     price: '14900',
     currency: 'KRW',
@@ -71,8 +71,8 @@ export const SUBSCRIPTION_PLANS: PayPalSubscriptionPlan[] = [
   },
   {
     id: 'glp1-maintenance-coach-yearly',
-    name: 'Stack Clarity Yearly',
-    description: 'Annual access — save 20%',
+    name: '근지킴 연간 플랜',
+    description: '근지킴 유지 관리 도구 연간 이용권',
     planId: 'YOUR_PAYPAL_YEARLY_PLAN_ID',
     price: '89000',
     currency: 'KRW',

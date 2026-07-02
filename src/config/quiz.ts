@@ -67,10 +67,10 @@ export interface QuizOutcome {
 }
 
 export const RESULT_SCREEN_FOOTER =
-  '본 진단은 교육용 정보이며 의학적 진단·조언·처방을 대신하지 않습니다. GLP-1은 전문의약품이며 복용·용량·중단은 반드시 담당 의사와 상의하세요.';
+  '교육용 정보이며 의학적 진단·처방을 대신하지 않습니다. 복용·중단은 담당 의사와 상의하세요.';
 
 export const RESERVATION_HEADLINE =
-  '약을 줄이거나 중단할 때, 유지 루틴을 같이 준비해요.';
+  '약을 줄이거나 중단할 때 필요한 유지 루틴을 함께 준비합니다.';
 
 export const RESERVATION_SUBHEAD =
   '초기 멤버에게 먼저 여는 사전예약. 출시되지 않으면 전액 환불.';
@@ -235,21 +235,21 @@ export const QUIZ_QUESTIONS: QuizQuestion[] = [
   {
     id: 'journey_stage',
     eyebrow: 'Q1',
-    title: '지금 GLP-1 여정 어디쯤이에요?',
+    title: '현재 GLP-1 사용은 어느 단계에 있으신가요?',
     options: [
       { id: 'stage_start', label: '막 시작 (1개월 미만)', dimensions: { maintenanceReadiness: 2 }, weights: { balanced: 1 } },
-      { id: 'stage_early_loss', label: '감량 초반', dimensions: { lossSpeed: 1, maintenanceReadiness: 2 }, weights: { balanced: 1 } },
-      { id: 'stage_mid_loss', label: '감량 중반', dimensions: { lossSpeed: 2, maintenanceReadiness: 2 }, weights: { runaway: 1 } },
-      { id: 'stage_plateau', label: '정체기(효과 둔화)', dimensions: { maintenanceReadiness: 4, recovery: 1 }, weights: { plateau: 8 } },
-      { id: 'stage_near_goal', label: '목표 근접', dimensions: { maintenanceReadiness: 4 }, weights: { rebound: 2 } },
+      { id: 'stage_early_loss', label: '감량 초기', dimensions: { lossSpeed: 1, maintenanceReadiness: 2 }, weights: { balanced: 1 } },
+      { id: 'stage_mid_loss', label: '감량 중', dimensions: { lossSpeed: 2, maintenanceReadiness: 2 }, weights: { runaway: 1 } },
+      { id: 'stage_plateau', label: '효과가 둔해진 시점', dimensions: { maintenanceReadiness: 4, recovery: 1 }, weights: { plateau: 8 } },
+      { id: 'stage_near_goal', label: '목표 체중 근접', dimensions: { maintenanceReadiness: 4 }, weights: { rebound: 2 } },
       { id: 'stage_maintenance', label: '유지 중', dimensions: { maintenanceReadiness: 5 }, weights: { rebound: 5 } },
-      { id: 'stage_stopped', label: '이미 끊음', dimensions: { maintenanceReadiness: 6 }, weights: { rebound: 7 } },
+      { id: 'stage_stopped', label: '중단함', dimensions: { maintenanceReadiness: 6 }, weights: { rebound: 7 } },
     ],
   },
   {
     id: 'duration',
     eyebrow: 'Q2',
-    title: '사용한 지 얼마나 됐어요?',
+    title: '사용하신 지 얼마나 되셨나요?',
     options: [
       { id: 'duration_under_1m', label: '1개월 미만', dimensions: { maintenanceReadiness: 2 }, weights: { balanced: 1 } },
       { id: 'duration_1_3m', label: '1~3개월', dimensions: { maintenanceReadiness: 2 }, weights: { balanced: 1 } },
@@ -260,31 +260,31 @@ export const QUIZ_QUESTIONS: QuizQuestion[] = [
   {
     id: 'monthly_loss_speed',
     eyebrow: 'Q3',
-    title: '최근 한 달, 체중이 빠지는 속도는?',
+    title: '최근 한 달간 체중 감소 속도는 어떠셨나요?',
     options: [
-      { id: 'loss_none', label: '거의 없음', dimensions: { lossSpeed: 0 }, weights: { plateau: 2, balanced: 1 } },
-      { id: 'loss_slow', label: '완만', dimensions: { lossSpeed: 2 }, weights: { balanced: 2, defender: 1 } },
-      { id: 'loss_fast', label: '빠름', dimensions: { lossSpeed: 6 }, weights: { runaway: 3 } },
-      { id: 'loss_very_fast', label: '매우 빠름', dimensions: { lossSpeed: 9 }, weights: { runaway: 5, undereater: 1 } },
+      { id: 'loss_none', label: '거의 줄지 않음', dimensions: { lossSpeed: 0 }, weights: { plateau: 2, balanced: 1 } },
+      { id: 'loss_slow', label: '완만하게 감소', dimensions: { lossSpeed: 2 }, weights: { balanced: 2, defender: 1 } },
+      { id: 'loss_fast', label: '빠르게 감소', dimensions: { lossSpeed: 6 }, weights: { runaway: 3 } },
+      { id: 'loss_very_fast', label: '매우 빠르게 감소', dimensions: { lossSpeed: 9 }, weights: { runaway: 5, undereater: 1 } },
     ],
   },
   {
     id: 'protein',
     eyebrow: 'Q4',
-    title: '하루 단백질, 얼마나 챙겨요?',
+    title: '하루 단백질 섭취는 어느 정도 챙기시나요?',
     options: [
-      { id: 'protein_none', label: '거의 신경 안 씀', dimensions: { protein: 9 }, weights: { undereater: 4, runaway: 2 } },
-      { id: 'protein_sometimes', label: '가끔', dimensions: { protein: 6 }, weights: { balanced: 1, undereater: 2 } },
-      { id: 'protein_meals', label: '매끼 의식함', dimensions: { protein: 2 }, weights: { defender: 2, balanced: 1 } },
-      { id: 'protein_target', label: '목표량을 계산해서 챙김', dimensions: { protein: 0 }, weights: { defender: 5 } },
+      { id: 'protein_none', label: '거의 신경 쓰지 않음', dimensions: { protein: 9 }, weights: { undereater: 4, runaway: 2 } },
+      { id: 'protein_sometimes', label: '가끔 챙김', dimensions: { protein: 6 }, weights: { balanced: 1, undereater: 2 } },
+      { id: 'protein_meals', label: '매 끼 신경 씀', dimensions: { protein: 2 }, weights: { defender: 2, balanced: 1 } },
+      { id: 'protein_target', label: '목표량을 계산해 챙김', dimensions: { protein: 0 }, weights: { defender: 5 } },
     ],
   },
   {
     id: 'strength_training',
     eyebrow: 'Q5',
-    title: '근력운동(웨이트·맨몸)은 주 몇 회?',
+    title: '근력 운동(웨이트·맨몸)은 주 몇 회 하시나요?',
     options: [
-      { id: 'training_none', label: '안 함', dimensions: { strengthTraining: 9 }, weights: { runaway: 2, undereater: 2 } },
+      { id: 'training_none', label: '하지 않음', dimensions: { strengthTraining: 9 }, weights: { runaway: 2, undereater: 2 } },
       { id: 'training_1_2', label: '주 1~2회', dimensions: { strengthTraining: 5 }, weights: { balanced: 1 } },
       { id: 'training_3_4', label: '주 3~4회', dimensions: { strengthTraining: 1 }, weights: { defender: 4 } },
       { id: 'training_5_plus', label: '주 5회 이상', dimensions: { strengthTraining: 0 }, weights: { defender: 5 } },
@@ -293,22 +293,22 @@ export const QUIZ_QUESTIONS: QuizQuestion[] = [
   {
     id: 'meal_amount',
     eyebrow: 'Q6',
-    title: '요즘 한 끼 먹는 양은?',
+    title: '요즘 한 끼 식사량은 어떤가요?',
     options: [
-      { id: 'meal_barely', label: '거의 못 먹음', dimensions: { intakeCapacity: 9, recovery: 3 }, weights: { undereater: 8 } },
-      { id: 'meal_half', label: '평소의 반 이하', dimensions: { intakeCapacity: 7, recovery: 2 }, weights: { undereater: 6, runaway: 1 } },
-      { id: 'meal_less', label: '조금 줄었다', dimensions: { intakeCapacity: 3 }, weights: { balanced: 1 } },
+      { id: 'meal_barely', label: '거의 먹지 못함', dimensions: { intakeCapacity: 9, recovery: 3 }, weights: { undereater: 8 } },
+      { id: 'meal_half', label: '평소의 절반 이하', dimensions: { intakeCapacity: 7, recovery: 2 }, weights: { undereater: 6, runaway: 1 } },
+      { id: 'meal_less', label: '조금 줄었음', dimensions: { intakeCapacity: 3 }, weights: { balanced: 1 } },
       { id: 'meal_similar', label: '평소와 비슷', dimensions: { intakeCapacity: 0 }, weights: { defender: 1, balanced: 1 } },
     ],
   },
   {
     id: 'support_intake',
     eyebrow: 'Q7',
-    title: '단백질 말고 따로 챙기는 게 있어요?',
-    helper: '가장 가까운 항목 하나만 골라주세요.',
+    title: '단백질 외에 따로 챙기시는 것이 있나요?',
+    helper: '가장 가까운 하나를 선택해 주세요.',
     options: [
-      { id: 'support_none', label: '딱히 없음', dimensions: { intakeCapacity: 3, recovery: 1 }, weights: { undereater: 1 } },
-      { id: 'support_water', label: '물·전해질', dimensions: { intakeCapacity: 2, recovery: 1 }, weights: { balanced: 1 } },
+      { id: 'support_none', label: '특별히 없음', dimensions: { intakeCapacity: 3, recovery: 1 }, weights: { undereater: 1 } },
+      { id: 'support_water', label: '수분·전해질', dimensions: { intakeCapacity: 2, recovery: 1 }, weights: { balanced: 1 } },
       { id: 'support_fiber', label: '식이섬유', dimensions: { intakeCapacity: 1 }, weights: { balanced: 1 } },
       { id: 'support_full', label: '비타민·미네랄까지 챙김', dimensions: { intakeCapacity: 0, recovery: 0 }, weights: { defender: 1 } },
     ],
@@ -316,42 +316,44 @@ export const QUIZ_QUESTIONS: QuizQuestion[] = [
   {
     id: 'recovery',
     eyebrow: 'Q8',
-    title: '요즘 컨디션·회복력은?',
+    title: '요즘 컨디션과 회복력은 어떠신가요?',
     options: [
-      { id: 'recovery_low', label: '기운 없고 자주 처진다', dimensions: { recovery: 8 }, weights: { runaway: 2, undereater: 2 } },
-      { id: 'recovery_okay', label: '그냥저냥', dimensions: { recovery: 5 }, weights: { balanced: 1 } },
-      { id: 'recovery_fine', label: '괜찮다', dimensions: { recovery: 2 }, weights: { balanced: 1, defender: 1 } },
-      { id: 'recovery_good', label: '좋다', dimensions: { recovery: 0 }, weights: { defender: 2 } },
+      { id: 'recovery_low', label: '기운이 없고 자주 지침', dimensions: { recovery: 8 }, weights: { runaway: 2, undereater: 2 } },
+      { id: 'recovery_okay', label: '보통', dimensions: { recovery: 5 }, weights: { balanced: 1 } },
+      { id: 'recovery_fine', label: '괜찮음', dimensions: { recovery: 2 }, weights: { balanced: 1, defender: 1 } },
+      { id: 'recovery_good', label: '좋음', dimensions: { recovery: 0 }, weights: { defender: 2 } },
     ],
   },
   {
     id: 'muscle_change',
     eyebrow: 'Q9',
-    title: '근육·근력 체감 변화는?',
+    title: '근력이나 근육의 변화를 체감하시나요?',
     options: [
-      { id: 'muscle_down', label: '빠진 것 같다', dimensions: { recovery: 7, strengthTraining: 2 }, weights: { runaway: 3, undereater: 2 } },
-      { id: 'muscle_unsure', label: '잘 모르겠다', dimensions: { recovery: 4, maintenanceReadiness: 1 }, weights: { balanced: 1 } },
-      { id: 'muscle_same', label: '유지되는 듯', dimensions: { recovery: 1 }, weights: { defender: 2, balanced: 1 } },
-      { id: 'muscle_up', label: '오히려 늘었다', dimensions: { recovery: 0, strengthTraining: 0 }, weights: { defender: 4 } },
+      { id: 'muscle_down', label: '줄어든 것 같음', dimensions: { recovery: 7, strengthTraining: 2 }, weights: { runaway: 3, undereater: 2 } },
+      { id: 'muscle_unsure', label: '잘 모르겠음', dimensions: { recovery: 4, maintenanceReadiness: 1 }, weights: { balanced: 1 } },
+      { id: 'muscle_same', label: '유지되는 편', dimensions: { recovery: 1 }, weights: { defender: 2, balanced: 1 } },
+      { id: 'muscle_up', label: '오히려 늘어남', dimensions: { recovery: 0, strengthTraining: 0 }, weights: { defender: 4 } },
     ],
   },
   {
     id: 'stop_plan',
     eyebrow: 'Q10',
-    title: '끊을 계획이 있어요?',
+    title: '앞으로 중단 계획이 있으신가요?',
     options: [
-      { id: 'stop_now', label: '지금 끊는 중', dimensions: { maintenanceReadiness: 9 }, weights: { rebound: 8 } },
-      { id: 'stop_soon', label: '3개월 내 끊을 것', dimensions: { maintenanceReadiness: 7 }, weights: { rebound: 7 } },
-      { id: 'stop_none', label: '아직 없음', dimensions: { maintenanceReadiness: 2 }, weights: { balanced: 1 } },
-      { id: 'stop_continue', label: '계속 맞을 것', dimensions: { maintenanceReadiness: 3 }, weights: { balanced: 1 } },
-      { id: 'stop_rebound', label: '이미 끊고 요요 겪는 중', dimensions: { maintenanceReadiness: 9, recovery: 2 }, weights: { rebound: 9 } },
+      { id: 'stop_now', label: '지금 중단하는 중', dimensions: { maintenanceReadiness: 9 }, weights: { rebound: 8 } },
+      { id: 'stop_soon', label: '3개월 내 중단 예정', dimensions: { maintenanceReadiness: 7 }, weights: { rebound: 7 } },
+      { id: 'stop_none', label: '아직 계획 없음', dimensions: { maintenanceReadiness: 2 }, weights: { balanced: 1 } },
+      { id: 'stop_continue', label: '계속 사용할 예정', dimensions: { maintenanceReadiness: 3 }, weights: { balanced: 1 } },
+      { id: 'stop_rebound', label: '이미 중단, 요요를 겪는 중', dimensions: { maintenanceReadiness: 9, recovery: 2 }, weights: { rebound: 9 } },
     ],
   },
 ];
 
 export const QUIZ_CONFIG = {
   id: 'glp1-muscle-risk-v1',
-  title: '당신의 GLP-1 근손실 위험은 몇 점일까?',
+  eyebrow: '60초 자가 점검',
+  title: '내 근육, 지금 안전할까?',
+  subtitle: '10개 문항이면 충분해요. 지금 내 근손실 위험과, 진료 때 물어볼 것을 정리해 드립니다.',
   estimatedTime: '60초',
   disclaimer: RESULT_SCREEN_FOOTER,
   questions: QUIZ_QUESTIONS,

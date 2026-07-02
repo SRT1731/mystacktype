@@ -78,7 +78,7 @@ export function QuizExperience({ onClose }: QuizExperienceProps) {
 
     if (canNativeShare) {
       await navigator.share({
-        title: `Stack Clarity: ${outcome.result.name}`,
+        title: `근지킴: ${outcome.result.name}`,
         text: shareText,
         url: window.location.href,
       });
@@ -110,13 +110,13 @@ export function QuizExperience({ onClose }: QuizExperienceProps) {
       className="fixed inset-0 z-[100] bg-[#030503]/78 p-3 text-[#111614] backdrop-blur-xl sm:p-5"
       role="dialog"
       aria-modal="true"
-      aria-label="Stack Clarity quiz"
+      aria-label="근지킴 자가 점검"
     >
       <div className="mx-auto flex h-full max-w-6xl flex-col overflow-hidden border border-white/15 bg-[#f8faf6] shadow-2xl">
         <div className="flex items-center justify-between border-b border-[#dbe4dc] bg-white px-4 py-3 sm:px-6">
           <div>
             <p className="text-[11px] font-bold uppercase text-[#3166ff]">
-              무료 근손실 위험 진단
+              무료 근손실 위험 자가 점검
             </p>
             <p className="mt-1 text-[12px] text-[#66706a]">
               {answeredCount}/{questions.length} 완료
@@ -126,7 +126,7 @@ export function QuizExperience({ onClose }: QuizExperienceProps) {
             type="button"
             onClick={onClose}
             className="flex h-10 w-10 items-center justify-center border border-[#dbe4dc] bg-[#f8faf6] text-[22px] leading-none text-[#111614] transition hover:bg-white"
-            aria-label="진단 닫기"
+            aria-label="자가 점검 닫기"
           >
             ×
           </button>
@@ -135,18 +135,18 @@ export function QuizExperience({ onClose }: QuizExperienceProps) {
         <div className="grid flex-1 gap-8 overflow-y-auto p-4 sm:p-6 lg:grid-cols-[0.78fr_1.22fr] lg:p-8">
         <div className="lg:sticky lg:top-0 lg:self-start">
           <p className="mb-5 text-[12px] font-bold uppercase text-[#3166ff]">
-            60초 GLP-1 근손실 위험 진단
+            {QUIZ_CONFIG.eyebrow}
           </p>
           <h2
             className="max-w-xl text-[40px] font-black leading-[1.05] sm:text-[56px]"
             style={{ letterSpacing: 0 }}
           >
-            내 근손실 위험,
+            내 근육,
             <br />
-            몇 점일까?
+            지금 안전할까?
           </h2>
           <p className="mt-6 max-w-md text-[15px] leading-relaxed text-[#4d5852]">
-            10문항으로 내 상태, 위험 점수, 약한 부분, 담당 의사에게 물어볼 질문을 정리합니다.
+            {QUIZ_CONFIG.subtitle}
           </p>
           <div className="mt-8 h-2 w-full max-w-md overflow-hidden rounded-full bg-[#dfe7df]">
             <div

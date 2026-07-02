@@ -33,7 +33,7 @@ export function ShareCard({ outcome, format = 'feed' }: ShareCardProps) {
     });
 
     const link = document.createElement('a');
-    link.download = `stack-clarity-${result.id}-${format}.png`;
+    link.download = `keepmuscle-${result.id}-${format}.png`;
     link.href = dataUrl;
     link.click();
     trackQuizEvent({
@@ -54,7 +54,7 @@ export function ShareCard({ outcome, format = 'feed' }: ShareCardProps) {
         <div className="relative flex h-full flex-col justify-between p-20">
           <div>
             <p className="text-4xl uppercase tracking-[0.22em] text-white/58">
-              Stack Clarity
+              근지킴
             </p>
             <div className="mt-12 text-[112px] leading-none">{result.emoji}</div>
             <h2 className="mt-10 max-w-[840px] text-[86px] font-semibold leading-[0.98]">
@@ -80,7 +80,7 @@ export function ShareCard({ outcome, format = 'feed' }: ShareCardProps) {
           </div>
 
           <p className="border-t border-white/14 pt-8 text-[26px] text-white/42">
-            교육용 진단 · 의학적 조언 아님
+            교육용 자가 점검 · 의학적 조언 아님
           </p>
           <span className="sr-only">{RESULT_SCREEN_FOOTER}</span>
         </div>
