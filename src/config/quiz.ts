@@ -67,13 +67,13 @@ export interface QuizOutcome {
 }
 
 export const RESULT_SCREEN_FOOTER =
-  '교육용 정보이며 의학적 진단·처방을 대신하지 않습니다. 복용·중단은 담당 의사와 상의하세요.';
+  '본 점검은 교육용 정보이며 의학적 진단·처방을 대신하지 않습니다. GLP-1은 전문의약품이며, 복용·용량·중단은 반드시 담당 의사와 상의하세요.';
 
 export const RESERVATION_HEADLINE =
-  '약을 줄이거나 중단할 때 필요한 유지 루틴을 함께 준비합니다.';
+  '약을 끊어도, 그대로.';
 
 export const RESERVATION_SUBHEAD =
-  '초기 멤버에게 먼저 여는 사전예약. 출시되지 않으면 전액 환불.';
+  '위험 축, 물어볼 질문, 유지 체크포인트를 한 곳에. 지금은 예약만 받아요 — 안 나오면 전액 환불.';
 
 export const DIMENSION_LABELS: Record<QuizDimension, string> = {
   lossSpeed: '감량 속도',
@@ -119,9 +119,9 @@ export const QUIZ_RESULTS: StackTypeResult[] = [
       '유지 코치는 감량 속도, 단백질, 근력운동, 회복 신호를 한 화면에서 점검하는 방향으로 설계 중입니다.',
     paywallHeadline: RESERVATION_HEADLINE,
     shareCopy: {
-      normal: '내 근손실 위험은 {score}점, 폭주 감량형이래.',
+      normal: '내 요요 위험은 {score}점, 폭주 감량형이래.',
       strong: '{score}점 폭주 감량형. 잘 빠지는 게 다가 아니었네.',
-      roast: '근손실 위험 {score}점 폭주 감량형 인정… 오늘부터 단백질 좀 먹자.',
+      roast: '요요 위험 {score}점 폭주 감량형 인정… 오늘부터 단백질 좀 먹자.',
     },
   },
   {
@@ -140,9 +140,9 @@ export const QUIZ_RESULTS: StackTypeResult[] = [
       '유지 코치는 부족한 축을 먼저 보여주고, 다음 상담 때 물어볼 질문을 정리하는 방향으로 준비 중입니다.',
     paywallHeadline: RESERVATION_HEADLINE,
     shareCopy: {
-      normal: '내 근손실 위험은 {score}점, 저섭취 취약형이래.',
+      normal: '내 요요 위험은 {score}점, 저섭취 취약형이래.',
       strong: '{score}점 저섭취 취약형. 잘 빠지는 게 다가 아니었네.',
-      roast: '근손실 위험 {score}점 저섭취 취약형 인정… 오늘부터 단백질 좀 먹자.',
+      roast: '요요 위험 {score}점 저섭취 취약형 인정… 오늘부터 단백질 좀 먹자.',
     },
   },
   {
@@ -161,9 +161,9 @@ export const QUIZ_RESULTS: StackTypeResult[] = [
       '유지 코치는 정체기에 놓치기 쉬운 단백질, 근력운동, 회복감을 정리하는 방향입니다.',
     paywallHeadline: RESERVATION_HEADLINE,
     shareCopy: {
-      normal: '내 근손실 위험은 {score}점, 정체 고민형이래.',
+      normal: '내 요요 위험은 {score}점, 정체 고민형이래.',
       strong: '{score}점 정체 고민형. 잘 빠지는 게 다가 아니었네.',
-      roast: '근손실 위험 {score}점 정체 고민형 인정… 오늘부터 단백질 좀 먹자.',
+      roast: '요요 위험 {score}점 정체 고민형 인정… 오늘부터 단백질 좀 먹자.',
     },
   },
   {
@@ -182,9 +182,9 @@ export const QUIZ_RESULTS: StackTypeResult[] = [
       '유지 코치는 종료 전후의 루틴 공백을 줄이고, 상담 질문을 놓치지 않게 돕는 방향으로 만들고 있습니다.',
     paywallHeadline: RESERVATION_HEADLINE,
     shareCopy: {
-      normal: '내 근손실 위험은 {score}점, 리바운드 경계형이래.',
+      normal: '내 요요 위험은 {score}점, 리바운드 경계형이래.',
       strong: '{score}점 리바운드 경계형. 잘 빠지는 게 다가 아니었네.',
-      roast: '근손실 위험 {score}점 리바운드 경계형 인정… 오늘부터 단백질 좀 먹자.',
+      roast: '요요 위험 {score}점 리바운드 경계형 인정… 오늘부터 단백질 좀 먹자.',
     },
   },
   {
@@ -203,9 +203,9 @@ export const QUIZ_RESULTS: StackTypeResult[] = [
       '유지 코치는 좋은 루틴이 끊기지 않도록 체크포인트와 질문을 정리하는 방향입니다.',
     paywallHeadline: RESERVATION_HEADLINE,
     shareCopy: {
-      normal: '내 근손실 위험은 {score}점, 근육 사수형이래.',
+      normal: '내 요요 위험은 {score}점, 근육 사수형이래.',
       strong: '{score}점 근육 사수형. 잘 빠지는 게 다가 아니었네.',
-      roast: '근손실 위험 {score}점 근육 사수형 인정… 오늘부터 단백질 좀 먹자.',
+      roast: '요요 위험 {score}점 근육 사수형 인정… 오늘부터 단백질 좀 먹자.',
     },
   },
   {
@@ -224,9 +224,9 @@ export const QUIZ_RESULTS: StackTypeResult[] = [
       '유지 코치는 현재 균형을 유지하고 약한 부분만 빠르게 확인하는 방향으로 준비 중입니다.',
     paywallHeadline: RESERVATION_HEADLINE,
     shareCopy: {
-      normal: '내 근손실 위험은 {score}점, 균형 관리형이래.',
+      normal: '내 요요 위험은 {score}점, 균형 관리형이래.',
       strong: '{score}점 균형 관리형. 잘 빠지는 게 다가 아니었네.',
-      roast: '근손실 위험 {score}점 균형 관리형 인정… 오늘부터 단백질 좀 먹자.',
+      roast: '요요 위험 {score}점 균형 관리형 인정… 오늘부터 단백질 좀 먹자.',
     },
   },
 ];
@@ -350,10 +350,10 @@ export const QUIZ_QUESTIONS: QuizQuestion[] = [
 ];
 
 export const QUIZ_CONFIG = {
-  id: 'glp1-muscle-risk-v1',
-  eyebrow: '60초 자가 점검',
-  title: '내 근육, 지금 안전할까?',
-  subtitle: '10개 문항이면 충분해요. 지금 내 근손실 위험과, 진료 때 물어볼 것을 정리해 드립니다.',
+  id: 'glp1-keepline-check-v1',
+  eyebrow: '60초 무료 자가 점검',
+  title: '애써 뺀 몸, 끊어도 그대로일까요?',
+  subtitle: '마운자로·위고비로 만든 라인과 탄력, 끊은 뒤에도 지키는 법. 60초면 내 요요 위험부터 확인해요.',
   estimatedTime: '60초',
   disclaimer: RESULT_SCREEN_FOOTER,
   questions: QUIZ_QUESTIONS,

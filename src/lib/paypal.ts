@@ -43,14 +43,14 @@ export interface PayPalSubscriptionPlan {
 export const PRODUCTS: PayPalProduct[] = [
   {
     id: 'glp1-maintenance-coach-early-bird',
-    name: '창립 멤버 사전예약',
+    name: 'KeepLine 창립 멤버 사전예약',
     description: '창립 멤버 우선 오픈. 안 나오면 전액 환불.',
     price: '8900',
     currency: 'KRW',
   },
   {
     id: 'glp1-maintenance-coach-founder',
-    name: '파운더 사전예약',
+    name: 'KeepLine 파운더 사전예약',
     description: '위 혜택 전부와 초기 피드백 반영. 안 나오면 전액 환불.',
     price: '14900',
     currency: 'KRW',
@@ -62,8 +62,8 @@ export const PRODUCTS: PayPalProduct[] = [
 export const SUBSCRIPTION_PLANS: PayPalSubscriptionPlan[] = [
   {
     id: 'glp1-maintenance-coach-monthly',
-    name: '근지킴 월간 플랜',
-    description: '근지킴 유지 관리 도구 월간 이용권',
+    name: 'KeepLine 월간 플랜',
+    description: 'KeepLine 유지 관리 도구 월간 이용권',
     planId: 'YOUR_PAYPAL_PLAN_ID', // PayPal에서 생성한 구독 플랜 ID
     price: '14900',
     currency: 'KRW',
@@ -71,8 +71,8 @@ export const SUBSCRIPTION_PLANS: PayPalSubscriptionPlan[] = [
   },
   {
     id: 'glp1-maintenance-coach-yearly',
-    name: '근지킴 연간 플랜',
-    description: '근지킴 유지 관리 도구 연간 이용권',
+    name: 'KeepLine 연간 플랜',
+    description: 'KeepLine 유지 관리 도구 연간 이용권',
     planId: 'YOUR_PAYPAL_YEARLY_PLAN_ID',
     price: '89000',
     currency: 'KRW',

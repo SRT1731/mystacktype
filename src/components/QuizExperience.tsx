@@ -78,7 +78,7 @@ export function QuizExperience({ onClose }: QuizExperienceProps) {
 
     if (canNativeShare) {
       await navigator.share({
-        title: `근지킴: ${outcome.result.name}`,
+        title: `KeepLine: ${outcome.result.name}`,
         text: shareText,
         url: window.location.href,
       });
@@ -110,13 +110,13 @@ export function QuizExperience({ onClose }: QuizExperienceProps) {
       className="fixed inset-0 z-[100] bg-[#030503]/78 p-3 text-[#111614] backdrop-blur-xl sm:p-5"
       role="dialog"
       aria-modal="true"
-      aria-label="근지킴 자가 점검"
+      aria-label="KeepLine 자가 점검"
     >
-      <div className="mx-auto flex h-full max-w-6xl flex-col overflow-hidden border border-white/15 bg-[#f8faf6] shadow-2xl">
-        <div className="flex items-center justify-between border-b border-[#dbe4dc] bg-white px-4 py-3 sm:px-6">
+      <div className="mx-auto flex h-full max-w-6xl flex-col overflow-hidden rounded-[24px] border border-white/50 bg-[#fbf7f3] shadow-2xl">
+        <div className="flex items-center justify-between border-b border-[#b76e79]/20 bg-white/85 px-4 py-3 sm:px-6">
           <div>
-            <p className="text-[11px] font-bold uppercase text-[#3166ff]">
-              무료 근손실 위험 자가 점검
+            <p className="text-[11px] font-bold uppercase tracking-[0.14em] text-[#be7c70]">
+              무료 점검
             </p>
             <p className="mt-1 text-[12px] text-[#66706a]">
               {answeredCount}/{questions.length} 완료
@@ -125,7 +125,7 @@ export function QuizExperience({ onClose }: QuizExperienceProps) {
           <button
             type="button"
             onClick={onClose}
-            className="flex h-10 w-10 items-center justify-center border border-[#dbe4dc] bg-[#f8faf6] text-[22px] leading-none text-[#111614] transition hover:bg-white"
+            className="flex h-10 w-10 items-center justify-center rounded-full border border-[#b76e79]/20 bg-[#fbf7f3] text-[22px] leading-none text-[#40382f] transition hover:bg-white"
             aria-label="자가 점검 닫기"
           >
             ×
@@ -134,27 +134,25 @@ export function QuizExperience({ onClose }: QuizExperienceProps) {
 
         <div className="grid flex-1 gap-8 overflow-y-auto p-4 sm:p-6 lg:grid-cols-[0.78fr_1.22fr] lg:p-8">
         <div className="lg:sticky lg:top-0 lg:self-start">
-          <p className="mb-5 text-[12px] font-bold uppercase text-[#3166ff]">
+          <p className="mb-5 text-[12px] font-bold uppercase tracking-[0.14em] text-[#be7c70]">
             {QUIZ_CONFIG.eyebrow}
           </p>
           <h2
-            className="max-w-xl text-[40px] font-black leading-[1.05] sm:text-[56px]"
-            style={{ letterSpacing: 0 }}
+            className="max-w-xl text-[34px] font-bold leading-[1.22] text-[#40382f] sm:text-[48px]"
+            style={{ fontFamily: '"Noto Serif KR", Georgia, serif', letterSpacing: 0 }}
           >
-            내 근육,
-            <br />
-            지금 안전할까?
+            {QUIZ_CONFIG.title}
           </h2>
-          <p className="mt-6 max-w-md text-[15px] leading-relaxed text-[#4d5852]">
+          <p className="mt-6 max-w-md text-[15px] leading-relaxed text-[#6b5f56]">
             {QUIZ_CONFIG.subtitle}
           </p>
-          <div className="mt-8 h-2 w-full max-w-md overflow-hidden rounded-full bg-[#dfe7df]">
+          <div className="mt-8 h-2 w-full max-w-md overflow-hidden rounded-full bg-[#f0ded7]">
             <div
-              className="h-full rounded-full bg-[#57c84d] transition-all"
+              className="h-full rounded-full bg-gradient-to-r from-[#dba99d] to-[#b76e79] transition-all"
               style={{ width: `${(answeredCount / questions.length) * 100}%` }}
             />
           </div>
-            <p className="mt-3 text-[13px] text-[#66706a]">
+            <p className="mt-3 text-[13px] text-[#9c8b82]">
               {currentIndex + 1}번째 질문 · {answeredCount}/{questions.length} 완료
             </p>
         </div>
@@ -163,12 +161,12 @@ export function QuizExperience({ onClose }: QuizExperienceProps) {
           {!showResult ? (
             <div
               key={currentQuestion.id}
-              className="border border-[#dbe4dc] bg-white p-5 shadow-sm sm:p-6"
+              className="rounded-[20px] border border-[#b76e79]/20 bg-white p-5 shadow-sm sm:p-6"
             >
-              <p className="mb-3 text-[11px] font-bold uppercase text-[#66706a]">
+              <p className="mb-3 text-[11px] font-bold uppercase text-[#be7c70]">
                 {currentQuestion.eyebrow}
               </p>
-              <h3 className="text-[20px] font-bold leading-snug text-[#111614]">
+              <h3 className="text-[20px] font-bold leading-snug text-[#40382f]">
                 {currentQuestion.title}
               </h3>
               {currentQuestion.helper ? (
@@ -185,10 +183,10 @@ export function QuizExperience({ onClose }: QuizExperienceProps) {
                       key={option.id}
                       type="button"
                       onClick={() => handleAnswer(currentQuestion.id, option.id)}
-                      className={`min-h-[58px] border px-4 py-3 text-left text-[14px] transition ${
+                      className={`min-h-[58px] rounded-[16px] border px-4 py-3 text-left text-[14px] transition ${
                         isSelected
-                          ? 'border-[#3166ff] bg-[#edf3ff] text-[#111614]'
-                          : 'border-[#dbe4dc] bg-[#f8faf6] text-[#3f4742] hover:border-[#57c84d] hover:bg-white'
+                          ? 'border-[#b76e79] bg-[#fbf0ec] text-[#40382f]'
+                          : 'border-[#b76e79]/20 bg-[#fbf7f3] text-[#5a4f47] hover:border-[#dba99d] hover:bg-white'
                       }`}
                     >
                       <span className="block font-bold">{option.label}</span>
@@ -210,7 +208,7 @@ export function QuizExperience({ onClose }: QuizExperienceProps) {
                 type="button"
                 onClick={goToPreviousQuestion}
                 disabled={currentIndex === 0}
-                className="h-[54px] border border-[#dbe4dc] px-6 text-[15px] font-bold text-[#3f4742] transition hover:bg-white disabled:cursor-not-allowed disabled:opacity-40"
+                className="h-[54px] rounded-full border border-[#b76e79]/25 px-6 text-[15px] font-bold text-[#5a4f47] transition hover:bg-white disabled:cursor-not-allowed disabled:opacity-40"
               >
                 이전
               </button>
@@ -219,7 +217,7 @@ export function QuizExperience({ onClose }: QuizExperienceProps) {
                   type="button"
                   onClick={handleReveal}
                   disabled={!isComplete}
-                  className="h-[54px] flex-1 bg-[#3166ff] px-6 text-[15px] font-bold text-white transition hover:bg-[#2455dc] disabled:cursor-not-allowed disabled:bg-[#b9c2bb]"
+                  className="h-[54px] flex-1 rounded-full bg-gradient-to-br from-[#dba99d] to-[#b76e79] px-6 text-[15px] font-bold text-white transition hover:shadow-lg disabled:cursor-not-allowed disabled:bg-none disabled:bg-[#c9bbb3]"
                 >
                   결과 보기
                 </button>
@@ -228,7 +226,7 @@ export function QuizExperience({ onClose }: QuizExperienceProps) {
                   type="button"
                   onClick={goToNextQuestion}
                   disabled={!currentAnswer}
-                  className="h-[54px] flex-1 bg-[#111614] px-6 text-[15px] font-bold text-white transition hover:bg-[#3166ff] disabled:cursor-not-allowed disabled:bg-[#b9c2bb]"
+                  className="h-[54px] flex-1 rounded-full bg-[#40382f] px-6 text-[15px] font-bold text-white transition hover:bg-[#5a4b45] disabled:cursor-not-allowed disabled:bg-[#c9bbb3]"
                 >
                   다음
                 </button>
@@ -236,7 +234,7 @@ export function QuizExperience({ onClose }: QuizExperienceProps) {
               <button
                 type="button"
                 onClick={handleReset}
-                className="h-[54px] border border-[#dbe4dc] px-6 text-[15px] font-bold text-[#3f4742] transition hover:bg-white"
+                className="h-[54px] rounded-full border border-[#b76e79]/25 px-6 text-[15px] font-bold text-[#5a4f47] transition hover:bg-white"
               >
                 다시 시작
               </button>
@@ -244,7 +242,7 @@ export function QuizExperience({ onClose }: QuizExperienceProps) {
           ) : null}
 
           {showResult ? (
-            <div className="border border-[#111614] bg-[#111614] p-6 text-white sm:p-8">
+            <div className="rounded-[22px] border border-[#b76e79]/20 bg-[#40382f] p-6 text-white sm:p-8">
               <div className="grid gap-8 md:grid-cols-[1fr_260px] md:items-center">
                 <div>
                   <p className="text-[13px] uppercase text-white/50">
@@ -259,7 +257,7 @@ export function QuizExperience({ onClose }: QuizExperienceProps) {
                   >
                     {outcome.result.name}
                   </h3>
-                  <p className="mt-4 text-[18px] text-[#90ffbe]">
+                  <p className="mt-4 text-[18px] text-[#f0c6bd]">
                     {outcome.result.tagline}
                   </p>
                   <p className="mt-5 max-w-xl text-[14px] leading-relaxed text-white/70">
@@ -267,7 +265,7 @@ export function QuizExperience({ onClose }: QuizExperienceProps) {
                   </p>
                   <div className="mt-6 flex flex-wrap gap-3 text-[13px]">
                     <span className="border border-white/18 px-3 py-2">
-                      위험 점수 {outcome.stackScore}
+                      요요 위험 점수 {outcome.stackScore}
                     </span>
                     <span className="border border-white/18 px-3 py-2">
                       희귀도 {outcome.result.rarity}%
@@ -317,7 +315,7 @@ export function QuizExperience({ onClose }: QuizExperienceProps) {
                 <button
                   type="button"
                   onClick={handleShare}
-                  className="h-[50px] bg-[#57c84d] px-5 text-[14px] font-bold text-[#111614] transition hover:bg-[#6ee064]"
+                  className="h-[50px] rounded-full bg-[#f0c6bd] px-5 text-[14px] font-bold text-[#40382f] transition hover:bg-white"
                 >
                   결과 공유
                 </button>

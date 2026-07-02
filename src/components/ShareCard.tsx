@@ -33,7 +33,7 @@ export function ShareCard({ outcome, format = 'feed' }: ShareCardProps) {
     });
 
     const link = document.createElement('a');
-    link.download = `keepmuscle-${result.id}-${format}.png`;
+    link.download = `keepline-${result.id}-${format}.png`;
     link.href = dataUrl;
     link.click();
     trackQuizEvent({
@@ -54,7 +54,7 @@ export function ShareCard({ outcome, format = 'feed' }: ShareCardProps) {
         <div className="relative flex h-full flex-col justify-between p-20">
           <div>
             <p className="text-4xl uppercase tracking-[0.22em] text-white/58">
-              근지킴
+              KeepLine
             </p>
             <div className="mt-12 text-[112px] leading-none">{result.emoji}</div>
             <h2 className="mt-10 max-w-[840px] text-[86px] font-semibold leading-[0.98]">
@@ -71,7 +71,7 @@ export function ShareCard({ outcome, format = 'feed' }: ShareCardProps) {
                 {shareCopy}
               </p>
               <div className="mt-10 flex gap-4 text-[32px] text-white/64">
-                <span>위험 점수 {stackScore}</span>
+                <span>요요 위험 점수 {stackScore}</span>
                 <span>·</span>
                 <span>희귀도 {result.rarity}%</span>
               </div>

@@ -45,7 +45,7 @@ export function Navbar({ entranceComplete, onQuizOpen }: NavbarProps) {
             >
               <ConnectAILabLogo size={18} className="text-white" />
               <span className="text-[16px] font-medium tracking-tight text-white">
-                근지킴
+                KeepLine
               </span>
             </motion.div>
 
@@ -151,7 +151,7 @@ export function Navbar({ entranceComplete, onQuizOpen }: NavbarProps) {
               onClick={onQuizOpen}
             >
               <span className="text-black text-[16px] font-medium">
-                <ScrambleText text="무료 자가 점검" isHovered={downloadHovered} />
+                <ScrambleText text="무료 점검" isHovered={downloadHovered} />
               </span>
             </motion.button>
           </div>
@@ -169,7 +169,7 @@ export function Navbar({ entranceComplete, onQuizOpen }: NavbarProps) {
             >
               <ConnectAILabLogo size={14} className="text-white shrink-0" />
               <span className="text-[13px] font-medium tracking-tight text-white whitespace-nowrap">
-                근지킴
+                KeepLine
               </span>
             </motion.div>
 
@@ -253,7 +253,7 @@ export function Navbar({ entranceComplete, onQuizOpen }: NavbarProps) {
               whileTap={{ scale: 0.95 }}
               onClick={onQuizOpen}
             >
-              <span className="text-black text-[13px] font-medium">무료 자가 점검</span>
+              <span className="text-black text-[13px] font-medium">무료 점검</span>
             </motion.button>
           </div>
         </div>

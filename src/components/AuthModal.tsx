@@ -99,7 +99,7 @@ export function AuthModal({ isOpen, onClose }: AuthModalProps) {
             <p className="text-white/40 text-[14px] mb-8">
               {mode === 'login'
                 ? '자가 점검 결과와 사전예약 정보를 저장하세요.'
-                : '계정을 만들고 GLP-1 근손실 위험 자가 점검 결과를 보관하세요.'}
+                : '계정을 만들고 GLP-1 자가 점검 결과를 보관하세요.'}
             </p>
 
             {/* Error */}
