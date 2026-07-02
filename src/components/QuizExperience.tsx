@@ -146,7 +146,7 @@ export function QuizExperience({ onClose }: QuizExperienceProps) {
             몇 점일까?
           </h2>
           <p className="mt-6 max-w-md text-[15px] leading-relaxed text-[#4d5852]">
-            10문항으로 위험 타입, 점수, 6축 레이더, 담당 의사에게 물어볼 질문을 정리합니다.
+            10문항으로 내 상태, 위험 점수, 약한 부분, 담당 의사에게 물어볼 질문을 정리합니다.
           </p>
           <div className="mt-8 h-2 w-full max-w-md overflow-hidden rounded-full bg-[#dfe7df]">
             <div

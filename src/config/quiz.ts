@@ -81,7 +81,7 @@ export const DIMENSION_LABELS: Record<QuizDimension, string> = {
   strengthTraining: '근력운동',
   intakeCapacity: '섭취 여력',
   recovery: '회복·컨디션',
-  maintenanceReadiness: '유지 준비도',
+  maintenanceReadiness: '끊어도 버틸 힘',
 };
 
 export const DIMENSION_LIMITS: Record<QuizDimension, { min: number; max: number }> = {
@@ -108,10 +108,10 @@ export const QUIZ_RESULTS: StackTypeResult[] = [
     emoji: '↘',
     name: '폭주 감량형',
     shortName: '폭주형',
-    tagline: '숫자는 잘 빠지는데, 안쪽도 같이 흔들리는 구간.',
+    tagline: '숫자는 잘 빠지는데, 몸이 같이 흔들리는 상태.',
     rarity: 22,
     description:
-      '감량 속도는 빠른데 식사, 운동, 회복 신호가 같이 흔들리는 구간이에요. 지금은 체중보다 루틴을 먼저 점검할 타이밍입니다.',
+      '감량 속도는 빠른데 식사, 운동, 회복감이 같이 흔들리고 있어요. 지금은 체중보다 루틴을 먼저 볼 때예요.',
     signals: ['최근 한 달 감량 속도가 빠름', '섭취량이 줄어듦', '회복감이 떨어짐', '유지 준비가 부족함'],
     resetHint:
       '속도보다 구성이 먼저예요. 담당 의사에게 현재 속도와 근력 변화에 대해 확인할 질문을 정리하세요.',
@@ -129,10 +129,10 @@ export const QUIZ_RESULTS: StackTypeResult[] = [
     emoji: '▽',
     name: '저섭취 취약형',
     shortName: '저섭취형',
-    tagline: '거의 못 먹는 구간. 근육이 먼저 흔들릴 수 있어요.',
+    tagline: '거의 못 먹는 상태. 근육이 먼저 흔들릴 수 있어요.',
     rarity: 18,
     description:
-      '먹는 양이 크게 줄어 단백질과 회복 여력이 부족해질 수 있는 구간이에요. 잘 빠지는 것처럼 보여도 버틸 기반은 따로 봐야 합니다.',
+      '먹는 양이 크게 줄어서 단백질과 회복 여력이 부족해질 수 있어요. 잘 빠지는 것처럼 보여도 버틸 기반은 따로 봐야 해요.',
     signals: ['한 끼 양이 크게 줄어듦', '단백질 관리가 약함', '컨디션 저하가 있음', '물·전해질 관리가 부족함'],
     resetHint:
       '무리해서 줄이는 문제가 아니라, 충분히 버틸 기반이 약한 상태일 수 있어요. 담당 의사에게 섭취 여력과 회복 신호를 같이 물어보세요.',
@@ -150,15 +150,15 @@ export const QUIZ_RESULTS: StackTypeResult[] = [
     emoji: '＝',
     name: '정체 고민형',
     shortName: '정체형',
-    tagline: '효과가 둔해진 구간. 다음 선택이 중요해요.',
+    tagline: '효과가 둔해진 상태. 다음 선택이 중요해요.',
     rarity: 16,
     description:
-      '효과가 둔해졌다고 느끼는 구간이에요. 더 밀어붙이기보다 단백질, 운동, 회복 신호를 같이 점검할 때입니다.',
+      '효과가 둔해졌다고 느끼는 상태예요. 더 밀어붙이기보다 단백질, 운동, 회복감을 같이 볼 때입니다.',
     signals: ['효과 둔화 체감', '감량 속도 변화', '운동·단백질 루틴 점검 필요', '다음 상담 질문 필요'],
     resetHint:
       '정체기는 더 세게 밀기보다 현재 루틴을 점검할 타이밍이에요. 담당 의사와 몸 상태·유지 전략을 같이 확인하세요.',
     paidReportAngle:
-      '유지 코치는 정체 구간에서 놓치기 쉬운 단백질, 근력운동, 회복 신호를 정리하는 방향입니다.',
+      '유지 코치는 정체기에 놓치기 쉬운 단백질, 근력운동, 회복감을 정리하는 방향입니다.',
     paywallHeadline: RESERVATION_HEADLINE,
     shareCopy: {
       normal: '내 근손실 위험은 {score}점, 정체 고민형이래.',
@@ -171,13 +171,13 @@ export const QUIZ_RESULTS: StackTypeResult[] = [
     emoji: '↺',
     name: '리바운드 경계형',
     shortName: '리바운드형',
-    tagline: '유지 구간의 창이 열렸어요. 여기서 흐름이 갈립니다.',
+    tagline: '유지로 넘어가는 순간. 여기서 흐름이 갈립니다.',
     rarity: 14,
     description:
-      '감량 후 유지로 넘어가는 구간이에요. 루틴이 비어 있으면 체중보다 생활 리듬이 먼저 흔들릴 수 있습니다.',
-    signals: ['유지 또는 종료 구간', '유지 계획 부족', '감량 이후 루틴 전환 필요', '회복·운동 점검 필요'],
+      '감량 후 유지로 넘어가는 상태예요. 루틴이 비어 있으면 체중보다 생활 리듬이 먼저 흔들릴 수 있습니다.',
+    signals: ['유지 또는 종료 단계', '유지 계획 부족', '감량 이후 루틴 전환 필요', '회복·운동 점검 필요'],
     resetHint:
-      '지금은 숫자보다 유지 루틴이 중요한 구간이에요. 담당 의사에게 종료 전후 관리와 근력 변화에 대해 질문하세요.',
+      '지금은 숫자보다 유지 루틴이 중요해요. 담당 의사에게 종료 전후 관리와 근력 변화에 대해 질문하세요.',
     paidReportAngle:
       '유지 코치는 종료 전후의 루틴 공백을 줄이고, 상담 질문을 놓치지 않게 돕는 방향으로 만들고 있습니다.',
     paywallHeadline: RESERVATION_HEADLINE,
@@ -195,10 +195,10 @@ export const QUIZ_RESULTS: StackTypeResult[] = [
     tagline: '방향은 맞아요. 이제 유지력이 승부예요.',
     rarity: 12,
     description:
-      '방향은 좋아요. 단백질과 근력운동 축이 살아 있어서, 이제 이 흐름을 유지 구간까지 이어가는 게 핵심입니다.',
+      '방향은 좋아요. 단백질과 근력운동 흐름이 살아 있어서, 이제 이 흐름을 계속 이어가는 게 핵심입니다.',
     signals: ['단백질 관리 양호', '근력운동 루틴 있음', '컨디션 비교적 안정', '유지 계획 점검 가능'],
     resetHint:
-      '이미 좋은 축이 있어요. 이 루틴을 유지 구간에서도 이어갈 수 있는지 담당 의사와 점검하세요.',
+      '이미 좋은 루틴이 있어요. 이 흐름을 계속 이어갈 수 있는지 담당 의사와 점검하세요.',
     paidReportAngle:
       '유지 코치는 좋은 루틴이 끊기지 않도록 체크포인트와 질문을 정리하는 방향입니다.',
     paywallHeadline: RESERVATION_HEADLINE,
@@ -216,12 +216,12 @@ export const QUIZ_RESULTS: StackTypeResult[] = [
     tagline: '큰 위험 신호는 낮지만, 방심하면 틈이 생겨요.',
     rarity: 18,
     description:
-      '큰 위험 신호는 낮지만 방심하기 쉬운 구간이에요. 약한 축 한두 개만 먼저 챙겨도 유지 준비가 훨씬 선명해집니다.',
+      '큰 위험 신호는 낮지만 방심하기 쉬운 상태예요. 약한 부분 한두 개만 먼저 챙겨도 다음 준비가 훨씬 선명해집니다.',
     signals: ['전반적 위험 낮음', '일부 축 보완 가능', '공유 가능한 기준점 확보', '상담 질문 정리 필요'],
     resetHint:
-      '지금은 위험을 키우지 않는 관리가 중요해요. 약한 축 한두 개를 먼저 확인하세요.',
+      '지금은 위험을 키우지 않는 관리가 중요해요. 약한 부분 한두 개를 먼저 확인하세요.',
     paidReportAngle:
-      '유지 코치는 현재 균형을 유지하고 약한 축만 빠르게 확인하는 방향으로 준비 중입니다.',
+      '유지 코치는 현재 균형을 유지하고 약한 부분만 빠르게 확인하는 방향으로 준비 중입니다.',
     paywallHeadline: RESERVATION_HEADLINE,
     shareCopy: {
       normal: '내 근손실 위험은 {score}점, 균형 관리형이래.',

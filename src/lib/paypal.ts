@@ -12,7 +12,7 @@
 
 export const PAYPAL_CONFIG = {
   clientId: import.meta.env.VITE_PAYPAL_CLIENT_ID || 'test',
-  currency: 'USD',
+  currency: 'KRW',
   intent: 'capture' as const,
 };
 
@@ -22,7 +22,7 @@ export interface PayPalProduct {
   id: string;
   name: string;
   description: string;
-  price: string; // '29.99' 형식
+  price: string;
   currency: string;
 }
 
@@ -43,17 +43,17 @@ export interface PayPalSubscriptionPlan {
 export const PRODUCTS: PayPalProduct[] = [
   {
     id: 'glp1-maintenance-coach-early-bird',
-    name: '유지 코치 얼리버드 사전예약',
-    description: '창립 멤버 우선 오픈. 미출시 시 전액 환불.',
-    price: '7.00',
-    currency: 'USD',
+    name: '창립 멤버 사전예약',
+    description: '창립 멤버 우선 오픈. 안 나오면 전액 환불.',
+    price: '8900',
+    currency: 'KRW',
   },
   {
     id: 'glp1-maintenance-coach-founder',
     name: '파운더 사전예약',
-    description: '얼리버드와 초기 피드백 반영 혜택. 미출시 시 전액 환불.',
-    price: '19.00',
-    currency: 'USD',
+    description: '위 혜택 전부와 초기 피드백 반영. 안 나오면 전액 환불.',
+    price: '14900',
+    currency: 'KRW',
   },
 ];
 
@@ -65,8 +65,8 @@ export const SUBSCRIPTION_PLANS: PayPalSubscriptionPlan[] = [
     name: 'Stack Clarity Monthly',
     description: 'Monthly access to Stack Clarity tools',
     planId: 'YOUR_PAYPAL_PLAN_ID', // PayPal에서 생성한 구독 플랜 ID
-    price: '19.00',
-    currency: 'USD',
+    price: '14900',
+    currency: 'KRW',
     interval: 'MONTH',
   },
   {
@@ -74,8 +74,8 @@ export const SUBSCRIPTION_PLANS: PayPalSubscriptionPlan[] = [
     name: 'Stack Clarity Yearly',
     description: 'Annual access — save 20%',
     planId: 'YOUR_PAYPAL_YEARLY_PLAN_ID',
-    price: '190.00',
-    currency: 'USD',
+    price: '89000',
+    currency: 'KRW',
     interval: 'YEAR',
   },
 ];

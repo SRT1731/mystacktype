@@ -22,12 +22,12 @@ const DIMENSION_KEYS: QuizDimension[] = [
 ];
 
 const INSIGHT_COPY: Record<QuizDimension, string> = {
-  lossSpeed: '감량 속도 축이 높아요. 숫자 변화만 보지 말고 근력·컨디션 변화도 같이 확인할 구간이에요.',
-  protein: '단백질 축이 높아요. 근육을 지키는 기반이 약해질 수 있어 담당 의사에게 섭취 여력을 물어보는 게 좋아요.',
-  strengthTraining: '근력운동 축이 높아요. 운동 루틴이 약하면 감량 후 유지력이 흔들릴 수 있어요.',
-  intakeCapacity: '섭취 여력 축이 높아요. 거의 못 먹는 날이 이어지면 회복과 근력 체감이 같이 흔들릴 수 있어요.',
-  recovery: '회복·컨디션 축이 높아요. 기운, 회복감, 근력 체감 변화를 상담 때 구체적으로 말할 준비가 필요해요.',
-  maintenanceReadiness: '유지 준비도 축이 높아요. 종료 전후 루틴 공백이 생기지 않게 미리 질문을 정리하세요.',
+  lossSpeed: '감량 속도가 빨라요. 숫자 변화만 보지 말고 근력과 컨디션도 같이 확인할 때예요.',
+  protein: '단백질이 약한 편이에요. 담당 의사에게 현재 식사량에서 무엇을 점검하면 좋을지 물어보세요.',
+  strengthTraining: '근력운동이 약한 편이에요. 운동 루틴이 비면 감량 후 버티는 힘도 흔들릴 수 있어요.',
+  intakeCapacity: '먹는 양이 부족한 편이에요. 거의 못 먹는 날이 이어지면 회복감과 근력 체감도 같이 흔들릴 수 있어요.',
+  recovery: '회복감이 약한 편이에요. 기운 없음, 회복감 저하, 근력 체감 변화를 상담 때 구체적으로 말해보세요.',
+  maintenanceReadiness: '끊어도 버틸 힘이 아직 약한 편이에요. 종료 전후 루틴 공백이 생기지 않게 질문을 미리 정리하세요.',
 };
 
 const DOCTOR_QUESTION_COPY: Record<QuizDimension, string> = {
@@ -36,7 +36,7 @@ const DOCTOR_QUESTION_COPY: Record<QuizDimension, string> = {
   strengthTraining: '제 상태에서 근력운동 루틴을 어느 정도로 잡는 게 안전할까요?',
   intakeCapacity: '식사량이 줄어든 기간이 길어질 때 어떤 신호를 봐야 하나요?',
   recovery: '기운 없음, 회복감 저하, 근력 체감 변화가 있을 때 어떤 검사가 도움이 될까요?',
-  maintenanceReadiness: '유지 구간으로 넘어가기 전 어떤 계획을 세워야 요요 위험을 낮출 수 있을까요?',
+  maintenanceReadiness: '약을 줄이거나 끊기 전에 어떤 준비를 해두면 좋을까요?',
 };
 
 export function calculateQuizOutcome(selectedOptionIds: string[]): QuizOutcome {

@@ -2,7 +2,6 @@ import { useState, useEffect, useRef, useCallback } from 'react';
 import { motion } from 'framer-motion';
 import { Navbar } from './components/Navbar';
 import { ScrambleIn } from './components/ScrambleText';
-import { ConnectAILabLogo } from './components/ConnectAILabLogo';
 import PayPalCheckoutButton from './components/payment/PayPalCheckoutButton';
 import TossCheckoutButton from './components/payment/TossCheckoutButton';
 import { QuizExperience } from './components/QuizExperience';
@@ -30,7 +29,7 @@ export default function App() {
           productId,
           productName,
           amount: parseFloat(amount),
-          currency: 'USD',
+          currency: PRODUCTS.find((product) => product.id === productId)?.currency || 'KRW',
           status: 'completed',
           paypalOrderId: orderId,
           paypalPayerId: details.payer?.payer_id || '',
@@ -94,7 +93,13 @@ export default function App() {
   const openQuiz = useCallback(() => setQuizOpen(true), []);
 
   return (
-    <div style={{ fontFamily: '"Pretendard", "Apple SD Gothic Neo", "Noto Sans KR", system-ui, sans-serif' }}>
+    <div
+      style={{
+        fontFamily: '"Pretendard", "Apple SD Gothic Neo", "Noto Sans KR", system-ui, sans-serif',
+        wordBreak: 'keep-all',
+        overflowWrap: 'break-word',
+      }}
+    >
       <Navbar entranceComplete={entranceComplete} onQuizOpen={openQuiz} />
 
       {/* ════════════════ SECTION 1: HERO ════════════════ */}
@@ -183,7 +188,7 @@ export default function App() {
                 animate={entranceComplete ? { opacity: 1, y: 0 } : {}}
                 transition={{ duration: 0.7, delay: 0.15 }}
               >
-                60초 무료 진단
+                {SITE_CONFIG.tagline}
               </motion.p>
               <h1
                 className="max-w-2xl text-white leading-[0.98] text-[44px] font-black sm:text-[64px] md:text-[82px] lg:text-[96px]"
@@ -213,7 +218,7 @@ export default function App() {
                 animate={entranceComplete ? { opacity: 1, y: 0 } : {}}
                 transition={{ duration: 0.8, delay: 0.35 }}
               >
-                무료 결과: 위험 타입 · 6축 레이더 · 상담 질문
+                무료 결과: 내 상태 · 약점 그래프 · 상담 질문
               </motion.p>
               <motion.button
                 type="button"
@@ -223,7 +228,7 @@ export default function App() {
                 animate={entranceComplete ? { opacity: 1, y: 0 } : {}}
                 transition={{ duration: 0.8, delay: 0.45 }}
               >
-                무료 진단 시작하기
+                무료로 진단받기
               </motion.button>
             </div>
           </div>
@@ -262,7 +267,7 @@ export default function App() {
         <div className="relative z-10 mx-auto grid min-h-screen max-w-6xl items-center gap-12 px-6 py-28 md:grid-cols-[0.9fr_1.1fr]">
           <motion.div>
             <p className="mb-5 text-[12px] font-extrabold text-[#90ffbe]">
-              놓치기 쉬운 신호
+              60초 무료 진단
             </p>
             <h2 className="text-[38px] font-black leading-[1.05] sm:text-[54px] md:text-[64px]">
               {cinematic.text}
@@ -271,8 +276,8 @@ export default function App() {
 
           <motion.div className="grid gap-3 sm:grid-cols-3 md:grid-cols-1">
             {[
-              ['1', '잘 빠지는데 힘이 빠진다'],
-              ['2', '한 끼가 반도 안 들어간다'],
+              ['1', '잘 빠지는데 힘이 없다'],
+              ['2', '한 끼도 겨우 먹는다'],
               ['3', '끊은 뒤가 더 걱정된다'],
             ].map(([num, label]) => (
               <div
@@ -308,17 +313,17 @@ export default function App() {
               {metrics.subtitle}
             </p>
             <h2 className="max-w-xl text-[42px] font-black leading-[1.02] text-[#111614] sm:text-[58px]">
-              돈 내기 전에, 먼저 내 상태부터 보세요.
+              결제 전에, 내 상태부터 보세요.
             </h2>
             <p className="mt-6 max-w-md text-[16px] leading-relaxed text-[#4d5852]">
-              무료 진단은 연락처를 얻기 위한 빈 미끼가 아니라, 바로 써먹을 수 있는 결과를 줍니다.
+              무료 진단만으로도 바로 쓸 게 나와요.
             </p>
             <button
               type="button"
               onClick={openQuiz}
               className="mt-8 h-[52px] rounded-full bg-[#111614] px-7 text-[15px] font-extrabold text-white transition hover:bg-[#3166ff]"
             >
-              내 위험 타입 보기
+              내 결과 보기
             </button>
           </motion.div>
 
@@ -479,7 +484,7 @@ export default function App() {
               출시 전, 가장 낮은 가격으로.
             </h2>
             <p className="text-[#4d5852] text-[15px] sm:text-[17px] leading-relaxed max-w-xl mx-auto">
-              무료 진단 결과가 쓸모 있었다면, 유지 코치를 먼저 예약하세요. 출시되지 않으면 전액 환불됩니다.
+              무료 진단만 보고 가도 돼요. 마음에 들면 예약하세요. 안 나오면 전액 환불.
             </p>
           </motion.div>
 
@@ -492,23 +497,26 @@ export default function App() {
               <div className="flex items-baseline gap-1 mb-2">
                 <span
                   className="text-[52px] leading-none uppercase"
-                  style={{ color: '#3166ff', fontFamily: '"Anton SC", sans-serif', letterSpacing: 0 }}
+                  style={{ color: '#3166ff', letterSpacing: 0 }}
                 >
-                  Free
+                  무료
                 </span>
               </div>
               <p className="text-[#4d5852] text-[13px] leading-relaxed mb-8">
-                먼저 내 상태를 확인하세요. 결제는 그다음입니다.
+                먼저 내 상태 확인.
               </p>
               <ul className="flex flex-col gap-3 mb-10 flex-1">
                 <li className="flex items-center gap-3 text-[#3f4742] text-[13px]">
-                  <span className="text-[#3166ff]">✓</span> 위험 타입
+                  <span className="text-[#3166ff]">✓</span> 무료 진단
                 </li>
                 <li className="flex items-center gap-3 text-[#3f4742] text-[13px]">
                   <span className="text-[#3166ff]">✓</span> 위험 점수
                 </li>
                 <li className="flex items-center gap-3 text-[#3f4742] text-[13px]">
-                  <span className="text-[#3166ff]">✓</span> 6축 레이더와 상담 질문
+                  <span className="text-[#3166ff]">✓</span> 약점 그래프
+                </li>
+                <li className="flex items-center gap-3 text-[#3f4742] text-[13px]">
+                  <span className="text-[#3166ff]">✓</span> 상담 질문
                 </li>
               </ul>
               <div className="flex flex-col gap-3">
@@ -535,14 +543,13 @@ export default function App() {
               <div className="flex items-baseline gap-1 mb-2">
                 <span
                   className="text-[52px] leading-none"
-                  style={{ color: '#57c84d', fontFamily: '"Anton SC", sans-serif', letterSpacing: 0 }}
+                  style={{ color: '#57c84d', letterSpacing: 0 }}
                 >
-                  $7
+                  8,900원
                 </span>
-                <span className="text-[#66706a] text-[14px]">먼저 예약</span>
               </div>
               <p className="text-[#4d5852] text-[13px] leading-relaxed mb-8">
-                첫 오픈 때 가장 낮은 가격으로 초대합니다.
+                출시 때 가장 싸게 초대.
               </p>
               <ul className="flex flex-col gap-3 mb-10 flex-1">
                 <li className="flex items-center gap-3 text-[#3f4742] text-[13px]">
@@ -552,10 +559,10 @@ export default function App() {
                   <span className="text-[#57c84d]">✓</span> 유지 체크포인트
                 </li>
                 <li className="flex items-center gap-3 text-[#3f4742] text-[13px]">
-                  <span className="text-[#57c84d]">✓</span> 진료 전 질문 정리
+                  <span className="text-[#57c84d]">✓</span> 진료 질문 정리
                 </li>
                 <li className="flex items-center gap-3 text-[#3f4742] text-[13px]">
-                  <span className="text-[#57c84d]">✓</span> 미출시 시 전액 환불
+                  <span className="text-[#57c84d]">✓</span> 안 나오면 전액 환불
                 </li>
               </ul>
               <div className="flex flex-col gap-3">
@@ -579,27 +586,26 @@ export default function App() {
               <div className="flex items-baseline gap-1 mb-2">
                 <span
                   className="text-[52px] leading-none"
-                  style={{ color: '#c98a16', fontFamily: '"Anton SC", sans-serif', letterSpacing: 0 }}
+                  style={{ color: '#c98a16', letterSpacing: 0 }}
                 >
-                  $19
+                  14,900원
                 </span>
-                <span className="text-[#66706a] text-[14px]">피드백 참여</span>
               </div>
               <p className="text-[#4d5852] text-[13px] leading-relaxed mb-8">
-                초기 피드백을 반영하고, 우선 자료를 먼저 받는 옵션입니다.
+                내 피드백까지 반영.
               </p>
               <ul className="flex flex-col gap-3 mb-10 flex-1">
                 <li className="flex items-center gap-3 text-[#3f4742] text-[13px]">
-                  <span className="text-[#c98a16]">✓</span> 얼리버드 혜택 포함
+                  <span className="text-[#c98a16]">✓</span> 위 혜택 전부
                 </li>
                 <li className="flex items-center gap-3 text-[#3f4742] text-[13px]">
                   <span className="text-[#c98a16]">✓</span> 초기 1:1 피드백 반영
                 </li>
                 <li className="flex items-center gap-3 text-[#3f4742] text-[13px]">
-                  <span className="text-[#c98a16]">✓</span> 근육 사수 스타터 가이드 우선
+                  <span className="text-[#c98a16]">✓</span> 근육 사수 가이드 우선
                 </li>
                 <li className="flex items-center gap-3 text-[#3f4742] text-[13px]">
-                  <span className="text-[#c98a16]">✓</span> 미출시 시 전액 환불
+                  <span className="text-[#c98a16]">✓</span> 안 나오면 전액 환불
                 </li>
               </ul>
               <div className="flex flex-col gap-3">
@@ -625,53 +631,10 @@ export default function App() {
       </section>
 
       {/* ════════════════ FOOTER ════════════════ */}
-      <footer className="bg-[#f6f8f4] overflow-hidden border-t border-[#dbe4dc]">
-        <div className="flex flex-col md:flex-row min-h-[400px]">
-          {/* Left: Video */}
-          <div className="md:w-1/2 h-[300px] md:h-auto relative">
-            {VIDEO_URLS.footer ? (
-              <video
-                src={VIDEO_URLS.footer}
-                className="absolute inset-0 w-full h-full object-cover"
-                autoPlay
-                muted
-                loop
-                playsInline
-              />
-            ) : (
-              <img
-                src={IMAGE_URLS.report}
-                alt=""
-                className="absolute inset-0 w-full h-full object-cover opacity-55"
-              />
-            )}
-            <div
-              className="absolute inset-0 pointer-events-none"
-              style={{
-                background:
-                  'linear-gradient(90deg, rgba(246,248,244,0.08) 0%, rgba(246,248,244,0.72) 100%)',
-              }}
-            />
-          </div>
-
-          {/* Right: Content */}
-          <div className="md:w-1/2 flex flex-col justify-between p-10 sm:p-16">
-            <div>
-              <div className="flex items-center gap-2.5 mb-8">
-                <ConnectAILabLogo size={18} className="text-[#3166ff]" />
-                <span className="text-[15px] font-bold text-[#111614] tracking-tight">
-                  {SITE_CONFIG.brandName}
-                </span>
-              </div>
-              <p className="text-[#4d5852] text-[14px] sm:text-[15px] leading-relaxed max-w-sm">
-                {footer.tagline}
-              </p>
-            </div>
-
-            <p className="text-[#77827b] text-[12px] mt-12">
-              {SITE_CONFIG.copyright}
-            </p>
-          </div>
+      <footer className="border-t border-[#dbe4dc] bg-[#f6f8f4] px-6 py-8">
+        <div className="mx-auto flex max-w-6xl flex-col gap-3 text-[12px] text-[#66706a] sm:flex-row sm:items-center sm:justify-between">
+          <p className="font-bold text-[#111614]">{footer.tagline}</p>
+          <p className="max-w-2xl leading-relaxed sm:text-right">{footer.disclaimer}</p>
         </div>
       </footer>
     </div>

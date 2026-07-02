@@ -34,14 +34,14 @@ export interface TossProduct {
 export const TOSS_PRODUCTS: TossProduct[] = [
   {
     id: 'glp1-maintenance-coach-early-bird-kr',
-    name: '유지 코치 얼리버드 사전예약',
-    price: 7000,
+    name: '창립 멤버 사전예약',
+    price: 8900,
     currency: 'KRW',
   },
   {
     id: 'glp1-maintenance-coach-founder-kr',
     name: '파운더 사전예약',
-    price: 19000,
+    price: 14900,
     currency: 'KRW',
   },
 ];
