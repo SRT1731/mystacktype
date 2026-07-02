@@ -1,7 +1,5 @@
-import { useState, useEffect, useRef, useCallback } from 'react';
+import { useCallback, useState } from 'react';
 import { motion } from 'framer-motion';
-import { Navbar } from './components/Navbar';
-import { ScrambleIn } from './components/ScrambleText';
 import PayPalCheckoutButton from './components/payment/PayPalCheckoutButton';
 import TossCheckoutButton from './components/payment/TossCheckoutButton';
 import { QuizExperience } from './components/QuizExperience';
@@ -9,16 +7,89 @@ import { useAuth } from './contexts/AuthContext';
 import { createOrder } from './lib/firestore';
 import { PRODUCTS } from './lib/paypal';
 import { TOSS_PRODUCTS } from './lib/toss';
-import { VIDEO_URLS } from './config/videos';
-import { IMAGE_URLS } from './config/images';
-import { SITE_CONFIG } from './config/content';
+
+const heroVisual = '/assets/lumiere-hero-visual.jpg';
+const lifestyleVisual = '/assets/lumiere-lifestyle.jpg';
+
+const softCards = [
+  {
+    title: '체중만 줄이고 근육은 손실',
+    text: '기초대사량이 떨어져 요요가 쉽게 찾아와요.',
+  },
+  {
+    title: '에너지와 컨디션 저하',
+    text: '피로, 식은땀, 집중력 저하가 생길 수 있어요.',
+  },
+  {
+    title: '지속이 어렵고 완주가 막막함',
+    text: '내 몸에 맞지 않는 방식은 금방 지치고 포기하게 만들어요.',
+  },
+];
+
+const statusItems = [
+  ['체지방률', '28.5%', '주의'],
+  ['근육량', '19.2kg', '보통'],
+  ['기초대사량', '1,248kcal', '보통'],
+  ['수면의 질', '62점', '낮음'],
+];
+
+const careItems = [
+  {
+    title: '건강한 체형 변화',
+    text: '근육은 지키고 체지방은 줄이는 방향을 먼저 확인해요.',
+  },
+  {
+    title: '지속 가능한 식습관',
+    text: '내 라이프스타일에 맞는 식단, 운동 습관을 찾습니다.',
+  },
+  {
+    title: '에너지와 컨디션 회복',
+    text: '피로와 무기력감을 줄이는 체크포인트를 정리해요.',
+  },
+  {
+    title: '전문가 1:1 코칭',
+    text: '혼자 버티지 않도록 진료 때 물어볼 질문을 준비합니다.',
+  },
+];
+
+const processSteps = [
+  ['001', '정확한 진단 & 목표 설정', '60초 질문으로 지금 상태를 먼저 확인해요.'],
+  ['002', '맞춤 플랜 & 실행', '식단, 운동, 생활 루틴의 빈틈을 정리해요.'],
+  ['003', '성과 분석 & 유지 관리', '감량 이후에도 흔들리지 않도록 체크합니다.'],
+];
+
+const plans = [
+  {
+    label: '무료 진단',
+    price: '무료',
+    note: '먼저 내 상태 확인',
+    benefits: ['60초 상태 진단', '위험 점수', '약점 그래프', '상담 질문'],
+    action: '무료로 시작하기',
+    free: true,
+  },
+  {
+    label: '창립 멤버',
+    price: '8,900원',
+    note: '출시 전 가장 낮은 가격',
+    benefits: ['창립 멤버 우선 오픈', '유지 체크포인트', '진료 질문 정리', '안 나오면 전액 환불'],
+    action: '스탠더드로 시작하기',
+    featured: true,
+  },
+  {
+    label: '파운더',
+    price: '14,900원',
+    note: '피드백까지 반영',
+    benefits: ['위 혜택 전부', '초기 1:1 피드백', '근육 사수 가이드 우선', '안 나오면 전액 환불'],
+    action: '프리미엄으로 시작하기',
+  },
+];
 
 export default function App() {
-  const [entranceComplete, setEntranceComplete] = useState(false);
   const [quizOpen, setQuizOpen] = useState(false);
   const { user } = useAuth();
 
-  /* ── PayPal 결제 완료 → Firestore 저장 ── */
+  const openQuiz = useCallback(() => setQuizOpen(true), []);
+
   const handlePayPalSuccess = useCallback(
     async (details: any, productId: string, productName: string, amount: string) => {
       const orderId = details.id || `pp_${Date.now()}`;
@@ -34,607 +105,360 @@ export default function App() {
           paypalOrderId: orderId,
           paypalPayerId: details.payer?.payer_id || '',
         });
-        console.log('[Firestore] Order saved:', orderId);
-        alert(`창립 멤버 확정! 출시되면 가장 먼저 알려드릴게요. Order: ${orderId}`);
+        alert('사전예약이 완료됐어요. 출시되면 가장 먼저 알려드릴게요.');
       } catch (err) {
         console.error('[Firestore] Failed to save order:', err);
-        alert(`결제는 완료되었지만 기록 저장에 실패했습니다. Order: ${orderId}`);
+        alert(`결제는 완료됐지만 기록 저장에 실패했습니다. Order: ${orderId}`);
       }
     },
     [user]
   );
 
-  /* ── Hero video mouse-scrub ── */
-  const heroVideoRef = useRef<HTMLVideoElement>(null);
-  const targetTimeRef = useRef(0);
-  const isSeekingRef = useRef(false);
-
-  const handleSeeked = useCallback(() => {
-    const video = heroVideoRef.current;
-    if (!video) return;
-    isSeekingRef.current = false;
-    if (Math.abs(video.currentTime - targetTimeRef.current) > 0.01) {
-      isSeekingRef.current = true;
-      video.currentTime = targetTimeRef.current;
-    }
-  }, []);
-
-  useEffect(() => {
-    const handleMouseMove = (e: MouseEvent) => {
-      const video = heroVideoRef.current;
-      if (!video || !video.duration) return;
-      const deltaX = e.movementX;
-      const sensitivity = 0.8;
-      const change = (deltaX / window.innerWidth) * video.duration * sensitivity;
-      targetTimeRef.current = Math.max(
-        0,
-        Math.min(video.duration, targetTimeRef.current + change)
-      );
-      if (!isSeekingRef.current) {
-        isSeekingRef.current = true;
-        video.currentTime = targetTimeRef.current;
-      }
-    };
-
-    window.addEventListener('mousemove', handleMouseMove);
-    return () => window.removeEventListener('mousemove', handleMouseMove);
-  }, []);
-
-  /* ── Entrance delay ── */
-  useEffect(() => {
-    const timer = setTimeout(() => setEntranceComplete(true), 800);
-    return () => clearTimeout(timer);
-  }, []);
-
-  /* ── Destructure config for readability ── */
-  const { hero, cinematic, metrics, technology, architecture, footer } = SITE_CONFIG;
-  const metricColors = ['#3166ff', '#57c84d', '#c98a16'];
-  const featureColors = ['#3166ff', '#57c84d', '#c98a16', '#2f8f83'];
-  const openQuiz = useCallback(() => setQuizOpen(true), []);
-
   return (
     <div
+      className="min-h-screen bg-[#fffaf5] text-[#3e312c]"
       style={{
-        fontFamily: '"Pretendard", "Apple SD Gothic Neo", "Noto Sans KR", system-ui, sans-serif',
+        fontFamily:
+          '"Pretendard", "Apple SD Gothic Neo", "Noto Sans KR", system-ui, sans-serif',
         wordBreak: 'keep-all',
         overflowWrap: 'break-word',
       }}
     >
-      <Navbar entranceComplete={entranceComplete} onQuizOpen={openQuiz} />
-
-      {/* ════════════════ SECTION 1: HERO ════════════════ */}
-      <section className="relative h-screen h-[100dvh] flex flex-col overflow-hidden">
-        {/* Video background (mouse-scrubbed) */}
-        {VIDEO_URLS.hero && (
-          <video
-            ref={heroVideoRef}
-            src={VIDEO_URLS.hero}
-            className="absolute inset-0 w-full h-full object-cover"
-            playsInline
-            muted
-            preload="auto"
-            onSeeked={handleSeeked}
-          />
-        )}
-
-        {IMAGE_URLS.hero && (
-          <img
-            src={IMAGE_URLS.hero}
-            alt=""
-            className="absolute inset-0 w-full h-full object-cover"
-          />
-        )}
-
-        {IMAGE_URLS.hero && (
-          <div
-            className="absolute inset-0 pointer-events-none z-[5]"
-            style={{
-              background:
-                'linear-gradient(90deg, rgba(1,1,3,0.58) 0%, rgba(1,1,3,0.18) 45%, rgba(1,1,3,0.42) 100%)',
-            }}
-          />
-        )}
-
-        {/* Dot grid overlay */}
-        <div
-          className="absolute inset-0 pointer-events-none z-10"
-          style={{
-            backgroundImage: 'radial-gradient(#ffffff 1px, transparent 1px)',
-            backgroundSize: '24px 24px',
-            opacity: 0.05,
-          }}
-        />
-
-        {/* Watermark text */}
-        <div
-          className="absolute inset-0 flex items-center justify-center pointer-events-none z-10"
-          style={{ paddingTop: 50 }}
-        >
-          <span
-            className="uppercase select-none text-[120px] sm:text-[220px] md:text-[360px] lg:text-[521px]"
-            style={{
-              fontFamily: '"Anton SC", sans-serif',
-              letterSpacing: 0,
-              opacity: 0.06,
-              background:
-                'radial-gradient(circle, rgba(142,127,148,0) 0%, #8E7F94 70%)',
-              WebkitBackgroundClip: 'text',
-              backgroundClip: 'text',
-              WebkitTextFillColor: 'transparent',
-              color: 'transparent',
-              lineHeight: 1,
-            }}
+      <header className="fixed inset-x-0 top-0 z-40 border-b border-[#eadbd2]/70 bg-[#fffaf5]/82 backdrop-blur-xl">
+        <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-5">
+          <a href="#" className="leading-none">
+            <span
+              className="block text-[22px] font-semibold uppercase text-[#a46c55]"
+              style={{ fontFamily: 'Georgia, "Times New Roman", serif', letterSpacing: '0.06em' }}
+            >
+              LUMIERE
+            </span>
+            <span className="mt-1 block text-[10px] font-semibold text-[#a46c55]/75">
+              루미에르 밸런스
+            </span>
+          </a>
+          <nav className="hidden items-center gap-10 text-[14px] font-semibold text-[#5a4a42] md:flex">
+            <a href="#problem">프로그램</a>
+            <a href="#process">코칭 과정</a>
+            <a href="#outcome">성장 사례</a>
+            <a href="#pricing">플랜</a>
+          </nav>
+          <button
+            type="button"
+            onClick={openQuiz}
+            className="rounded-full bg-[#bd766e] px-5 py-3 text-[13px] font-bold text-white shadow-[0_14px_28px_rgba(189,118,110,0.22)] transition hover:bg-[#a9625d]"
           >
-            {hero.watermark}
-          </span>
+            무료 진단받기
+          </button>
         </div>
+      </header>
 
-        {/* Hero content */}
-        <motion.div
-          className="relative z-20 flex flex-col flex-1 px-4 sm:px-6 md:px-8 pt-20 sm:pt-24 pb-8 sm:pb-12"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: entranceComplete ? 1 : 0 }}
-          transition={{ duration: 1 }}
-        >
-          <div className="flex-1" />
-
-          <div className="flex flex-col gap-6 md:flex-row md:items-end md:justify-start">
-            {/* Left column */}
-            <div className="flex flex-col gap-4 sm:gap-5">
-              <motion.p
-                className="text-white/65 text-[11px] sm:text-[12px] font-bold uppercase"
-                style={{ letterSpacing: 0 }}
-                initial={{ opacity: 0, y: 14 }}
-                animate={entranceComplete ? { opacity: 1, y: 0 } : {}}
-                transition={{ duration: 0.7, delay: 0.15 }}
-              >
-                {SITE_CONFIG.tagline}
-              </motion.p>
+      <main>
+        <section className="relative overflow-hidden bg-[radial-gradient(circle_at_85%_10%,#f8ded3_0%,transparent_34%),linear-gradient(115deg,#fff9f1_0%,#fff4ec_46%,#f7e8df_100%)] pt-28">
+          <div className="mx-auto grid min-h-[760px] max-w-6xl items-center gap-10 px-5 pb-16 md:grid-cols-[0.9fr_1.1fr]">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.7 }}
+            >
+              <p className="mb-6 text-[15px] font-semibold text-[#b06d5e]">
+                체중은 줄었는데,
+              </p>
               <h1
-                className="max-w-2xl text-white leading-[0.98] text-[44px] font-black sm:text-[64px] md:text-[82px] lg:text-[96px]"
-                style={{ letterSpacing: 0 }}
+                className="text-[48px] font-medium leading-[1.18] text-[#3a2b27] sm:text-[64px] lg:text-[76px]"
+                style={{ fontFamily: 'Georgia, "Times New Roman", "Noto Serif KR", serif' }}
               >
-                <ScrambleIn text={hero.titleLeft[0]} delay={200} triggered={entranceComplete} />
+                삶은 빠졌는데,
                 <br />
-                <ScrambleIn text={hero.titleLeft[1]} delay={500} triggered={entranceComplete} />
+                컨디션도 함께
+                <br />
+                무너졌나요?
               </h1>
-
-              <motion.p
-                className="max-w-lg text-[15px] sm:text-[18px] text-white/78 leading-[1.65]"
-                initial={{ opacity: 0, y: 25 }}
-                animate={entranceComplete ? { opacity: 1, y: 0 } : {}}
-                transition={{
-                  duration: 0.9,
-                  ease: [0.215, 0.61, 0.355, 1.0],
-                  delay: 0.2,
-                }}
-              >
-                {hero.description}
-              </motion.p>
-              <motion.p
-                className="text-white/52 text-[12px] sm:text-[13px]"
-                style={{ letterSpacing: 0 }}
-                initial={{ opacity: 0, y: 18 }}
-                animate={entranceComplete ? { opacity: 1, y: 0 } : {}}
-                transition={{ duration: 0.8, delay: 0.35 }}
-              >
-                무료 결과: 내 상태 · 약점 그래프 · 상담 질문
-              </motion.p>
-              <motion.button
+              <p className="mt-8 max-w-md text-[16px] leading-[1.9] text-[#6f5c52]">
+                루미에르는 체중 감량이 아닌, 내 몸의 균형과 컨디션 회복을 목표로 합니다.
+              </p>
+              <button
                 type="button"
                 onClick={openQuiz}
-                className="mt-1 h-[52px] w-full max-w-[300px] rounded-full bg-white px-6 text-[15px] font-extrabold text-[#111614] transition hover:bg-[#90ffbe]"
-                initial={{ opacity: 0, y: 18 }}
-                animate={entranceComplete ? { opacity: 1, y: 0 } : {}}
-                transition={{ duration: 0.8, delay: 0.45 }}
+                className="mt-9 rounded-full bg-[#bd766e] px-8 py-4 text-[15px] font-bold text-white shadow-[0_18px_36px_rgba(189,118,110,0.25)] transition hover:bg-[#a9625d]"
               >
-                무료로 진단받기
-              </motion.button>
-            </div>
-          </div>
-        </motion.div>
-      </section>
+                무료 진단받기
+              </button>
+              <p className="mt-6 text-[13px] font-medium text-[#90796f]">
+                10초면 내 상태를 확인할 수 있어요
+              </p>
+            </motion.div>
 
-      {quizOpen ? <QuizExperience onClose={() => setQuizOpen(false)} /> : null}
-
-      {/* ════════════════ SECTION 2: CINEMATIC TEXT ════════════════ */}
-      <section className="relative min-h-screen overflow-hidden bg-[#101412] text-white">
-        {VIDEO_URLS.section2 ? (
-          <video
-            src={VIDEO_URLS.section2}
-            className="absolute inset-0 h-full w-full object-cover"
-            autoPlay
-            muted
-            loop
-            playsInline
-          />
-        ) : (
-          <img
-            src={IMAGE_URLS.report}
-            alt=""
-            className="absolute inset-0 h-full w-full object-cover opacity-35"
-          />
-        )}
-
-        <div
-          className="absolute inset-0"
-          style={{
-            background:
-              'linear-gradient(90deg, rgba(8,12,10,0.94) 0%, rgba(8,12,10,0.68) 46%, rgba(8,12,10,0.36) 100%)',
-          }}
-        />
-
-        <div className="relative z-10 mx-auto grid min-h-screen max-w-6xl items-center gap-12 px-6 py-28 md:grid-cols-[0.9fr_1.1fr]">
-          <motion.div>
-            <p className="mb-5 text-[12px] font-extrabold text-[#90ffbe]">
-              60초 무료 진단
-            </p>
-            <h2 className="text-[38px] font-black leading-[1.05] sm:text-[54px] md:text-[64px]">
-              {cinematic.text}
-            </h2>
-          </motion.div>
-
-          <motion.div className="grid gap-3 sm:grid-cols-3 md:grid-cols-1">
-            {[
-              ['1', '잘 빠지는데 힘이 없다'],
-              ['2', '한 끼도 겨우 먹는다'],
-              ['3', '끊은 뒤가 더 걱정된다'],
-            ].map(([num, label]) => (
-              <div
-                key={num}
-                className="flex min-h-[82px] items-center gap-5 border border-white/14 bg-white/8 px-5 backdrop-blur-md"
-              >
-                <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[#90ffbe] text-[15px] font-black text-[#101412]">
-                  {num}
-                </span>
-                <span className="text-[18px] font-bold text-white/88">{label}</span>
-              </div>
-            ))}
-          </motion.div>
-        </div>
-      </section>
-
-      {/* ════════════════ SECTION 3: METRICS ════════════════ */}
-      <section className="relative min-h-screen overflow-hidden bg-[#f7faf6]">
-        {VIDEO_URLS.metrics && (
-          <video
-            src={VIDEO_URLS.metrics}
-            className="absolute inset-0 h-full w-full object-cover"
-            autoPlay
-            muted
-            loop
-            playsInline
-          />
-        )}
-
-        <div className="relative z-20 mx-auto grid min-h-screen max-w-6xl items-center gap-12 px-6 py-28 md:grid-cols-[0.95fr_1.05fr]">
-          <motion.div>
-            <p className="mb-5 text-[12px] font-extrabold text-[#3166ff]">
-              {metrics.subtitle}
-            </p>
-            <h2 className="max-w-xl text-[42px] font-black leading-[1.02] text-[#111614] sm:text-[58px]">
-              결제 전에, 내 상태부터 보세요.
-            </h2>
-            <p className="mt-6 max-w-md text-[16px] leading-relaxed text-[#4d5852]">
-              무료 진단만으로도 바로 쓸 게 나와요.
-            </p>
-            <button
-              type="button"
-              onClick={openQuiz}
-              className="mt-8 h-[52px] rounded-full bg-[#111614] px-7 text-[15px] font-extrabold text-white transition hover:bg-[#3166ff]"
+            <motion.div
+              className="relative mx-auto w-full max-w-[560px]"
+              initial={{ opacity: 0, scale: 0.96 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.8, delay: 0.1 }}
             >
-              내 결과 보기
-            </button>
-          </motion.div>
+              <div className="absolute -left-8 top-20 h-28 w-28 rounded-full bg-[#eac6b6]/60 blur-2xl" />
+              <img
+                src={heroVisual}
+                alt=""
+                className="relative z-10 w-full rounded-[34px] object-cover shadow-[0_28px_90px_rgba(108,72,56,0.18)]"
+              />
+            </motion.div>
+          </div>
+        </section>
 
-          <motion.div className="relative min-h-[520px] overflow-hidden border border-[#dbe4dc] bg-white shadow-[0_24px_80px_rgba(17,22,20,0.08)]">
-            <img
-              src={IMAGE_URLS.report}
-              alt=""
-              className="absolute inset-0 h-full w-full object-cover"
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-white via-white/72 to-white/16" />
-            <div className="absolute inset-x-0 bottom-0 grid gap-3 p-5 sm:grid-cols-3">
-              {metrics.items.map((m, i) => (
-                <div key={m.label} className="bg-white/88 p-4 backdrop-blur-md">
-                  <div
-                    className="text-[34px] font-black leading-none"
-                    style={{ color: metricColors[i % metricColors.length] }}
-                  >
-                    {m.value}
+        {quizOpen ? <QuizExperience onClose={() => setQuizOpen(false)} /> : null}
+
+        <section id="problem" className="bg-[#fffaf5] px-5 py-24">
+          <div className="mx-auto max-w-6xl">
+            <div className="mb-12 text-center">
+              <p className="mb-3 text-[13px] font-bold text-[#b06d5e]">지금 몸이 보내는 신호</p>
+              <h2
+                className="text-[34px] font-medium leading-tight text-[#3a2b27] sm:text-[46px]"
+                style={{ fontFamily: 'Georgia, "Times New Roman", "Noto Serif KR", serif' }}
+              >
+                체중은 줄었는데,
+                <br className="sm:hidden" /> 왜 여전히 어려울까요?
+              </h2>
+            </div>
+            <div className="grid gap-6 md:grid-cols-3">
+              {softCards.map((card) => (
+                <article
+                  key={card.title}
+                  className="rounded-2xl border border-[#eadbd2] bg-white/72 p-8 text-center shadow-[0_18px_45px_rgba(97,61,45,0.06)]"
+                >
+                  <div className="mx-auto mb-6 flex h-14 w-14 items-center justify-center rounded-full border border-[#d9aaa0] text-[24px] text-[#bd766e]">
+                    +
                   </div>
-                  <p className="mt-3 text-[13px] font-bold leading-snug text-[#3f4742]">
-                    {m.label}
-                  </p>
-                </div>
+                  <h3 className="text-[18px] font-bold text-[#4b3c35]">{card.title}</h3>
+                  <p className="mt-4 text-[14px] leading-relaxed text-[#7b6a61]">{card.text}</p>
+                </article>
               ))}
             </div>
-          </motion.div>
-        </div>
-      </section>
-
-      {/* ════════════════ SECTION 4: TECHNOLOGY ════════════════ */}
-      <section className="relative min-h-screen overflow-hidden bg-[#eef4f0]">
-        {/* Video background */}
-        {VIDEO_URLS.technology && (
-          <video
-            src={VIDEO_URLS.technology}
-            className="absolute inset-0 w-full h-full object-cover"
-            autoPlay
-            muted
-            loop
-            playsInline
-          />
-        )}
-
-        <div className="relative z-20 mx-auto flex min-h-screen max-w-6xl flex-col justify-center px-6 py-28">
-          <div className="flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
-            <motion.h2
-              className="text-[42px] font-black leading-[1.03] text-[#111614] sm:text-[58px] md:text-[72px]"
-              style={{ letterSpacing: 0 }}
-            >
-              {technology.title[0]}
-              <br />
-              {technology.title[1]}
-            </motion.h2>
-
-            <motion.p
-              className="max-w-sm text-[15px] leading-relaxed text-[#4d5852] md:text-right"
-            >
-              {technology.description}
-            </motion.p>
           </div>
+        </section>
 
-          <motion.div
-            className="mt-16 grid gap-4 sm:grid-cols-2 lg:grid-cols-4"
-          >
-            {technology.features.map((f, i) => (
-              <motion.div
-                key={f.title}
-                className="min-h-[220px] border border-[#d6e1d8] bg-white/78 p-5 shadow-sm backdrop-blur-sm"
+        <section className="overflow-hidden bg-[#f8ede6] px-5 py-24">
+          <div className="mx-auto grid max-w-6xl items-center gap-10 md:grid-cols-[0.78fr_1.22fr]">
+            <div>
+              <h2
+                className="text-[34px] font-medium leading-tight text-[#3a2b27] sm:text-[44px]"
+                style={{ fontFamily: 'Georgia, "Times New Roman", "Noto Serif KR", serif' }}
               >
-                <div className="mb-8 h-1.5 w-12 rounded-full" style={{ backgroundColor: featureColors[i % featureColors.length] }} />
-                <h3 className="mb-4 text-[22px] font-black text-[#111614]">
-                  {f.title}
-                </h3>
-                <p className="text-[14px] leading-relaxed text-[#59645e]">
-                  {f.desc}
-                </p>
-              </motion.div>
-            ))}
-          </motion.div>
-        </div>
-      </section>
-
-      {/* ════════════════ SECTION 5: ARCHITECTURE ════════════════ */}
-      <section className="relative min-h-screen flex items-center justify-center bg-[#f6f8f4] overflow-hidden">
-        {IMAGE_URLS.report && (
-          <img
-            src={IMAGE_URLS.report}
-            alt=""
-            className="absolute inset-0 w-full h-full object-cover opacity-35"
-          />
-        )}
-
-        {IMAGE_URLS.report && (
-          <div
-            className="absolute inset-0 pointer-events-none"
-            style={{
-              background:
-                'linear-gradient(180deg, rgba(246,248,244,0.94) 0%, rgba(246,248,244,0.72) 45%, rgba(246,248,244,0.96) 100%)',
-            }}
-          />
-        )}
-
-        <div className="relative z-20 max-w-3xl mx-auto px-6 py-32 text-center">
-          <motion.div>
-            <p className="text-[#66706a] text-[13px] sm:text-[14px] tracking-[0.2em] uppercase mb-8">
-              {architecture.subtitle}
-            </p>
-            <h2
-              className="mb-8 text-[42px] font-black leading-[1.03] text-[#111614] sm:text-[58px] md:text-[70px]"
-              style={{ letterSpacing: 0 }}
-            >
-              {architecture.heading}
-            </h2>
-            <p className="mx-auto max-w-xl text-[16px] leading-relaxed text-[#4d5852] sm:text-[18px]">
-              {architecture.description}
-            </p>
-          </motion.div>
-
-          <motion.div
-            className="mt-20 flex flex-col items-center gap-4"
-          >
-            {architecture.layers.map((l) => (
-              <div
-                key={l.num}
-                className="w-full max-w-md h-[72px] border border-[#dbe4dc] bg-white/80 backdrop-blur-md rounded-lg flex items-center justify-between px-6 shadow-sm"
+                먼저 내 상태를
+                <br />
+                정확히 알아야 해요.
+              </h2>
+              <p className="mt-6 max-w-sm text-[15px] leading-[1.9] text-[#6f5c52]">
+                식단보다 중요한 것은 지금 내 몸 상태를 아는 것부터 시작됩니다.
+              </p>
+              <button
+                type="button"
+                onClick={openQuiz}
+                className="mt-8 rounded-full bg-[#bd766e] px-7 py-4 text-[14px] font-bold text-white shadow-[0_16px_32px_rgba(189,118,110,0.22)]"
               >
-                <span className="text-[#77827b] text-[12px] tracking-[0.15em] uppercase">
-                  Step {l.num}
-                </span>
-                <span className="text-[#111614] text-[16px] sm:text-[18px] font-bold">
-                  {l.name}
-                </span>
-              </div>
-            ))}
-            <a
-              href="#pricing"
-              className="mt-4 flex h-[52px] w-full max-w-md items-center justify-center rounded-full bg-[#111614] px-6 text-[15px] font-extrabold text-white transition hover:bg-[#3166ff]"
-            >
-              사전예약 옵션 보기
-            </a>
-          </motion.div>
-        </div>
-      </section>
-
-      {/* ════════════════ SECTION 6: PRICING ════════════════ */}
-      <section id="pricing" className="min-h-screen bg-white py-32 px-6">
-        <div className="max-w-6xl mx-auto">
-          <motion.div
-            className="text-center mb-20"
-          >
-            <p className="text-[#66706a] text-[13px] sm:text-[14px] tracking-[0.2em] uppercase mb-8">
-              사전예약
-            </p>
-            <h2
-              className="mb-6 text-[42px] font-black leading-[1.03] text-[#111614] sm:text-[58px] md:text-[70px]"
-              style={{ letterSpacing: 0 }}
-            >
-              출시 전, 가장 낮은 가격으로.
-            </h2>
-            <p className="text-[#4d5852] text-[15px] sm:text-[17px] leading-relaxed max-w-xl mx-auto">
-              무료 진단만 보고 가도 돼요. 마음에 들면 예약하세요. 안 나오면 전액 환불.
-            </p>
-          </motion.div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8">
-            {/* ── Basic ── */}
-            <motion.div
-              className="border border-[#dbe4dc] bg-[#f6f8f4] rounded-2xl p-8 flex flex-col shadow-sm"
-            >
-              <p className="text-[#66706a] text-[12px] tracking-[0.15em] uppercase mb-3">무료 진단</p>
-              <div className="flex items-baseline gap-1 mb-2">
-                <span
-                  className="text-[52px] leading-none uppercase"
-                  style={{ color: '#3166ff', letterSpacing: 0 }}
-                >
-                  무료
+                무료 진단 시작하기
+              </button>
+            </div>
+            <div className="relative rounded-[22px] bg-white/86 p-7 shadow-[0_28px_80px_rgba(112,76,62,0.14)]">
+              <div className="mb-6 flex items-center justify-between">
+                <h3 className="text-[16px] font-bold text-[#4b3c35]">내 몸 상태 체크</h3>
+                <span className="rounded-full bg-[#f3dfd7] px-3 py-1 text-[12px] font-bold text-[#a4635b]">
+                  60초
                 </span>
               </div>
-              <p className="text-[#4d5852] text-[13px] leading-relaxed mb-8">
-                먼저 내 상태 확인.
+              <div className="grid gap-3 sm:grid-cols-4">
+                {statusItems.map(([label, value, state]) => (
+                  <div key={label} className="rounded-2xl border border-[#f0dfd7] bg-[#fffaf5] p-5">
+                    <p className="text-[12px] font-semibold text-[#8a756b]">{label}</p>
+                    <p className="mt-3 text-[26px] font-bold text-[#3a2b27]">{value}</p>
+                    <p className="mt-2 text-[12px] font-bold text-[#bd766e]">{state}</p>
+                  </div>
+                ))}
+              </div>
+              <p className="mt-6 text-[12px] text-[#90796f]">
+                결과는 교육용 참고 정보이며 의학적 진단을 대신하지 않습니다.
               </p>
-              <ul className="flex flex-col gap-3 mb-10 flex-1">
-                <li className="flex items-center gap-3 text-[#3f4742] text-[13px]">
-                  <span className="text-[#3166ff]">✓</span> 무료 진단
-                </li>
-                <li className="flex items-center gap-3 text-[#3f4742] text-[13px]">
-                  <span className="text-[#3166ff]">✓</span> 위험 점수
-                </li>
-                <li className="flex items-center gap-3 text-[#3f4742] text-[13px]">
-                  <span className="text-[#3166ff]">✓</span> 약점 그래프
-                </li>
-                <li className="flex items-center gap-3 text-[#3f4742] text-[13px]">
-                  <span className="text-[#3166ff]">✓</span> 상담 질문
-                </li>
-              </ul>
-              <div className="flex flex-col gap-3">
-                <button
-                  type="button"
-                  onClick={openQuiz}
-                  className="w-full max-w-md mx-auto h-[50px] rounded-lg font-bold text-[15px] flex items-center justify-center bg-[#3166ff] text-white hover:bg-[#2455dc] transition-colors"
-                >
-                  무료로 먼저 보기
-                </button>
-              </div>
-            </motion.div>
-
-            {/* ── Pro (Featured) ── */}
-            <motion.div
-              className="border border-[#3166ff]/35 rounded-2xl p-8 flex flex-col relative bg-white shadow-[0_18px_60px_rgba(49,102,255,0.14)]"
-            >
-              <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2">
-                <span className="bg-[#57c84d] text-[#111614] text-[11px] font-bold tracking-[0.1em] uppercase px-4 py-1.5 rounded-full">
-                  초기 멤버
-                </span>
-              </div>
-              <p className="text-[#66706a] text-[12px] tracking-[0.15em] uppercase mb-3">창립 멤버 사전예약</p>
-              <div className="flex items-baseline gap-1 mb-2">
-                <span
-                  className="text-[52px] leading-none"
-                  style={{ color: '#57c84d', letterSpacing: 0 }}
-                >
-                  8,900원
-                </span>
-              </div>
-              <p className="text-[#4d5852] text-[13px] leading-relaxed mb-8">
-                출시 때 가장 싸게 초대.
-              </p>
-              <ul className="flex flex-col gap-3 mb-10 flex-1">
-                <li className="flex items-center gap-3 text-[#3f4742] text-[13px]">
-                  <span className="text-[#57c84d]">✓</span> 창립 멤버 우선 오픈
-                </li>
-                <li className="flex items-center gap-3 text-[#3f4742] text-[13px]">
-                  <span className="text-[#57c84d]">✓</span> 유지 체크포인트
-                </li>
-                <li className="flex items-center gap-3 text-[#3f4742] text-[13px]">
-                  <span className="text-[#57c84d]">✓</span> 진료 질문 정리
-                </li>
-                <li className="flex items-center gap-3 text-[#3f4742] text-[13px]">
-                  <span className="text-[#57c84d]">✓</span> 안 나오면 전액 환불
-                </li>
-              </ul>
-              <div className="flex flex-col gap-3">
-                <PayPalCheckoutButton
-                  product={PRODUCTS[0]}
-                  onSuccess={(details) => handlePayPalSuccess(details, PRODUCTS[0].id, PRODUCTS[0].name, PRODUCTS[0].price)}
-                  onError={(err) => console.error('PayPal error:', err)}
-                />
-                <TossCheckoutButton
-                  product={TOSS_PRODUCTS[0]}
-                  onError={(err) => console.error('Toss error:', err)}
-                />
-              </div>
-            </motion.div>
-
-            {/* ── Enterprise ── */}
-            <motion.div
-              className="border border-[#dbe4dc] bg-[#f6f8f4] rounded-2xl p-8 flex flex-col shadow-sm"
-            >
-              <p className="text-[#66706a] text-[12px] tracking-[0.15em] uppercase mb-3">파운더 사전예약</p>
-              <div className="flex items-baseline gap-1 mb-2">
-                <span
-                  className="text-[52px] leading-none"
-                  style={{ color: '#c98a16', letterSpacing: 0 }}
-                >
-                  14,900원
-                </span>
-              </div>
-              <p className="text-[#4d5852] text-[13px] leading-relaxed mb-8">
-                내 피드백까지 반영.
-              </p>
-              <ul className="flex flex-col gap-3 mb-10 flex-1">
-                <li className="flex items-center gap-3 text-[#3f4742] text-[13px]">
-                  <span className="text-[#c98a16]">✓</span> 위 혜택 전부
-                </li>
-                <li className="flex items-center gap-3 text-[#3f4742] text-[13px]">
-                  <span className="text-[#c98a16]">✓</span> 초기 1:1 피드백 반영
-                </li>
-                <li className="flex items-center gap-3 text-[#3f4742] text-[13px]">
-                  <span className="text-[#c98a16]">✓</span> 근육 사수 가이드 우선
-                </li>
-                <li className="flex items-center gap-3 text-[#3f4742] text-[13px]">
-                  <span className="text-[#c98a16]">✓</span> 안 나오면 전액 환불
-                </li>
-              </ul>
-              <div className="flex flex-col gap-3">
-                <PayPalCheckoutButton
-                  product={PRODUCTS[1]}
-                  onSuccess={(details) => handlePayPalSuccess(details, PRODUCTS[1].id, PRODUCTS[1].name, PRODUCTS[1].price)}
-                  onError={(err) => console.error('PayPal error:', err)}
-                />
-                <TossCheckoutButton
-                  product={TOSS_PRODUCTS[1]}
-                  onError={(err) => console.error('Toss error:', err)}
-                />
-                <a
-                  href="mailto:contact@connectailab.com"
-                  className="w-full max-w-md mx-auto h-[50px] rounded-lg font-medium text-[15px] flex items-center justify-center gap-2 border border-[#cbd7cf] text-[#3f4742] hover:bg-white transition-colors"
-                >
-                  문의하기
-                </a>
-              </div>
-            </motion.div>
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
 
-      {/* ════════════════ FOOTER ════════════════ */}
-      <footer className="border-t border-[#dbe4dc] bg-[#f6f8f4] px-6 py-8">
-        <div className="mx-auto flex max-w-6xl flex-col gap-3 text-[12px] text-[#66706a] sm:flex-row sm:items-center sm:justify-between">
-          <p className="font-bold text-[#111614]">{footer.tagline}</p>
-          <p className="max-w-2xl leading-relaxed sm:text-right">{footer.disclaimer}</p>
+        <section id="outcome" className="bg-[#fffaf5] px-5 py-24">
+          <div className="mx-auto max-w-6xl">
+            <div className="mb-12 text-center">
+              <p className="mb-3 text-[13px] font-bold text-[#b06d5e]">진단 후 달라지는 것</p>
+              <h2
+                className="text-[34px] font-medium leading-tight text-[#3a2b27] sm:text-[46px]"
+                style={{ fontFamily: 'Georgia, "Times New Roman", "Noto Serif KR", serif' }}
+              >
+                몸도, 습관도, 삶의 에너지도 달라집니다
+              </h2>
+            </div>
+            <div className="grid gap-5 md:grid-cols-4">
+              {careItems.map((item) => (
+                <article key={item.title} className="rounded-2xl border border-[#eadbd2] bg-white/75 p-7">
+                  <div className="mb-5 h-10 w-10 rounded-full border border-[#d9aaa0]" />
+                  <h3 className="text-[17px] font-bold text-[#4b3c35]">{item.title}</h3>
+                  <p className="mt-4 text-[13px] leading-relaxed text-[#7b6a61]">{item.text}</p>
+                </article>
+              ))}
+            </div>
+            <div className="mt-8 grid overflow-hidden rounded-2xl border border-[#eadbd2] bg-white/70 text-center text-[14px] font-bold text-[#8a756b] md:grid-cols-3">
+              <p className="border-b border-[#eadbd2] px-4 py-4 md:border-b-0 md:border-r">
+                체계적인 데이터 기반 관리
+              </p>
+              <p className="border-b border-[#eadbd2] px-4 py-4 md:border-b-0 md:border-r">
+                개인 맞춤 플랜 & 피드백
+              </p>
+              <p className="px-4 py-4">식단, 운동, 마음까지 통합 케어</p>
+            </div>
+          </div>
+        </section>
+
+        <section id="process" className="bg-[#fbf1eb] px-5 py-24">
+          <div className="mx-auto max-w-6xl">
+            <div className="mb-12 text-center">
+              <p className="mb-3 text-[13px] font-bold text-[#b06d5e]">루미에르 코칭 과정</p>
+              <h2
+                className="text-[34px] font-medium leading-tight text-[#3a2b27] sm:text-[46px]"
+                style={{ fontFamily: 'Georgia, "Times New Roman", "Noto Serif KR", serif' }}
+              >
+                단계별 맞춤 코칭으로, 끝까지 함께합니다
+              </h2>
+            </div>
+            <div className="grid gap-6 md:grid-cols-3">
+              {processSteps.map(([num, title, text]) => (
+                <article key={num} className="rounded-2xl border border-[#eadbd2] bg-white/72 p-7 shadow-sm">
+                  <p className="mb-4 text-[13px] font-bold text-[#bd766e]">{num}</p>
+                  <h3 className="text-[18px] font-bold text-[#4b3c35]">{title}</h3>
+                  <p className="mt-4 text-[14px] leading-relaxed text-[#7b6a61]">{text}</p>
+                </article>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        <section id="pricing" className="bg-[#fffaf5] px-5 py-24">
+          <div className="mx-auto max-w-6xl">
+            <div className="mb-12 text-center">
+              <h2
+                className="text-[34px] font-medium leading-tight text-[#3a2b27] sm:text-[46px]"
+                style={{ fontFamily: 'Georgia, "Times New Roman", "Noto Serif KR", serif' }}
+              >
+                내게 맞는 프로그램을 선택하세요.
+              </h2>
+              <p className="mt-4 text-[15px] text-[#7b6a61]">
+                모든 프로그램은 1:1 맞춤 코칭과 지속적인 피드백이 포함됩니다.
+              </p>
+            </div>
+
+            <div className="grid gap-6 md:grid-cols-3">
+              {plans.map((plan, index) => (
+                <article
+                  key={plan.label}
+                  className={`relative rounded-3xl border bg-white/82 p-8 shadow-[0_22px_60px_rgba(97,61,45,0.08)] ${
+                    plan.featured
+                      ? 'border-[#bd766e] shadow-[0_26px_80px_rgba(189,118,110,0.18)]'
+                      : 'border-[#eadbd2]'
+                  }`}
+                >
+                  {plan.featured ? (
+                    <span className="absolute left-1/2 top-0 -translate-x-1/2 -translate-y-1/2 rounded-full bg-[#bd766e] px-5 py-2 text-[12px] font-bold text-white">
+                      추천
+                    </span>
+                  ) : null}
+                  <p className="text-[14px] font-bold text-[#8a756b]">{plan.label}</p>
+                  <p
+                    className="mt-5 text-[42px] font-medium leading-none text-[#3a2b27]"
+                    style={{ fontFamily: 'Georgia, "Times New Roman", serif' }}
+                  >
+                    {plan.price}
+                  </p>
+                  <p className="mt-3 text-[13px] text-[#90796f]">{plan.note}</p>
+                  <ul className="mt-8 space-y-3 text-[14px] text-[#6f5c52]">
+                    {plan.benefits.map((benefit) => (
+                      <li key={benefit}>✓ {benefit}</li>
+                    ))}
+                  </ul>
+
+                  <div className="mt-8">
+                    {plan.free ? (
+                      <button
+                        type="button"
+                        onClick={openQuiz}
+                        className="h-12 w-full rounded-xl border border-[#d9aaa0] text-[14px] font-bold text-[#8f5a51] transition hover:bg-[#fbf1eb]"
+                      >
+                        {plan.action}
+                      </button>
+                    ) : index === 1 ? (
+                      <div className="space-y-3">
+                        <PayPalCheckoutButton
+                          product={PRODUCTS[0]}
+                          onSuccess={(details) =>
+                            handlePayPalSuccess(details, PRODUCTS[0].id, PRODUCTS[0].name, PRODUCTS[0].price)
+                          }
+                          onError={(err) => console.error('PayPal error:', err)}
+                        />
+                        <TossCheckoutButton
+                          product={TOSS_PRODUCTS[0]}
+                          onError={(err) => console.error('Toss error:', err)}
+                        />
+                      </div>
+                    ) : (
+                      <div className="space-y-3">
+                        <PayPalCheckoutButton
+                          product={PRODUCTS[1]}
+                          onSuccess={(details) =>
+                            handlePayPalSuccess(details, PRODUCTS[1].id, PRODUCTS[1].name, PRODUCTS[1].price)
+                          }
+                          onError={(err) => console.error('PayPal error:', err)}
+                        />
+                        <TossCheckoutButton
+                          product={TOSS_PRODUCTS[1]}
+                          onError={(err) => console.error('Toss error:', err)}
+                        />
+                      </div>
+                    )}
+                  </div>
+                </article>
+              ))}
+            </div>
+            <p className="mt-6 text-center text-[12px] text-[#90796f]">부가세 포함가입니다.</p>
+          </div>
+        </section>
+
+        <section className="bg-[#f7e8df] px-5 py-24">
+          <div className="mx-auto grid max-w-6xl overflow-hidden rounded-[34px] bg-white/55 shadow-[0_24px_90px_rgba(97,61,45,0.12)] md:grid-cols-[0.95fr_1.05fr]">
+            <img src={lifestyleVisual} alt="" className="h-full min-h-[360px] w-full object-cover" />
+            <div className="flex flex-col justify-center p-8 sm:p-12">
+              <p className="mb-4 text-[13px] font-bold text-[#b06d5e]">루미에르가 약속합니다</p>
+              <h2
+                className="text-[34px] font-medium leading-tight text-[#3a2b27] sm:text-[46px]"
+                style={{ fontFamily: 'Georgia, "Times New Roman", "Noto Serif KR", serif' }}
+              >
+                지금의 변화를 넘어,
+                <br />
+                더 빛나는 나를 만나세요.
+              </h2>
+              <p className="mt-6 max-w-md text-[15px] leading-[1.9] text-[#6f5c52]">
+                루미에르는 단순한 체중 감량이 아닌 당신의 건강한 습관과 자신감을 되찾아 드립니다.
+              </p>
+              <div className="mt-9 grid gap-4 text-center sm:grid-cols-3">
+                {['여성 전문 코칭', '프라이빗 관리', '신뢰할 수 있는 데이터'].map((item) => (
+                  <div key={item} className="rounded-2xl border border-[#eadbd2] bg-[#fffaf5]/80 p-4">
+                    <p className="text-[13px] font-bold text-[#4b3c35]">{item}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </section>
+      </main>
+
+      <footer className="border-t border-[#eadbd2] bg-[#fffaf5] px-5 py-8">
+        <div className="mx-auto flex max-w-6xl flex-col gap-3 text-[12px] text-[#8a756b] sm:flex-row sm:items-center sm:justify-between">
+          <p className="font-bold text-[#4b3c35]">LUMIERE · © 2026</p>
+          <p className="max-w-2xl leading-relaxed sm:text-right">
+            교육용 정보이며 의학적 진단·처방을 대신하지 않습니다. 복용·중단은 담당 의사와 상의하세요.
+          </p>
         </div>
       </footer>
     </div>

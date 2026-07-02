@@ -34,8 +34,8 @@ const PayPalCheckoutButton: React.FC<PayPalCheckoutButtonProps> = ({
       <PayPalButtons
         style={{
           layout: 'vertical',
-          color: 'gold',
-          shape: 'rect',
+          color: 'black',
+          shape: 'pill',
           label: 'paypal',
           height: 50,
           tagline: false,
