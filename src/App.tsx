@@ -414,7 +414,7 @@ export default function App() {
               킵라인은 의료기관이 아니며, 점검 결과는 생활관리 참고용입니다.
             </p>
             <p className="mt-1 text-[12px] text-[#9c8b82]">
-              © 2026 KeepLine · 문의: hello@mystacktype.life
+              © 2026 KeepLine · 문의: keepline1717@gmail.com
             </p>
           </div>
         </div>
