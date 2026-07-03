@@ -2,7 +2,7 @@
 // AuthModal — 로그인/회원가입 모달
 // ============================================================
 // 사이트 어디서든 열 수 있는 풀스크린 로그인 모달
-// Google, Apple, 이메일 로그인 지원
+// Google, 이메일 로그인/회원가입 지원
 // ============================================================
 
 import { useState } from 'react';
@@ -15,8 +15,7 @@ interface AuthModalProps {
 }
 
 export function AuthModal({ isOpen, onClose }: AuthModalProps) {
-  const { signInWithGoogle, signInWithApple, signInWithEmail, signUpWithEmail, error, clearError } =
-    useAuth();
+  const { signInWithGoogle, signInWithEmail, signUpWithEmail, error, clearError } = useAuth();
   const [mode, setMode] = useState<'login' | 'signup'>('login');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -42,15 +41,6 @@ export function AuthModal({ isOpen, onClose }: AuthModalProps) {
   const handleGoogle = async () => {
     try {
       await signInWithGoogle();
-      onClose();
-    } catch {
-      // error handled in context
-    }
-  };
-
-  const handleApple = async () => {
-    try {
-      await signInWithApple();
       onClose();
     } catch {
       // error handled in context
@@ -94,12 +84,12 @@ export function AuthModal({ isOpen, onClose }: AuthModalProps) {
 
             {/* Header */}
             <h2 className="text-white text-[24px] font-light mb-2" style={{ letterSpacing: 0 }}>
-              {mode === 'login' ? 'Sign In' : 'Create Account'}
+              {mode === 'login' ? '로그인' : '이메일로 회원가입'}
             </h2>
             <p className="text-white/40 text-[14px] mb-8">
               {mode === 'login'
-                ? '자가 점검 결과와 사전예약 정보를 저장하세요.'
-                : '계정을 만들고 GLP-1 자가 점검 결과를 보관하세요.'}
+                ? '자가 점검 결과와 대기명단 정보를 저장하세요.'
+                : '이메일과 비밀번호로 계정을 만들고 점검 결과를 보관하세요.'}
             </p>
 
             {/* Error */}
@@ -127,22 +117,14 @@ export function AuthModal({ isOpen, onClose }: AuthModalProps) {
                   <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
                   <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
                 </svg>
-                Continue with Google
-              </button>
-
-              <button
-                onClick={handleApple}
-                className="w-full h-[48px] rounded-lg bg-white/[0.07] border border-white/10 text-white text-[14px] font-medium flex items-center justify-center gap-3 hover:bg-white/[0.12] active:scale-[0.98] transition-all cursor-pointer"
-              >
-                <i className="bi bi-apple text-[18px]" />
-                Continue with Apple
+                Google로 계속하기
               </button>
             </div>
 
             {/* Divider */}
             <div className="flex items-center gap-4 mb-6">
               <div className="flex-1 h-px bg-white/10" />
-              <span className="text-white/30 text-[12px] uppercase tracking-[0.1em]">or</span>
+              <span className="text-white/30 text-[12px] uppercase tracking-[0.1em]">또는</span>
               <div className="flex-1 h-px bg-white/10" />
             </div>
 
@@ -150,7 +132,7 @@ export function AuthModal({ isOpen, onClose }: AuthModalProps) {
             <form onSubmit={handleEmailSubmit} className="flex flex-col gap-4">
               <div>
                 <label className="text-white/40 text-[12px] uppercase tracking-[0.1em] mb-2 block">
-                  Email
+                  이메일
                 </label>
                 <input
                   type="email"
@@ -163,7 +145,7 @@ export function AuthModal({ isOpen, onClose }: AuthModalProps) {
               </div>
               <div>
                 <label className="text-white/40 text-[12px] uppercase tracking-[0.1em] mb-2 block">
-                  Password
+                  비밀번호
                 </label>
                 <input
                   type="password"
@@ -181,13 +163,13 @@ export function AuthModal({ isOpen, onClose }: AuthModalProps) {
                 disabled={loading}
                 className="w-full h-[48px] bg-white text-black rounded-lg text-[14px] font-bold hover:bg-white/90 active:scale-[0.98] transition-all cursor-pointer border-none disabled:opacity-50 disabled:cursor-not-allowed mt-2"
               >
-                {loading ? '...' : mode === 'login' ? 'Sign In' : 'Create Account'}
+                {loading ? '처리 중...' : mode === 'login' ? '이메일로 로그인' : '회원가입하기'}
               </button>
             </form>
 
             {/* Switch mode */}
             <p className="text-center text-white/40 text-[13px] mt-6">
-              {mode === 'login' ? "Don't have an account?" : 'Already have an account?'}{' '}
+              {mode === 'login' ? '아직 계정이 없나요?' : '이미 계정이 있나요?'}{' '}
               <button
                 onClick={() => {
                   setMode(mode === 'login' ? 'signup' : 'login');
@@ -195,7 +177,7 @@ export function AuthModal({ isOpen, onClose }: AuthModalProps) {
                 }}
                 className="text-white/70 hover:text-white underline cursor-pointer bg-transparent border-none text-[13px]"
               >
-                {mode === 'login' ? 'Sign Up' : 'Sign In'}
+                {mode === 'login' ? '이메일로 회원가입' : '로그인하기'}
               </button>
             </p>
           </motion.div>
