@@ -1,19 +1,15 @@
 import { useCallback, useState } from 'react';
 import { motion } from 'framer-motion';
-import PayPalCheckoutButton from './components/payment/PayPalCheckoutButton';
-import TossCheckoutButton from './components/payment/TossCheckoutButton';
 import { AuthModal } from './components/AuthModal';
+import { EmailCaptureForm } from './components/EmailCaptureForm';
 import { QuizExperience } from './components/QuizExperience';
 import { useAuth } from './contexts/AuthContext';
-import { createOrder } from './lib/firestore';
-import { PRODUCTS } from './lib/paypal';
-import { TOSS_PRODUCTS } from './lib/toss';
+import { trackQuizEvent } from './lib/analytics';
 
-const heroVisual = '/assets/keepline-hero.png';
-const agitationVisual = '/assets/keepline-agitation.png';
-const resultVisual = '/assets/keepline-result-dashboard.png';
-const coachVisual = '/assets/keepline-coach.png';
-const pricingVisual = '/assets/keepline-pricing.png';
+const heroVisual = '/assets/keepline-hero-v2.webp';
+const ribbonVisual = '/assets/keepline-ribbon-v2.webp';
+const resultVisual = '/assets/keepline-dashboard-v2.webp';
+const newsletterVisual = '/assets/keepline-newsletter-v2.webp';
 
 const resultFeatures = [
   ['1', '내 타입', '지금 내가 어떤 상태인지'],
@@ -33,19 +29,22 @@ const plans = [
   },
   {
     tier: '창립 멤버',
-    label: '얼리버드 사전예약',
     amount: '8,900원',
+    priceLabel: '출시 예정가',
     desc: '출시 때 창립 멤버가로 먼저 열어드려요.',
     items: ['창립 멤버가 고정', '유지 체크포인트', '진료 질문 정리', '안 나오면 전액 환불'],
-    action: '사전예약',
+    action: '창립 멤버 대기명단 올리기',
+    tierId: 'member' as const,
     featured: true,
   },
   {
-    tier: '파운더 사전예약',
+    tier: '파운더',
     amount: '14,900원',
+    priceLabel: '출시 예정가',
     desc: '내 피드백까지 반영돼요.',
     items: ['얼리버드 혜택 전부', '초기 1:1 피드백 반영', '근육 사수 가이드 우선', '안 나오면 전액 환불'],
-    action: '사전예약',
+    action: '파운더 대기명단 올리기',
+    tierId: 'founder' as const,
   },
 ];
 
@@ -81,31 +80,10 @@ export default function App() {
   const [authOpen, setAuthOpen] = useState(false);
   const { user, signOut } = useAuth();
 
-  const openQuiz = useCallback(() => setQuizOpen(true), []);
-
-  const handlePayPalSuccess = useCallback(
-    async (details: any, productId: string, productName: string, amount: string) => {
-      const orderId = details.id || `pp_${Date.now()}`;
-      try {
-        await createOrder({
-          id: orderId,
-          userId: user?.uid || 'anonymous',
-          productId,
-          productName,
-          amount: parseFloat(amount),
-          currency: PRODUCTS.find((product) => product.id === productId)?.currency || 'KRW',
-          status: 'completed',
-          paypalOrderId: orderId,
-          paypalPayerId: details.payer?.payer_id || '',
-        });
-        alert('사전예약이 완료됐어요. 출시되면 가장 먼저 알려드릴게요.');
-      } catch (err) {
-        console.error('[Firestore] Failed to save order:', err);
-        alert(`결제는 완료됐지만 기록 저장에 실패했습니다. Order: ${orderId}`);
-      }
-    },
-    [user]
-  );
+  const openQuiz = useCallback(() => {
+    trackQuizEvent({ type: 'check_start' });
+    setQuizOpen(true);
+  }, []);
 
   return (
     <div
@@ -155,7 +133,7 @@ export default function App() {
 
       <main>
         <header className="px-6 py-16 sm:py-20">
-          <div className="mx-auto grid max-w-6xl items-center gap-12 lg:grid-cols-[1.05fr_0.95fr]">
+          <div className="mx-auto grid max-w-6xl items-center gap-12 lg:grid-cols-[0.86fr_1.14fr]">
             <motion.div
               initial={{ opacity: 0, y: 18 }}
               animate={{ opacity: 1, y: 0 }}
@@ -193,13 +171,23 @@ export default function App() {
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.75, delay: 0.08 }}
             >
-              <img src={heroVisual} alt="" className="aspect-[16/9] h-full w-full object-cover" />
+              <img
+                src={heroVisual}
+                alt="크림색 침구 위에 놓인 스마트폰, 물컵, 핑크색 줄자"
+                className="aspect-[4/3] h-full w-full object-cover"
+              />
             </motion.div>
           </div>
         </header>
 
         <section className="relative flex min-h-[340px] items-center justify-center overflow-hidden bg-[#f5e6e0] text-center">
-          <img src={agitationVisual} alt="" className="absolute inset-0 h-full w-full object-cover opacity-90" />
+          <img
+            src={ribbonVisual}
+            alt="크림빛 배경 위로 길게 흐르는 핑크 실크 리본"
+            loading="lazy"
+            className="absolute inset-0 h-full w-full object-cover object-center opacity-90"
+          />
+          <div className="absolute inset-0 bg-[#faf4f0]/35" />
           <div className="relative z-10 px-6 py-16">
             <h2
               className="text-[27px] font-semibold leading-[1.5] text-[#5a4b45] drop-shadow-[0_2px_20px_rgba(251,247,243,0.9)] sm:text-[34px]"
@@ -241,32 +229,51 @@ export default function App() {
               </div>
             </div>
             <div className="overflow-hidden rounded-[22px] border border-[#b76e79]/20 shadow-[0_20px_50px_rgba(159,110,100,0.18)]">
-              <img src={resultVisual} alt="" className="w-full object-cover" />
+              <img
+                src={resultVisual}
+                alt="핑크 톤의 점검 대시보드가 표시된 태블릿 화면"
+                loading="lazy"
+                className="aspect-[3/2] w-full object-cover"
+              />
             </div>
           </div>
         </section>
 
         <section className="bg-gradient-to-b from-white to-[#fbf7f3] px-6 py-20">
-          <div className="mx-auto grid max-w-6xl items-center gap-12 lg:grid-cols-2">
-            <div className="overflow-hidden rounded-[22px] bg-[#f5e6e0] shadow-[0_20px_50px_rgba(159,110,100,0.18)]">
-              <img src={coachVisual} alt="" className="aspect-[4/3] h-full w-full object-cover" />
-            </div>
+          <div className="mx-auto grid max-w-6xl items-center gap-12 lg:grid-cols-[0.92fr_1.08fr]">
             <div>
               <span className="text-[13px] font-semibold uppercase tracking-[0.18em] text-[#be7c70]">
-                Early Access
+                킵라인 레터
               </span>
               <h2
-                className="mt-4 text-[31px] font-bold leading-[1.35] text-[#40382f] sm:text-[36px]"
+                className="mt-4 text-[32px] font-bold leading-[1.35] text-[#40382f] sm:text-[38px]"
                 style={{ fontFamily: '"Noto Serif KR", Georgia, serif' }}
               >
-                약을 끊어도, 그대로.
-                <small className="mt-2 block text-[18px] font-medium text-[#be7c70]">
-                  킵라인 코치, 준비 중
-                </small>
+                빼는 법 말고,
+                <br />
+                지키는 법만 보냅니다.
               </h2>
-              <p className="mt-5 max-w-[420px] text-[15px] leading-[1.9] text-[#6b5f56]">
-                위험 축, 물어볼 질문, 유지 체크포인트를 한 곳에. 지금은 예약만 받아요 — 안 나오면 전액 환불.
+              <p className="mt-5 max-w-[500px] text-[15px] leading-[1.9] text-[#6b5f56]">
+                주 1회 — 식욕이 돌아오는 신호, 요요를 부르는 습관, 끊은 뒤에도 라인을 지킨 사람들의 루틴.
               </p>
+              <div className="mt-7 max-w-[520px]">
+                <EmailCaptureForm
+                  mode="newsletter"
+                  source="landing_newsletter"
+                  buttonLabel="무료로 받아보기"
+                  caption="스팸 없음 · 원클릭 구독 해지"
+                  successMessage="등록됐어요. 다음 레터부터 보내드릴게요."
+                  compact
+                />
+              </div>
+            </div>
+            <div className="overflow-hidden rounded-[22px] bg-[#f5e6e0] shadow-[0_20px_50px_rgba(159,110,100,0.18)]">
+              <img
+                src={newsletterVisual}
+                alt="따뜻한 햇살 아래 노트북을 보며 컵을 든 사람"
+                loading="lazy"
+                className="aspect-[3/2] h-full w-full object-cover"
+              />
             </div>
           </div>
         </section>
@@ -274,27 +281,22 @@ export default function App() {
         <section id="pricing" className="px-6 py-20 text-center sm:py-24">
           <div className="mx-auto max-w-6xl">
             <span className="text-[13px] font-semibold uppercase tracking-[0.18em] text-[#be7c70]">
-              사전예약
+              출시 대기명단
             </span>
             <h2
               className="mt-3 text-[32px] font-bold leading-tight text-[#40382f] sm:text-[38px]"
               style={{ fontFamily: '"Noto Serif KR", Georgia, serif' }}
             >
-              출시 전, 가장 낮은 가격으로.
+              결제는 아직 안 받아요.
+              <br />
+              자리만 잡아두세요.
             </h2>
-            <p className="mt-3 text-[15px] text-[#6b5f56]">
-              무료 점검만 보고 가도 돼요. 마음에 들면 예약하세요.
+            <p className="mx-auto mt-4 max-w-[620px] text-[15px] leading-[1.8] text-[#6b5f56]">
+              킵라인 코치는 준비 중입니다. 지금 대기명단에 올리면 출시 때 창립 멤버 가격이 그대로 고정됩니다.
             </p>
-            <p className="mt-2 text-[13px] text-[#be7c70]">
-              킵라인 코치는 창립 멤버 선착순 · 출시 전 예약자만 혜택 고정
-            </p>
-
-            <div className="mt-10 overflow-hidden rounded-[26px] border border-[#b76e79]/20 shadow-[0_20px_50px_rgba(159,110,100,0.12)]">
-              <img src={pricingVisual} alt="" className="max-h-[320px] w-full object-cover" />
-            </div>
 
             <div className="mt-12 grid items-stretch gap-6 text-left md:grid-cols-3">
-              {plans.map((plan, index) => (
+              {plans.map((plan) => (
                 <article
                   key={plan.tier}
                   className={`relative flex flex-col rounded-[22px] bg-white p-7 shadow-sm ${
@@ -305,12 +307,17 @@ export default function App() {
                 >
                   {plan.featured ? (
                     <span className="absolute left-1/2 top-0 -translate-x-1/2 -translate-y-1/2 rounded-full bg-gradient-to-br from-[#dba99d] to-[#b76e79] px-5 py-2 text-[12px] font-semibold text-white">
-                      {plan.label}
+                      먼저 열리는 자리
                     </span>
                   ) : null}
                   <p className="text-[14px] text-[#9c8b82]">{plan.tier}</p>
+                  {plan.priceLabel ? (
+                    <p className="mt-3 text-[12px] font-semibold uppercase tracking-[0.12em] text-[#be7c70]">
+                      {plan.priceLabel}
+                    </p>
+                  ) : null}
                   <p
-                    className="mt-3 text-[32px] font-bold text-[#40382f]"
+                    className={plan.priceLabel ? 'mt-1 text-[32px] font-bold text-[#40382f]' : 'mt-3 text-[32px] font-bold text-[#40382f]'}
                     style={{ fontFamily: '"Noto Serif KR", Georgia, serif' }}
                   >
                     {plan.amount}
@@ -335,34 +342,15 @@ export default function App() {
                       >
                         {plan.action}
                       </button>
-                    ) : index === 1 ? (
-                      <div className="space-y-3">
-                        <PayPalCheckoutButton
-                          product={PRODUCTS[0]}
-                          onSuccess={(details) =>
-                            handlePayPalSuccess(details, PRODUCTS[0].id, PRODUCTS[0].name, PRODUCTS[0].price)
-                          }
-                          onError={(err) => console.error('PayPal error:', err)}
-                        />
-                        <TossCheckoutButton
-                          product={TOSS_PRODUCTS[0]}
-                          onError={(err) => console.error('Toss error:', err)}
-                        />
-                      </div>
                     ) : (
-                      <div className="space-y-3">
-                        <PayPalCheckoutButton
-                          product={PRODUCTS[1]}
-                          onSuccess={(details) =>
-                            handlePayPalSuccess(details, PRODUCTS[1].id, PRODUCTS[1].name, PRODUCTS[1].price)
-                          }
-                          onError={(err) => console.error('PayPal error:', err)}
-                        />
-                        <TossCheckoutButton
-                          product={TOSS_PRODUCTS[1]}
-                          onError={(err) => console.error('Toss error:', err)}
-                        />
-                      </div>
+                      <EmailCaptureForm
+                        mode="waitlist"
+                        source={`pricing_${plan.tierId}`}
+                        tier={plan.tierId}
+                        buttonLabel={plan.action}
+                        caption="출시 전까지 결제 없음 · 출시 알림만 보내드려요"
+                        successMessage="등록됐어요. 출시 때 창립 멤버 가격으로 먼저 알려드릴게요."
+                      />
                     )}
                   </div>
                 </article>
@@ -370,11 +358,46 @@ export default function App() {
             </div>
           </div>
         </section>
+
+        <section className="bg-[#f5ede7] px-6 py-20 sm:py-24">
+          <div className="mx-auto max-w-[640px] text-center">
+            <span className="text-[13px] font-semibold uppercase tracking-[0.18em] text-[#be7c70]">
+              왜 만들었냐면요
+            </span>
+            <div
+              className="mt-5 space-y-5 text-[24px] font-semibold leading-[1.65] text-[#40382f] sm:text-[29px]"
+              style={{ fontFamily: '"Noto Serif KR", Georgia, serif' }}
+            >
+              <p>
+                저도 마운자로를 썼고, 끊었고,
+                <br />
+                지금 체중이 돌아오는 걸 직접 겪고 있습니다.
+              </p>
+              <p>
+                빼는 법은 유튜브에 수천 개가 있는데
+                <br />
+                “끊은 다음”에 대한 이야기는 이상할 만큼 없더군요.
+              </p>
+              <p>
+                킵라인은 그 “이후”를 위해 만들고 있습니다.
+              </p>
+            </div>
+            <p className="mx-auto mt-7 max-w-[520px] text-[15px] leading-[1.9] text-[#6b5f56]">
+              같은 불안을 겪고 있다면, 점검부터 해보세요.
+            </p>
+            <p className="mt-6 text-[14px] font-semibold text-[#be7c70]">— 킵라인 만드는 사람</p>
+          </div>
+        </section>
       </main>
 
       <footer className="overflow-hidden">
         <div className="h-[260px]">
-          <img src={heroVisual} alt="" className="h-full w-full object-cover" />
+          <img
+            src={heroVisual}
+            alt="크림색 침구 위에 놓인 스마트폰과 핑크색 줄자"
+            loading="lazy"
+            className="h-full w-full object-cover"
+          />
         </div>
         <div className="bg-[#fbf7f3] px-6 py-11">
           <div className="mx-auto flex max-w-6xl flex-col items-start gap-3">
@@ -385,11 +408,14 @@ export default function App() {
             >
               애써 만든 라인, 그대로.
             </p>
-            <p className="max-w-[640px] text-[12.5px] leading-[1.8] text-[#9c8b82]">
-              본 점검은 교육용 정보이며 의학적 진단·처방을 대신하지 않습니다. GLP-1은 전문의약품이며,
-              복용·용량·중단은 반드시 담당 의사와 상의하세요.
+            <p className="max-w-[720px] text-[12.5px] leading-[1.8] text-[#9c8b82]">
+              본 점검은 교육용 참고 정보이며 의학적 진단·치료·처방을 대신하지 않습니다.
+              GLP-1(마운자로·위고비 등)은 전문의약품이며, 복용·용량·중단은 반드시 담당 의사와 상의하세요.
+              킵라인은 의료기관이 아니며, 점검 결과는 생활관리 참고용입니다.
             </p>
-            <p className="mt-1 text-[12px] text-[#9c8b82]">© 2026 KeepLine</p>
+            <p className="mt-1 text-[12px] text-[#9c8b82]">
+              © 2026 KeepLine · 문의: hello@mystacktype.life
+            </p>
           </div>
         </div>
       </footer>

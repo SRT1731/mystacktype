@@ -28,6 +28,8 @@ export const COLLECTIONS = {
   ORDERS: 'orders',
   SUBSCRIPTIONS: 'subscriptions',
   PRODUCTS: 'products',
+  WAITLIST: 'waitlist',
+  NEWSLETTER: 'newsletter',
 } as const;
 
 // ── Data Types ──
@@ -42,7 +44,7 @@ export interface UserProfile {
   subscription?: {
     planId: string;
     status: 'active' | 'cancelled' | 'expired';
-    paypalSubscriptionId: string;
+    externalSubscriptionId: string;
     startDate: Timestamp;
     endDate?: Timestamp;
   };
@@ -56,8 +58,8 @@ export interface Order {
   amount: number;
   currency: string;
   status: 'pending' | 'completed' | 'failed' | 'refunded';
-  paypalOrderId: string;
-  paypalPayerId?: string;
+  externalOrderId: string;
+  externalPayerId?: string;
   createdAt: Timestamp;
   completedAt?: Timestamp;
 }
@@ -66,11 +68,28 @@ export interface SubscriptionRecord {
   id: string;
   userId: string;
   planId: string;
-  paypalSubscriptionId: string;
+  externalSubscriptionId: string;
   status: 'active' | 'cancelled' | 'suspended' | 'expired';
   startDate: Timestamp;
   nextBillingDate?: Timestamp;
   cancelledAt?: Timestamp;
+}
+
+export interface WaitlistLead {
+  id: string;
+  email: string;
+  tier: 'member' | 'founder';
+  source: string;
+  tag: 'waitlist_member' | 'waitlist_founder';
+  createdAt: Timestamp;
+}
+
+export interface NewsletterLead {
+  id: string;
+  email: string;
+  source: string;
+  tag: 'newsletter';
+  createdAt: Timestamp;
 }
 
 // ── User Helpers ──
@@ -121,15 +140,15 @@ export async function createOrder(order: Omit<Order, 'createdAt'>): Promise<void
 export async function updateOrderStatus(
   orderId: string,
   status: Order['status'],
-  paypalPayerId?: string
+  externalPayerId?: string
 ): Promise<void> {
   const ref = doc(db, COLLECTIONS.ORDERS, orderId);
   const updates: DocumentData = { status };
   if (status === 'completed') {
     updates.completedAt = serverTimestamp();
   }
-  if (paypalPayerId) {
-    updates.paypalPayerId = paypalPayerId;
+  if (externalPayerId) {
+    updates.externalPayerId = externalPayerId;
   }
   await updateDoc(ref, updates);
 }
@@ -183,4 +202,47 @@ export async function getActiveSubscription(
 export async function deleteProduct(productId: string): Promise<void> {
   const ref = doc(db, COLLECTIONS.PRODUCTS, productId);
   await deleteDoc(ref);
+}
+
+// ── Lead Helpers ──
+
+function normalizeLeadId(email: string, suffix: string): string {
+  return `${email.trim().toLowerCase().replace(/[^a-z0-9._-]/g, '_')}_${suffix}`;
+}
+
+export async function createWaitlistLead(
+  email: string,
+  tier: WaitlistLead['tier'],
+  source: string
+): Promise<void> {
+  const tag = tier === 'founder' ? 'waitlist_founder' : 'waitlist_member';
+  const ref = doc(db, COLLECTIONS.WAITLIST, normalizeLeadId(email, tier));
+  await setDoc(
+    ref,
+    {
+      email: email.trim().toLowerCase(),
+      tier,
+      source,
+      tag,
+      createdAt: serverTimestamp(),
+    },
+    { merge: true }
+  );
+}
+
+export async function createNewsletterLead(
+  email: string,
+  source: string
+): Promise<void> {
+  const ref = doc(db, COLLECTIONS.NEWSLETTER, normalizeLeadId(email, 'newsletter'));
+  await setDoc(
+    ref,
+    {
+      email: email.trim().toLowerCase(),
+      source,
+      tag: 'newsletter',
+      createdAt: serverTimestamp(),
+    },
+    { merge: true }
+  );
 }

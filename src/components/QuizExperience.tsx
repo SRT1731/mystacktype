@@ -2,6 +2,7 @@ import { useMemo, useState } from 'react';
 import { QUIZ_CONFIG, RESULT_SCREEN_FOOTER } from '../config/quiz';
 import { trackQuizEvent } from '../lib/analytics';
 import { calculateQuizOutcome } from '../lib/scoring';
+import { EmailCaptureForm } from './EmailCaptureForm';
 import { RadarChart } from './RadarChart';
 
 type AnswerMap = Record<string, string>;
@@ -34,11 +35,6 @@ export function QuizExperience({ onClose }: QuizExperienceProps) {
 
   function handleAnswer(questionId: string, optionId: string) {
     setAnswers((current) => {
-      const isFirstAnswer = Object.keys(current).length === 0;
-      if (isFirstAnswer) {
-        trackQuizEvent({ type: 'quiz_start' });
-      }
-
       return {
         ...current,
         [questionId]: optionId,
@@ -51,7 +47,7 @@ export function QuizExperience({ onClose }: QuizExperienceProps) {
     if (!isComplete) return;
     setShowResult(true);
     trackQuizEvent({
-      type: 'quiz_finish',
+      type: 'check_complete',
       resultType: outcome.resultType,
       stackScore: outcome.stackScore,
     });
@@ -283,7 +279,7 @@ export function QuizExperience({ onClose }: QuizExperienceProps) {
                   </p>
                 </div>
                 <div className="border border-white/14 p-4">
-                  <p className="text-[12px] uppercase text-white/42">사전예약</p>
+                  <p className="text-[12px] uppercase text-white/42">대기명단</p>
                   <p className="mt-3 text-[15px] leading-relaxed text-white/82">
                     {outcome.result.paywallHeadline}
                   </p>
@@ -321,16 +317,30 @@ export function QuizExperience({ onClose }: QuizExperienceProps) {
                 </button>
                 <a
                   href="#pricing"
-                  onClick={() =>
-                    trackQuizEvent({
-                      type: 'paywall_view',
-                      resultType: outcome.resultType,
-                    })
-                  }
                   className="flex h-[50px] items-center justify-center border border-white/18 px-5 text-[14px] font-bold text-white transition hover:bg-white/10"
                 >
-                  사전예약 보기
+                  대기명단 보기
                 </a>
+              </div>
+
+              <div className="mt-6 rounded-[18px] border border-white/14 bg-white/[0.06] p-5">
+                <p className="text-[12px] uppercase text-white/42">킵라인 레터</p>
+                <h4 className="mt-2 text-[20px] font-semibold text-white">
+                  빼는 법 말고, 지키는 법만 보냅니다.
+                </h4>
+                <p className="mt-2 text-[13px] leading-relaxed text-white/62">
+                  주 1회, 식욕이 돌아오는 신호와 끊은 뒤에도 라인을 지키는 루틴을 보내드려요.
+                </p>
+                <div className="mt-4">
+                  <EmailCaptureForm
+                    mode="newsletter"
+                    source="quiz_result"
+                    buttonLabel="무료로 받아보기"
+                    caption="스팸 없음 · 원클릭 구독 해지"
+                    successMessage="등록됐어요. 다음 레터부터 보내드릴게요."
+                    compact
+                  />
+                </div>
               </div>
 
               <p className="mt-6 border-t border-white/12 pt-5 text-[12px] leading-relaxed text-white/42">

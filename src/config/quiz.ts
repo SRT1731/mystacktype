@@ -67,13 +67,13 @@ export interface QuizOutcome {
 }
 
 export const RESULT_SCREEN_FOOTER =
-  '본 점검은 교육용 정보이며 의학적 진단·처방을 대신하지 않습니다. GLP-1은 전문의약품이며, 복용·용량·중단은 반드시 담당 의사와 상의하세요.';
+  '본 점검은 교육용 참고 정보이며 의학적 진단·치료·처방을 대신하지 않습니다. GLP-1(마운자로·위고비 등)은 전문의약품이며, 복용·용량·중단은 반드시 담당 의사와 상의하세요. 킵라인은 의료기관이 아니며, 점검 결과는 생활관리 참고용입니다.';
 
 export const RESERVATION_HEADLINE =
-  '약을 끊어도, 그대로.';
+  '결제는 아직 안 받아요. 자리만 잡아두세요.';
 
 export const RESERVATION_SUBHEAD =
-  '위험 축, 물어볼 질문, 유지 체크포인트를 한 곳에. 지금은 예약만 받아요 — 안 나오면 전액 환불.';
+  '지금 대기명단에 올리면 출시 때 창립 멤버 가격이 그대로 고정됩니다.';
 
 export const DIMENSION_LABELS: Record<QuizDimension, string> = {
   lossSpeed: '감량 속도',
