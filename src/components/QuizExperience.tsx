@@ -271,17 +271,11 @@ export function QuizExperience({ onClose }: QuizExperienceProps) {
                 <RadarChart dimensions={outcome.dimensions} size={260} />
               </div>
 
-              <div className="mt-8 grid gap-4 md:grid-cols-2">
+              <div className="mt-8">
                 <div className="border border-white/14 p-4">
                   <p className="text-[12px] uppercase text-white/42">한 줄 결과</p>
                   <p className="mt-3 text-[15px] leading-relaxed text-white/82">
                     {outcome.result.description}
-                  </p>
-                </div>
-                <div className="border border-white/14 p-4">
-                  <p className="text-[12px] uppercase text-white/42">대기명단</p>
-                  <p className="mt-3 text-[15px] leading-relaxed text-white/82">
-                    {outcome.result.paywallHeadline}
                   </p>
                 </div>
               </div>
@@ -315,21 +309,15 @@ export function QuizExperience({ onClose }: QuizExperienceProps) {
                 >
                   결과 공유
                 </button>
-                <a
-                  href="#pricing"
-                  className="flex h-[50px] items-center justify-center border border-white/18 px-5 text-[14px] font-bold text-white transition hover:bg-white/10"
-                >
-                  대기명단 보기
-                </a>
               </div>
 
               <div className="mt-6 rounded-[18px] border border-white/14 bg-white/[0.06] p-5">
                 <p className="text-[12px] uppercase text-white/42">킵라인 레터</p>
                 <h4 className="mt-2 text-[20px] font-semibold text-white">
-                  빼는 법 말고, 지키는 법만 보냅니다.
+                  이 결과, 유지로 이어가려면
                 </h4>
                 <p className="mt-2 text-[13px] leading-relaxed text-white/62">
-                  주 1회, 식욕이 돌아오는 신호와 끊은 뒤에도 라인을 지키는 루틴을 보내드려요.
+                  매주 한 통, 지키는 법만 보내드려요. 무료예요.
                 </p>
                 <div className="mt-4">
                   <EmailCaptureForm

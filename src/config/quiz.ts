@@ -72,9 +72,6 @@ export const RESULT_SCREEN_FOOTER =
 export const RESERVATION_HEADLINE =
   '결제는 아직 안 받아요. 자리만 잡아두세요.';
 
-export const RESERVATION_SUBHEAD =
-  '지금 대기명단에 올리면 출시 때 창립 멤버 가격이 그대로 고정됩니다.';
-
 export const DIMENSION_LABELS: Record<QuizDimension, string> = {
   lossSpeed: '감량 속도',
   protein: '단백질',

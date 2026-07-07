@@ -18,36 +18,6 @@ const resultFeatures = [
   ['4', '물어볼 질문', '진료 때 그대로 쓰는 질문 3개'],
 ];
 
-const plans = [
-  {
-    tier: '무료 점검',
-    amount: '0원',
-    desc: '먼저 내 상태부터 확인해요.',
-    items: ['위험 타입', '요요 위험 점수', '약점 그래프', '물어볼 질문 3개'],
-    action: '무료로 점검하기',
-    free: true,
-  },
-  {
-    tier: '창립 멤버',
-    amount: '8,900원',
-    priceLabel: '출시 예정가',
-    desc: '출시 때 창립 멤버가로 먼저 열어드려요.',
-    items: ['창립 멤버가 고정', '유지 체크포인트', '진료 질문 정리', '안 나오면 전액 환불'],
-    action: '창립 멤버 대기명단 올리기',
-    tierId: 'member' as const,
-    featured: true,
-  },
-  {
-    tier: '파운더',
-    amount: '14,900원',
-    priceLabel: '출시 예정가',
-    desc: '내 피드백까지 반영돼요.',
-    items: ['얼리버드 혜택 전부', '초기 1:1 피드백 반영', '근육 사수 가이드 우선', '안 나오면 전액 환불'],
-    action: '파운더 대기명단 올리기',
-    tierId: 'founder' as const,
-  },
-];
-
 function KeepLineLogo({ compact = false }: { compact?: boolean }) {
   return (
     <div className="flex items-center gap-3">
@@ -151,7 +121,7 @@ export default function App() {
                 끊어도 그대로일까요?
               </h1>
               <p className="mt-6 max-w-[440px] text-[17px] leading-[1.8] text-[#6b5f56]">
-                마운자로·위고비로 만든 라인과 탄력, 끊은 뒤에도 지키는 법. 60초면 내 요요 위험부터 확인해요.
+                마운자로·위고비를 끊은 뒤가 진짜 시작이에요. 60초 점검으로 내 요요 위험을 확인하고, 매주 ‘지키는 법’을 받아보세요.
               </p>
               <button
                 type="button"
@@ -239,11 +209,11 @@ export default function App() {
           </div>
         </section>
 
-        <section className="bg-gradient-to-b from-white to-[#fbf7f3] px-6 py-20">
+        <section id="newsletter" className="bg-gradient-to-b from-white to-[#fbf7f3] px-6 py-20">
           <div className="mx-auto grid max-w-6xl items-center gap-12 lg:grid-cols-[0.92fr_1.08fr]">
             <div>
               <span className="text-[13px] font-semibold uppercase tracking-[0.18em] text-[#be7c70]">
-                킵라인 레터
+                킵라인 레터 · 주 1회 · 무료
               </span>
               <h2
                 className="mt-4 text-[32px] font-bold leading-[1.35] text-[#40382f] sm:text-[38px]"
@@ -254,7 +224,27 @@ export default function App() {
                 지키는 법만 보냅니다.
               </h2>
               <p className="mt-5 max-w-[500px] text-[15px] leading-[1.9] text-[#6b5f56]">
-                주 1회 — 식욕이 돌아오는 신호, 요요를 부르는 습관, 끊은 뒤에도 라인을 지킨 사람들의 루틴.
+                매주 한 통. 읽는 데 3분이면 됩니다.
+              </p>
+              <div className="mt-7 flex flex-col gap-4">
+                {[
+                  ['1', '몸의 신호', '식욕·컨디션에서 요요가 시작되는 신호 한 가지'],
+                  ['2', '지키는 루틴', '단백질·근력·수면에서 이번 주 실천할 것 한 가지'],
+                  ['3', '진료실 질문', '다음 진료 때 그대로 쓸 수 있는 질문 한 개'],
+                ].map(([num, title, text]) => (
+                  <div key={num} className="flex items-start gap-4">
+                    <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#f5e6e0] text-[14px] font-bold text-[#be7c70]">
+                      {num}
+                    </span>
+                    <span>
+                      <b className="block text-[16px] font-semibold text-[#40382f]">{title}</b>
+                      <span className="text-[14px] text-[#9c8b82]">{text}</span>
+                    </span>
+                  </div>
+                ))}
+              </div>
+              <p className="mt-5 text-[13px] text-[#9c8b82]">
+                이제 막 시작한 레터예요. 첫 화부터 함께 읽는 독자가 됩니다.
               </p>
               <div className="mt-7 max-w-[520px]">
                 <EmailCaptureForm
@@ -274,87 +264,6 @@ export default function App() {
                 loading="lazy"
                 className="aspect-[3/2] h-full w-full object-cover"
               />
-            </div>
-          </div>
-        </section>
-
-        <section id="pricing" className="px-6 py-20 text-center sm:py-24">
-          <div className="mx-auto max-w-6xl">
-            <span className="text-[13px] font-semibold uppercase tracking-[0.18em] text-[#be7c70]">
-              출시 대기명단
-            </span>
-            <h2
-              className="mt-3 text-[32px] font-bold leading-tight text-[#40382f] sm:text-[38px]"
-              style={{ fontFamily: '"Noto Serif KR", Georgia, serif' }}
-            >
-              결제는 아직 안 받아요.
-              <br />
-              자리만 잡아두세요.
-            </h2>
-            <p className="mx-auto mt-4 max-w-[620px] text-[15px] leading-[1.8] text-[#6b5f56]">
-              킵라인 코치는 준비 중입니다. 지금 대기명단에 올리면 출시 때 창립 멤버 가격이 그대로 고정됩니다.
-            </p>
-
-            <div className="mt-12 grid items-stretch gap-6 text-left md:grid-cols-3">
-              {plans.map((plan) => (
-                <article
-                  key={plan.tier}
-                  className={`relative flex flex-col rounded-[22px] bg-white p-7 shadow-sm ${
-                    plan.featured
-                      ? '-translate-y-0 border-2 border-[#b76e79] shadow-[0_26px_60px_rgba(183,110,121,0.2)] md:-translate-y-3'
-                      : 'border border-[#b76e79]/20'
-                  }`}
-                >
-                  {plan.featured ? (
-                    <span className="absolute left-1/2 top-0 -translate-x-1/2 -translate-y-1/2 rounded-full bg-gradient-to-br from-[#dba99d] to-[#b76e79] px-5 py-2 text-[12px] font-semibold text-white">
-                      먼저 열리는 자리
-                    </span>
-                  ) : null}
-                  <p className="text-[14px] text-[#9c8b82]">{plan.tier}</p>
-                  {plan.priceLabel ? (
-                    <p className="mt-3 text-[12px] font-semibold uppercase tracking-[0.12em] text-[#be7c70]">
-                      {plan.priceLabel}
-                    </p>
-                  ) : null}
-                  <p
-                    className={plan.priceLabel ? 'mt-1 text-[32px] font-bold text-[#40382f]' : 'mt-3 text-[32px] font-bold text-[#40382f]'}
-                    style={{ fontFamily: '"Noto Serif KR", Georgia, serif' }}
-                  >
-                    {plan.amount}
-                  </p>
-                  <p className="mt-2 min-h-10 text-[14px] leading-relaxed text-[#6b5f56]">
-                    {plan.desc}
-                  </p>
-                  <ul className="mt-5 flex-1 space-y-3">
-                    {plan.items.map((item) => (
-                      <li key={item} className="relative pl-7 text-[14px] text-[#5a4f47]">
-                        <span className="absolute left-0 font-bold text-[#be7c70]">✓</span>
-                        {item}
-                      </li>
-                    ))}
-                  </ul>
-                  <div className="mt-7">
-                    {plan.free ? (
-                      <button
-                        type="button"
-                        onClick={openQuiz}
-                        className="h-[52px] w-full rounded-full border border-[#b76e79]/30 text-[15px] font-semibold text-[#be7c70] transition hover:bg-[#fbf7f3]"
-                      >
-                        {plan.action}
-                      </button>
-                    ) : (
-                      <EmailCaptureForm
-                        mode="waitlist"
-                        source={`pricing_${plan.tierId}`}
-                        tier={plan.tierId}
-                        buttonLabel={plan.action}
-                        caption="출시 전까지 결제 없음 · 출시 알림만 보내드려요"
-                        successMessage="등록됐어요. 출시 때 창립 멤버 가격으로 먼저 알려드릴게요."
-                      />
-                    )}
-                  </div>
-                </article>
-              ))}
             </div>
           </div>
         </section>
@@ -386,6 +295,69 @@ export default function App() {
               같은 불안을 겪고 있다면, 점검부터 해보세요.
             </p>
             <p className="mt-6 text-[14px] font-semibold text-[#be7c70]">— 킵라인 만드는 사람</p>
+          </div>
+        </section>
+
+        <section className="px-6 py-20 text-center sm:py-24">
+          <div className="mx-auto max-w-[640px]">
+            <span className="text-[13px] font-semibold uppercase tracking-[0.18em] text-[#be7c70]">
+              지금은 전부 무료예요
+            </span>
+            <h2
+              className="mt-3 text-[32px] font-bold leading-tight text-[#40382f] sm:text-[38px]"
+              style={{ fontFamily: '"Noto Serif KR", Georgia, serif' }}
+            >
+              결제 없어요.
+              <br />
+              지금은 같이 시작하는 단계예요.
+            </h2>
+            <p className="mx-auto mt-4 max-w-[620px] text-[15px] leading-[1.8] text-[#6b5f56]">
+              킵라인은 이제 막 시작했습니다. 점검도, 레터도 무료예요. 유료 상품이 생기면 레터 구독자에게 가장 먼저, 가장 좋은 조건으로 알려드릴게요.
+            </p>
+            <div className="mt-10 flex flex-wrap items-center justify-center gap-4">
+              <button
+                type="button"
+                onClick={openQuiz}
+                className="rounded-full bg-gradient-to-br from-[#dba99d] to-[#b76e79] px-8 py-4 text-[15px] font-semibold text-white shadow-[0_10px_24px_rgba(183,110,121,0.28)] transition hover:-translate-y-0.5 hover:shadow-[0_14px_30px_rgba(183,110,121,0.36)]"
+              >
+                60초 무료 점검하기
+              </button>
+              <a
+                href="#newsletter"
+                className="rounded-full border border-[#b76e79]/30 px-8 py-4 text-[15px] font-semibold text-[#be7c70] transition hover:bg-[#fbf7f3]"
+              >
+                레터 구독하기
+              </a>
+            </div>
+          </div>
+        </section>
+
+        <section className="px-6 py-20 sm:py-24">
+          <div className="mx-auto max-w-[680px]">
+            <span className="text-[13px] font-semibold uppercase tracking-[0.18em] text-[#be7c70]">
+              자주 묻는 질문
+            </span>
+            <div className="mt-7 flex flex-col gap-4">
+              {[
+                ['킵라인이 뭐예요?', '마운자로·위고비 ‘이후’의 유지를 다루는 프로젝트예요. 지금은 60초 무료 점검과 주 1회 무료 레터를 운영합니다.'],
+                ['의료 서비스인가요?', '아니요. 교육용 참고 정보예요. 복용·용량·중단은 반드시 담당 의사와 상의하세요.'],
+                ['레터는 얼마나 자주 오나요?', '주 1회예요. 스팸은 없고, 메일 하단에서 원클릭으로 해지할 수 있어요.'],
+                ['나중에 유료로 바뀌나요?', '지금 있는 점검과 레터는 무료예요. 유료 상품을 만들게 되면 레터에서 먼저 알려드립니다.'],
+              ].map(([q, a]) => (
+                <details
+                  key={q}
+                  className="rounded-[16px] border border-[#b76e79]/20 bg-white"
+                >
+                  <summary className="flex cursor-pointer items-center justify-between gap-4 px-5 py-4 text-[16px] font-semibold text-[#40382f] [&::-webkit-details-marker]:hidden">
+                    {q}
+                    <span className="text-[20px] leading-none text-[#be7c70]">+</span>
+                  </summary>
+                  <p className="px-5 pb-5 text-[14px] leading-[1.8] text-[#6b5f56]">
+                    {a}
+                  </p>
+                </details>
+              ))}
+            </div>
           </div>
         </section>
       </main>
