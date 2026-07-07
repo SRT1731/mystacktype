@@ -14,17 +14,31 @@ export type QuizEvent =
       channel: 'image' | 'link' | 'native';
     };
 
+function readRef(): string | null {
+  try {
+    const raw = new URLSearchParams(window.location.search).get('ref');
+    if (!raw) return null;
+    return /^[A-Za-z0-9_-]{1,32}$/.test(raw) ? raw : null;
+  } catch {
+    return null;
+  }
+}
+
+// Captured once at module load so every event carries the entry ref.
+const REF = readRef();
+
 export function trackQuizEvent(event: QuizEvent): void {
   try {
     const gtag = (window as typeof window & {
       gtag?: (command: 'event', eventName: string, params?: Record<string, unknown>) => void;
     }).gtag;
+    const { type, ...rest } = event;
+    const params = { ...rest, ref: REF };
     if (gtag) {
-      const { type, ...params } = event;
       gtag('event', type, params);
     }
     if (import.meta.env.DEV) {
-      console.debug('[quiz-event]', event);
+      console.debug('[quiz-event]', { type, ...params });
     }
   } catch {
     // Analytics should never block the quiz funnel.

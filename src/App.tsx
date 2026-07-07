@@ -224,7 +224,7 @@ export default function App() {
                 지키는 법만 보냅니다.
               </h2>
               <p className="mt-5 max-w-[500px] text-[15px] leading-[1.9] text-[#6b5f56]">
-                매주 한 통. 읽는 데 3분이면 됩니다.
+                매주 한 통. 읽는 데 3분이면 됩니다. 빼는 법은 세상에 넘쳐요 — 여기는 ‘지키는 사람들’이 모이는 곳입니다.
               </p>
               <div className="mt-7 flex flex-col gap-4">
                 {[
@@ -244,7 +244,7 @@ export default function App() {
                 ))}
               </div>
               <p className="mt-5 text-[13px] text-[#9c8b82]">
-                이제 막 시작한 레터예요. 첫 화부터 함께 읽는 독자가 됩니다.
+                이제 막 시작한 레터예요. 첫 화부터 함께 읽는 독자가 됩니다. 답장하시면 제가 전부 읽고, 좋은 질문은 다음 화에서 다룹니다.
               </p>
               <div className="mt-7 max-w-[520px]">
                 <EmailCaptureForm

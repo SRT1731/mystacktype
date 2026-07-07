@@ -63,7 +63,8 @@ export function QuizExperience({ onClose }: QuizExperienceProps) {
   );
 
   async function handleShare() {
-    const shareText = `${shareCopy}\n${window.location.href}`;
+    const shareUrl = `${window.location.origin}${window.location.pathname}?ref=share`;
+    const shareText = `${shareCopy}\n${shareUrl}`;
     const canNativeShare = 'share' in navigator;
 
     trackQuizEvent({
@@ -76,7 +77,7 @@ export function QuizExperience({ onClose }: QuizExperienceProps) {
       await navigator.share({
         title: `KeepLine: ${outcome.result.name}`,
         text: shareText,
-        url: window.location.href,
+        url: shareUrl,
       });
       return;
     }
