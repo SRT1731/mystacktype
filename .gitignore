@@ -4,3 +4,6 @@
 node_modules/
 dist/
 .DS_Store
+
+# 내보낸 구독자 CSV (개인정보 — 커밋 금지)
+exports/

@@ -8,7 +8,8 @@
     "build": "tsc && vite build",
     "preview": "vite preview",
     "lint:copy": "tsx scripts/lint-copy.ts",
-    "test:scoring": "tsx scripts/test-scoring.ts"
+    "test:scoring": "tsx scripts/test-scoring.ts",
+    "export:leads": "tsx scripts/export-leads.ts"
   },
   "dependencies": {
     "firebase": "^12.15.0",
